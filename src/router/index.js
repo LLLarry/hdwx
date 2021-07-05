@@ -73,14 +73,14 @@ const routes = [
       title: 'IC卡列表'
     }
   },
-  {
-    path: '/ic/manage/:cardId',
-    name: 'ic-list-manage',
-    component: () => import(/* webpackChunkName: "ic-list-manage" */ '../views/ic/ic-list-manage/index.vue'),
-    meta: {
-      title: 'IC卡管理'
-    }
-  },
+  // {
+  //   path: '/ic/manage/:cardId',
+  //   name: 'ic-list-manage',
+  //   component: () => import(/* webpackChunkName: "ic-list-manage" */ '../views/ic/ic-list-manage/index.vue'),
+  //   meta: {
+  //     title: 'IC卡管理'
+  //   }
+  // },
   {
     path: '/ic/record/:id',
     name: 'ic-consume-record',
