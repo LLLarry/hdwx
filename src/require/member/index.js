@@ -1,5 +1,5 @@
 import ajax from '../ajax'
-
+// const baseUrl = process.env.NODE_ENV === 'production' ? '' : '/api'
 /**
  * 获取会员列表
  * @param {*} data
@@ -8,7 +8,7 @@ import ajax from '../ajax'
  */
 export const ajaxMemberCentre = (data, loadText) => {
     return ajax({
-        url: '/api/merchant/ajaxMemberCentre',
+        url: '/merchant/ajaxMemberCentre',
         method: 'post',
         data,
         loadText

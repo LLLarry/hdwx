@@ -1,5 +1,5 @@
 <template>
-    <div class="ic-list-manage position-relative bg-gray overflow-hidden">
+    <div class="member-list-manage position-relative bg-gray overflow-hidden">
         <member-list-card class="manage-card position-relative margin-top-3" :value="member" :from="2"/>
         <hd-title>
             钱包充值
@@ -25,13 +25,13 @@
                 </van-col>
             </van-row>
             <div class="d-flex margin-top-4 padding-top-1">
-                <van-button plain type="info" size="small" class="flex-1 margin-right-2" @click="handleVirtual(20, 0)">20元</van-button>
-                <van-button plain type="info" size="small" class="flex-1 margin-right-2" @click="handleVirtual(50, 0)">50元</van-button>
-                <van-button plain type="info" size="small" class="flex-1 margin-right-2" @click="handleVirtual(100, 0)">100元</van-button>
-                <van-button plain type="danger" size="small" class="flex-1" @click="handleVirtual(-member.money, -member.sendmoney)">清零</van-button>
+                <van-button plain type="primary" size="small" class="flex-1 margin-right-2" @click="handleVirtual(20, 0)">20元</van-button>
+                <van-button plain type="primary" size="small" class="flex-1 margin-right-2" @click="handleVirtual(50, 0)">50元</van-button>
+                <van-button plain type="primary" size="small" class="flex-1 margin-right-2" @click="handleVirtual(100, 0)">100元</van-button>
+                <van-button plain type="danger" size="small" class="flex-1" @click="handleVirtual(-member.topupmoney, -member.sendmoney)">清零</van-button>
             </div>
             <div class="d-flex margin-top-4 padding-top-1">
-                <van-button type="info" size="normal" class="flex-1 begin-set" @click="handleCharge">立即充值</van-button>
+                <van-button type="primary" size="normal" class="flex-1 begin-set" @click="handleCharge">立即充值</van-button>
             </div>
         </div>
     </div>
@@ -121,7 +121,7 @@ export default {
 </script>
 
 <style lang="scss">
-.ic-list-manage {
+.member-list-manage {
      min-height: 100vh;
     .manage-card {
         margin-bottom: 0;
@@ -139,8 +139,8 @@ export default {
             right: 0;
             top: 0;
             bottom: 0;
-            background-image: linear-gradient(-45deg, rgba(11, 156, 255, 0.5), rgba(107, 152, 234, 0.81));
-            // background-image: linear-gradient(to -45deg, red, blue);
+            // background-image: linear-gradient(-45deg, rgba(11, 156, 255, 0.5), rgba(107, 152, 234, 0.81));
+            background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.5), rgba(7, 193, 96, 0.8));
         }
     }
     .post-search {
@@ -148,7 +148,8 @@ export default {
         border: 1px solid #efefef;
     }
     .begin-set {
-        background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
+        // background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
+        background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.5), rgba(7, 193, 96, 0.8));
         height: 1rem;
     }
     .delete-content {

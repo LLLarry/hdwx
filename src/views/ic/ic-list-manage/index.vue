@@ -199,7 +199,7 @@ export default {
             right: 0;
             top: 0;
             bottom: 0;
-            background-image: linear-gradient(to -45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
+            background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
         }
     }
     .post-search {
@@ -207,7 +207,7 @@ export default {
         border: 1px solid #efefef;
     }
     .begin-set {
-        background-image: linear-gradient(to -45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
+        background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
         height: 1rem;
     }
     .delete-content {

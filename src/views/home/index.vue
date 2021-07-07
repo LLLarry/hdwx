@@ -83,7 +83,7 @@
                     :key="item.title"
                     :icon="require(`../../assets/images/home_${(index+1).toString().padStart(2, '0')}.png`)"
                     :text="item.title"
-                    :url="item.url"
+                    :to="item.url"
                 >
                     <van-image class="menu-icon margin-bottom-1" :src="require(`../../assets/images/home_${(index+1).toString().padStart(2, '0')}.png`)" />
                     <div class="menu-title margin-bottom-1">{{item.title}}</div>
@@ -109,7 +109,7 @@
                     { title: '设备管理', url: '/device/list', online: 5, total: 10 },
                     { title: 'IC卡管理', url: '/ic/list', total: 20 },
                     { title: '会员管理', url: '/member/list', total: 1596 },
-                    { title: '小区管理', total: 12 },
+                    { title: '小区管理', total: 12, url: '/area/list' },
                     { title: '设备绑定' },
                     { title: '历史收益' },
                     { title: '订单统计' },

@@ -73,14 +73,14 @@ const routes = [
       title: 'IC卡列表'
     }
   },
-  // {
-  //   path: '/ic/manage/:cardId',
-  //   name: 'ic-list-manage',
-  //   component: () => import(/* webpackChunkName: "ic-list-manage" */ '../views/ic/ic-list-manage/index.vue'),
-  //   meta: {
-  //     title: 'IC卡管理'
-  //   }
-  // },
+  {
+    path: '/ic/manage/:cardId',
+    name: 'ic-list-manage',
+    component: () => import(/* webpackChunkName: "ic-list-manage" */ '../views/ic/ic-list-manage/index.vue'),
+    meta: {
+      title: 'IC卡管理'
+    }
+  },
   {
     path: '/ic/record/:id',
     name: 'ic-consume-record',
@@ -103,6 +103,22 @@ const routes = [
     component: () => import(/* webpackChunkName: "member-list-manage" */ '../views/member/member-list-manage/index.vue'),
     meta: {
       title: '会员管理'
+    }
+  },
+  {
+    path: '/member/record/:id',
+    name: 'member-consume-record',
+    component: () => import(/* webpackChunkName: "member-consume-record" */ '../views/member/member-consume-record/index.vue'),
+    meta: {
+      title: '会员消费记录'
+    }
+  },
+  {
+    path: '/area/list',
+    name: 'area-list',
+    component: () => import(/* webpackChunkName: "area-list" */ '../views/area/area-list/index.vue'),
+    meta: {
+      title: '小区列表'
     }
   }
 ]

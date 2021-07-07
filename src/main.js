@@ -11,7 +11,7 @@ import HdTitle from '@/components/hd-title'
 import loadingIndex from '@/components/hd-loading/loadingIndex'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
-Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar
+Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area
 } from 'vant'
 
 Vue.use(loadingIndex)
@@ -40,6 +40,7 @@ Vue.use(Toast)
 Vue.use(ActionSheet)
 Vue.use(Popup)
 Vue.use(Calendar)
+Vue.use(Area)
 
 Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })

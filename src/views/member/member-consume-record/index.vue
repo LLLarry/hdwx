@@ -1,5 +1,5 @@
 <template>
-    <div class="ic-consume-record position-relative bg-gray overflow-hidden">
+    <div class="member-consume-record position-relative bg-gray overflow-hidden">
         <!-- 顶部操作 -->
         <div class="header bg-white shadow position-absolute padding-bottom-1">
             <!--
@@ -13,7 +13,7 @@
                 <van-search
                     class="flex-1"
                     v-model="keywords"
-                    placeholder="请输入搜索关键词"
+                    placeholder="请输入订单编号"
                 />
                 <van-button type="default" class="search-btn margin-left-2 text-success" @click="searchOrder">搜索</van-button>
             </div>
@@ -90,10 +90,10 @@
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
                             <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
                                 <div class="">
-                                    <div class="font-weight-bold text-000 text-size-default card-num">A56EB912</div>
+                                    <div class="font-weight-bold text-000 text-size-default card-num">00023656</div>
                                 </div>
                                 <van-tag v-if="item.status === 1" type="primary">充值订单</van-tag>
-                                <van-tag v-else-if="item.status === 2" type="success">余额回收订单</van-tag>
+                                <van-tag v-else-if="item.status === 2" type="success">部分退费订单</van-tag>
                                 <van-tag v-else-if="item.status === 3" type="danger">消费订单</van-tag>
                                 <van-tag v-else-if="item.status === 4" type="warning">虚拟充值订单</van-tag>
                             </div>
@@ -107,7 +107,7 @@
                                 <span class="card-item-title text-333">
                                 {{
                                     item.status === 1 ? '充值到账' :
-                                    item.status === 2 ? '回收到账' :
+                                    item.status === 2 ? '部分退费' :
                                     item.status === 3 ? '消费金额' :
                                     item.status === 4 ? '充值到账' : ''
                                 }}：</span>
@@ -289,7 +289,7 @@ export default {
 </script>
 
 <style lang="scss">
-.ic-consume-record {
+.member-consume-record {
     height: 100vh;
     .header {
         width: 100%;

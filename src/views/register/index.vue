@@ -11,12 +11,13 @@
 
 <script>
 import ajax from '@/require/ajax'
+// const baseUrl = process.env.NODE_ENV === 'production' ? '' : '/api'
 export default {
     methods: {
         onSave ({ tel, name }) {
             // console.log(content)
             ajax({
-                url: '/api/webenter/accountEnter',
+                url: '/webenter/accountEnter',
                 method: 'post',
                 data: {
                     phone: tel,

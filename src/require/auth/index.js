@@ -1,5 +1,4 @@
 import ajax from '../ajax'
-
 /**
  * 发送微信返回的Code交给后台验证
  * @param {*} data { code: String }
@@ -15,7 +14,7 @@ export const sendCodeAndgetUserInfo = (data) => {
 
 export const getAjaxEquList = (data, loadText) => {
     return ajax({
-        url: '/api/equipment/getAjaxEquList',
+        url: '/equipment/getAjaxEquList',
         method: 'post',
         data,
         loadText

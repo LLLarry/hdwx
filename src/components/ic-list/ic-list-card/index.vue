@@ -44,8 +44,8 @@
             </hd-card-item>
         </hd-card>
         <div class="bottom padding-x-2 padding-bottom-2 d-flex justify-content-end" v-if="from === 1">
-            <van-button type="primary" size="mini" class="margin-right-1" plain round :url="`/ic/manage/${value.cardID}`">管理此卡</van-button>
-            <van-button type="info" size="mini" class="margin-right-1" :url="`/ic/record/${value.cardID}`" plain round >消费记录</van-button>
+            <van-button type="primary" size="mini" class="margin-right-1" plain round :to="`/ic/manage/${value.cardID}`">管理此卡</van-button>
+            <van-button type="info" size="mini" class="margin-right-1" :to="`/ic/record/${value.cardID}`" plain round >消费记录</van-button>
             <van-button type="warning" size="mini" plain round>更改状态</van-button>
         </div>
     </div>

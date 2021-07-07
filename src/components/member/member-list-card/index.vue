@@ -36,8 +36,8 @@
             </hd-card-item>
         </hd-card>
         <div class="bottom padding-x-2 padding-bottom-2 d-flex justify-content-end" v-if="from === 1">
-            <van-button type="primary" size="mini" class="margin-right-1" plain round :url="`/member/manage/${value.id}?aid=${value.aid}&wallerid=${value.wallerid}`">管理会员</van-button>
-            <van-button type="info" size="mini" class="margin-right-1" plain round >消费记录</van-button>
+            <van-button type="primary" size="mini" class="margin-right-1" plain round :to="`/member/manage/${value.id}?aid=${value.aid}&wallerid=${value.wallerid}`">管理会员</van-button>
+            <van-button type="info" size="mini" class="margin-right-1" plain round :to="`/member/record/${value.id}`">消费记录</van-button>
             <van-button type="warning" size="mini" plain round @click="$emit('changeArea', value)">更改小区</van-button>
         </div>
     </div>

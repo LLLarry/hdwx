@@ -45,8 +45,10 @@ export default {
         margin-right: 0;
     }
     &.active {
-        background: #EBF1FF;
-        color: #1989fa;
+        // background: #EBF1FF;
+        background: #dff9eb;
+        // color: #1989fa;
+        color: #07c160;
     }
 }
 </style>
