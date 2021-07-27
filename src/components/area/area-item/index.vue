@@ -48,7 +48,7 @@
            </span>
         </hd-card-item>
         <div class="area-contral d-flex justify-content-end w-100 margin-top-1">
-            <van-button type="primary" size="small">管理</van-button>
+            <van-button type="primary" size="small" @click="$router.push(`/area/manage/${value.value}`)">管理</van-button>
             <van-button type="primary" size="small">统计</van-button>
         </div>
     </hd-card>

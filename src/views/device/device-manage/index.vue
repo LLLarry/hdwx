@@ -20,6 +20,14 @@
         />
       </van-grid>
     </div>
+    <!-- 设备二维码 -->
+    <hd-overlay :show="deviceQRcode" title="设备二维码" @close="deviceQRcode = false">
+      <div>
+        <hd-qrcode :qrcode="qrcode" v-if="deviceQRcode" />
+        <p class="text-center text-size-sm text-666">长按识别或保存二维码</p>
+      </div>
+    </hd-overlay>
+
     <!-- 更换模块 -->
     <hd-overlay :show="changeModel" title="更换模块" @close="changeModel = false">
       <div class="text-center text-size-sm">
@@ -62,6 +70,8 @@
 
 <script>
 import hdOverlay from '@/components/hd-overlay'
+import hdQrcode from '@/components/hd-qrcode'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -75,25 +85,49 @@ export default {
         { title: '断开重连', icon: require('../../../assets/images/home_09.png') }
       ],
       changeModel: false, // 更换模块
-      disconnect: false
+      disconnect: false,
+      deviceQRcode: false, // 设备二维码
+      qrcode: {
+        value: '9965465465sadsaswwwaad',
+        key: 1,
+        size: 220, // 二维码大小
+        title: '设备： 000130'
+      }
     }
   },
   components: {
-    hdOverlay
+    hdOverlay,
+    hdQrcode
+  },
+  computed: {
+    ...mapState(['global'])
   },
   methods: {
     handleClick (title) {
+      console.log(this.global)
       switch (title) {
-        case '设备二维码': break
-        case '端口二维码': break
-        case '收费模板': break
+        case '设备二维码':
+          this.qrcode = {
+          value: '9965465465sadsaswwwaad',
+          key: 1,
+          size: this.global.clientWidth * 0.6, // 二维码大小
+          title: '设备： 000130'
+        }
+          this.deviceQRcode = true
+          break
+        case '端口二维码':
+          this.$router.push({ path: '/device/portqrcode/' + this.code })
+        break
+        case '收费模板':
+          this.$router.push({ path: '/template/v3/' + this.code })
+        break
         case '系统参数': break
         case '更换模块':
           this.changeModel = true
-        break
+          break
         case '断开重连':
           this.disconnect = true
-        break
+          break
       }
     }
   }

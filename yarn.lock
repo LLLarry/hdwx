@@ -2043,6 +2043,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npm.taobao.org/balanced-match/download/balanced-match-1.0.2.tgz?cache=0&sync_timestamp=1617714298273&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbalanced-match%2Fdownload%2Fbalanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha1-6D46fj8wCzTLnYf2FfoMvzV2kO4=
 
+base64-arraybuffer@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npm.taobao.org/base64-arraybuffer/download/base64-arraybuffer-0.2.0.tgz#4b944fac0191aa5907afe2d8c999ccc57ce80f45"
+  integrity sha1-S5RPrAGRqlkHr+LYyZnMxXzoD0U=
+
 base64-js@^1.0.2:
   version "1.5.1"
   resolved "https://registry.npm.taobao.org/base64-js/download/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -3006,6 +3011,13 @@ css-declaration-sorter@^4.0.1:
   dependencies:
     postcss "^7.0.1"
     timsort "^0.3.0"
+
+css-line-break@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.nlark.com/css-line-break/download/css-line-break-1.1.1.tgz?cache=0&sync_timestamp=1626349215174&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcss-line-break%2Fdownload%2Fcss-line-break-1.1.1.tgz#d5e9bdd297840099eb0503c7310fd34927a026ef"
+  integrity sha1-1em90peEAJnrBQPHMQ/TSSegJu8=
+  dependencies:
+    base64-arraybuffer "^0.2.0"
 
 css-loader@^3.5.3:
   version "3.6.0"
@@ -4732,6 +4744,13 @@ html-webpack-plugin@^3.2.0:
     tapable "^1.0.0"
     toposort "^1.0.0"
     util.promisify "1.0.0"
+
+html2canvas@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.nlark.com/html2canvas/download/html2canvas-1.1.4.tgz#53ae91cd26e9e9e623c56533cccb2e3f57c8124c"
+  integrity sha1-U66RzSbp6eYjxWUzzMsuP1fIEkw=
+  dependencies:
+    css-line-break "1.1.1"
 
 htmlparser2@^6.1.0:
   version "6.1.0"
@@ -7255,6 +7274,11 @@ q@^1.1.2:
   resolved "https://registry.nlark.com/q/download/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
+qrious@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npm.taobao.org/qrious/download/qrious-4.0.2.tgz#09c4d4079d2b961617f62c69cff3b9bb66a39693"
+  integrity sha1-CcTUB50rlhYX9ixpz/O5u2ajlpM=
+
 qs@6.7.0:
   version "6.7.0"
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
@@ -8965,6 +8989,15 @@ vue-navigation@^1.1.4:
   resolved "https://registry.npm.taobao.org/vue-navigation/download/vue-navigation-1.1.4.tgz#be990190624647daa34b8cd525fad4fb6d472542"
   integrity sha1-vpkBkGJGR9qjS4zVJfrU+21HJUI=
 
+vue-qrcode2@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.nlark.com/vue-qrcode2/download/vue-qrcode2-0.0.1.tgz#cd5ec96c3bddc33e7335f42f05bf81091f55c425"
+  integrity sha1-zV7JbDvdwz5zNfQvBb+BCR9VxCU=
+  dependencies:
+    object-assign "^4.1.1"
+    qrious "^4.0.2"
+    vue "2.4.4"
+
 vue-router@^3.2.0:
   version "3.5.2"
   resolved "https://registry.nlark.com/vue-router/download/vue-router-3.5.2.tgz?cache=0&sync_timestamp=1624286995690&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue-router%2Fdownload%2Fvue-router-3.5.2.tgz#5f55e3f251970e36c3e8d88a7cd2d67a350ade5c"
@@ -8995,6 +9028,11 @@ vue-wechat-title@^2.0.7:
   version "2.0.7"
   resolved "https://registry.npm.taobao.org/vue-wechat-title/download/vue-wechat-title-2.0.7.tgz#6ad4ca49fb2e7bcd0f1eed0a5fdcbe9461b2946b"
   integrity sha1-atTKSfsue80PHu0KX9y+lGGylGs=
+
+vue@2.4.4:
+  version "2.4.4"
+  resolved "https://registry.nlark.com/vue/download/vue-2.4.4.tgz#ea9550b96a71465fd2b8b17b61673b3561861789"
+  integrity sha1-6pVQuWpxRl/SuLF7YWc7NWGGF4k=
 
 vue@^2.6.11:
   version "2.6.14"

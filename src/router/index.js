@@ -66,6 +66,14 @@ const routes = [
     }
   },
   {
+    path: '/device/portqrcode/:code',
+    name: 'device-port-qrcode',
+    component: () => import(/* webpackChunkName: "device-port-qrcode" */ '../views/device/device-port-qrcode/index.vue'),
+    meta: {
+      title: '设备端口二维码'
+    }
+  },
+  {
     path: '/ic/list',
     name: 'ic-list',
     component: () => import(/* webpackChunkName: "ic-list" */ '../views/ic/ic-list/index.vue'),
@@ -119,6 +127,22 @@ const routes = [
     component: () => import(/* webpackChunkName: "area-list" */ '../views/area/area-list/index.vue'),
     meta: {
       title: '小区列表'
+    }
+  },
+  {
+    path: '/area/manage/:id',
+    name: 'area-manage',
+    component: () => import(/* webpackChunkName: "area-manage" */ '../views/area/area-manage/index.vue'),
+    meta: {
+      title: '小区管理'
+    }
+  },
+  {
+    path: '/template/v3/:code',
+    name: 'template-v3',
+    component: () => import(/* webpackChunkName: "template-v3" */ '../views/template/v3Template/index.vue'),
+    meta: {
+      title: 'v3收费模板'
     }
   }
 ]

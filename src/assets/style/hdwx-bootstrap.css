@@ -45,6 +45,9 @@
 .text-999 {
   color: #999999;
 }
+.text-p {
+  color: #8f8f94;
+}
 
 .text-white {
   color: #fff;
@@ -171,7 +174,27 @@
  .border-info {
  	 border-color: #17a2b8;
  }
- 
+ .border-333 {
+  border-color: #333;
+ }
+ .border-666 {
+  border-color: #666;
+ }
+ .border-999 {
+  border-color: #999;
+ }
+ .border-ccc {
+  border-color: #ccc;
+ }
+ .border-ddd {
+  border-color: #ddd;
+ }
+ .border-eee {
+  border-color: #eee;
+ }
+ .outline-none {
+   outline: none;
+ }
  /* 3.2、边框圆角 */ 
  .rounded {
      border-radius: 0.25em;
@@ -618,6 +641,12 @@
 
  .shadow {
   box-shadow: 0 2px 12px rgba(100, 101, 102, 0.12);
+ }
+ .shadow-md {
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.24);
+ }
+ .shadow-lg {
+  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.36);
  }
 
  .h-25 {

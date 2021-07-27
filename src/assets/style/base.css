@@ -17,6 +17,7 @@ table { border-collapse:collapse; border-spacing:0; }
 html,body {
     width: 100%;
     height: 100%;
+    user-select: none;
 }
 
 .clearfix:before,
@@ -43,6 +44,12 @@ html,body {
 /* element Bug样式 */
 body .el-table__fixed-right::before, body  .el-table__fixed::before {
     height: 0px;
+}
+
+input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
 }
 
 /* * { touch-action: pan-y;touch-action: none; } */

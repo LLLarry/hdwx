@@ -9,9 +9,12 @@ import Navigation from 'vue-navigation'
 import HdLine from '@/components/hd-line'
 import HdTitle from '@/components/hd-title'
 import loadingIndex from '@/components/hd-loading/loadingIndex'
+import '@/components/directive/hd-skeleton'
+import qrcode from 'vue-qrcode2'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
-Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area
+Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
+RadioGroup, Radio, Switch
 } from 'vant'
 
 Vue.use(loadingIndex)
@@ -41,12 +44,25 @@ Vue.use(ActionSheet)
 Vue.use(Popup)
 Vue.use(Calendar)
 Vue.use(Area)
+Vue.use(NavBar)
+Vue.use(Sticky)
+Vue.use(Empty)
+Vue.use(Skeleton)
+Vue.use(Divider)
+Vue.use(Stepper)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(RadioGroup)
+Vue.use(Radio)
+Vue.use(Switch)
 
 Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })
 Vue.component('hd-line', HdLine)
 Vue.component('hd-title', HdTitle)
 Vue.use(require('vue-wechat-title'))
+
+Vue.use(qrcode)
 
 new Vue({
   router,
