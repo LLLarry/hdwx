@@ -8,6 +8,7 @@
                 label="模板名称："
                 placeholder="请输入模板名称"
                 :rules="[{ required: true, message: '请填写用户名' }]"
+                :disabled="isSystemTem"
             />
         </div>
     </li>
@@ -18,7 +19,7 @@
                 name="remark"
                 label="品牌名称："
                 placeholder="请输入品牌名称"
-                :rules="[{ required: true, message: '请填写用户名' }]"
+                :disabled="isSystemTem"
             />
         </div>
     </li>
@@ -29,7 +30,7 @@
                 name="common2"
                 label="联系电话："
                 placeholder="请输入联系电话"
-                :rules="[{ required: true, message: '请填写用户名' }]"
+                :disabled="isSystemTem"
             />
         </div>
     </li>
@@ -43,6 +44,12 @@ export default {
             type: Object,
             default: () => {}
         }
+    },
+    computed: {
+      // 是否是系统模板
+      isSystemTem () {
+        return this.data.merchantid === 0
+      }
     }
 }
 </script>

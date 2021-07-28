@@ -6,7 +6,7 @@ import ajax from '../ajax'
  */
 export const sendCodeAndgetUserInfo = (data) => {
     return ajax({
-        url: '/allowInterface/getAccountInfo',
+        url: '/mobileMerchant/getDealAccountInfo',
         method: 'post',
         data
     })

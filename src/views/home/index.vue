@@ -101,6 +101,7 @@
 
 <script>
     // import { Notify } from 'vant'
+    import { getDealHomePageData } from '@/require/home'
     export default {
         data () {
             return {
@@ -118,15 +119,34 @@
                 ],
                 isShowIcon: true // 是否显示投币收益
             }
+        },
+        mounted () {
+            // setTimeout(() => {
+            //     Notify({
+            //         type: 'primary',
+            //         message: '当前数据非最新数据，如想查看最新数据，请点击下方“”按钮'
+            //     })
+            // }, 2000)
+            // this.$dialog.alert({
+            //     title: '提示',
+            //     message: JSON.stringify(this.$store.state),
+            //     beforeClose (action, done) {
+            //         done()
+            //         wx.closeWindow()
+            //     }
+            // })
+            this.getInitData()
+        },
+        methods: {
+            async getInitData (data) {
+                try {
+                    const { code, message, ...result } = await getDealHomePageData(data)
+                    alert(JSON.stringify(result))
+                } catch (e) {
+                    alert(message)
+                }
+            }
         }
-        // mounted () {
-        //     setTimeout(() => {
-        //         Notify({
-        //             type: 'primary',
-        //             message: '当前数据非最新数据，如想查看最新数据，请点击下方“”按钮'
-        //         })
-        //     }, 2000)
-        // }
     }
 </script>
 

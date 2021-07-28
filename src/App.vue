@@ -3,11 +3,15 @@
       <navigation>
         <transition
           mode="out-in"
+          v-if="$route.meta.title !== '授权页'"
         >
           <router-view v-slot="Component" v-wechat-title="$route.meta.title">
             <components :is="Component" />
           </router-view>
         </transition>
+        <router-view v-slot="Component" v-wechat-title="$route.meta.title" v-else>
+          <components :is="Component" />
+        </router-view>
       </navigation>
 
       <van-tabbar v-model="active" v-if="showTabBar">

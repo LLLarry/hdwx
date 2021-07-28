@@ -21,6 +21,7 @@
 </template>
 <script>
 import { sendCodeAndgetUserInfo } from '@/require/auth'
+import { mapMutations } from 'vuex'
 export default {
     created () {
         const code = this.$route.query.code
@@ -34,11 +35,26 @@ export default {
                 wx.closeWindow()
             })
         }
+        console.log(this.$router)
     },
     methods: {
+        ...mapMutations(['setUser']),
        async asySendCodeAndgetUserInfo (code) {
-           const { code: status, message } = await sendCodeAndgetUserInfo({ code })
-           alert(JSON.stringify({ status, message }))
+           const { code: status, message, dealuser, openid } = await sendCodeAndgetUserInfo({ code })
+        //    alert(JSON.stringify({ ...dealuser, openid }))
+           if (status === 200) {
+               this.setUser({ ...dealuser, openid })
+               this.$router.replace({ path: '/' })
+           } else {
+                this.$dialog.alert({
+                    title: '验证失败',
+                    message,
+                    beforeClose (action, done) {
+                        done()
+                        wx.closeWindow()
+                    }
+                })
+           }
        }
     }
 }

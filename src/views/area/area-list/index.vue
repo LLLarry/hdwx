@@ -77,13 +77,15 @@ export default {
                     list: [],
                     status: 1, // 0 正在加载中 1 空闲状态 2 更多数据
                     currentPage: 1, // 当前页数
-                    scroll: null // 滚动实例
+                    scroll: null, // 滚动实例
+                    leaveScrollY: 0 // 离开时滚动的距离
                 },
                 {
                     list: [],
                     status: 1, //  0 正在加载中 1 空闲状态 2 更多数据
                     currentPage: 1, // 当前页数
-                    scroll: null // 滚动实例
+                    scroll: null, // 滚动实例
+                    leaveScrollY: 0 // 离开时滚动的距离
                 }
             ],
             addAreaIsShow: false
@@ -106,6 +108,31 @@ export default {
                 webkitTransform: value
             }
         }
+    },
+    watch: {
+        // 监听路由的变化，当前路由调回来的时候将存储的位置信息重新赋值回来
+        $route: {
+            handler (value) {
+                if (this.source[0].scroll) {
+                    this.source[0].scroll.refresh()
+                    this.source[0].scroll.scrollTo(0, this.source[0].leaveScrollY, 0, undefined, {})
+                }
+                if (this.source[1].scroll) {
+                    this.source[1].scroll.refresh()
+                    this.source[1].scroll.scrollTo(0, this.source[1].leaveScrollY, 0, undefined, {})
+                }
+            }
+        }
+    },
+    // 在页面跳出之前存储当前滚动实例滚动的位置
+    beforeRouteLeave (to, from, next) {
+        if (this.source[0].scroll) {
+            this.source[0].leaveScrollY = this.source[0].scroll.y
+        }
+        if (this.source[1].scroll) {
+            this.source[1].leaveScrollY = this.source[1].scroll.y
+        }
+        next()
     },
     methods: {
         async pullingUpFn ({ scroll, index }) {
