@@ -11,6 +11,7 @@ import HdTitle from '@/components/hd-title'
 import loadingIndex from '@/components/hd-loading/loadingIndex'
 import '@/components/directive/hd-skeleton'
 import qrcode from 'vue-qrcode2'
+import '@/filter'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,

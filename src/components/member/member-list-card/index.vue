@@ -5,11 +5,12 @@
                 width="45"
                 height="45"
                 :src="cardUrl"
+                class="rounded-circle overflow-hidden"
             />
             <div class="flex-1 margin-left-2 d-flex justify-content-between align-items-center">
                 <div class="">
                     <div class="font-weight-bold text-000 text-size-default card-num">{{value.nick}}</div>
-                    <div>{{value.id.toString().padStart(8, '0')}}</div>
+                    <div>{{value.uid && value.uid.toString().padStart(8, '0')}}</div>
                 </div>
             </div>
         </div>
@@ -24,7 +25,7 @@
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">绑定人：</span>
-                <span class="card-item-content text-666">{{value.nick}}</span>
+                <span class="card-item-content text-666">{{value.username}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">电话：</span>
@@ -32,12 +33,18 @@
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">归属小区：</span>
-                <span class="card-item-content text-666">{{value.arename}}</span>
+                <span class="card-item-content text-666">{{value.areaname}}</span>
             </hd-card-item>
         </hd-card>
         <div class="bottom padding-x-2 padding-bottom-2 d-flex justify-content-end" v-if="from === 1">
-            <van-button type="primary" size="mini" class="margin-right-1" plain round :to="`/member/manage/${value.id}?aid=${value.aid}&wallerid=${value.wallerid}`">管理会员</van-button>
-            <van-button type="info" size="mini" class="margin-right-1" plain round :to="`/member/record/${value.id}`">消费记录</van-button>
+            <van-button
+                type="primary"
+                size="mini"
+                class="margin-right-1"
+                plain round
+                :to="`/member/manage/${value.uid}?aid=${value.aid === void 0 ? '' : value.aid}&walletid=${value.walletid === void 0 ? '' : value.walletid}`"
+            >管理会员</van-button>
+            <van-button type="info" size="mini" class="margin-right-1" plain round :to="`/member/record/${value.uid}?aid=${value.aid === void 0 ? '' : value.aid}`">消费记录</van-button>
             <van-button type="warning" size="mini" plain round @click="$emit('changeArea', value)">更改小区</van-button>
         </div>
     </div>
@@ -55,9 +62,9 @@ export default {
             default: 1 // 1 默认从列表中传值， 2 从管理中传值
         }
     },
-    data () {
-        return {
-            cardUrl: require('@/assets/images/home_02.png')
+    computed: {
+        cardUrl () {
+            return this.value.headimgurl ? this.value.headimgurl : require('@/assets/images/home_02.png')
         }
     },
     components: {

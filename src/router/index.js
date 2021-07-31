@@ -144,6 +144,14 @@ const routes = [
     meta: {
       title: 'v3收费模板'
     }
+  },
+  {
+    path: '/device/templatelist/:code',
+    name: 'device-template-list',
+    component: () => import(/* webpackChunkName: "device-template-list" */ '../views/device/deivce-template-list/index.vue'),
+    meta: {
+      title: '模板列表'
+    }
   }
 ]
 // process.env.BASE_URL

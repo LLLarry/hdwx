@@ -39,23 +39,14 @@
 <script>
 import memberListCard from '@/components/member/member-list-card'
 import { getType } from '@/utils/util'
+import { skipVirtualTopupPage, virtualPayMoney } from '@/require/member'
 export default {
     data () {
         return {
-            member: {
-                address: '开元路',
-                aid: 2193,
-                arename: '洛阳悦府',
-                cellphone: '15137984005',
-                id: 743756,
-                nick: '闫宇航',
-                role: 5,
-                rolename: '一级游客',
-                sendmoney: 0,
-                topupmoney: 673,
-                wallerid: 743756,
-                walletid: 743756
-            },
+            uid: '', // 用户id
+            aid: '', // 小区id
+            walletid: '', // 钱包id
+            member: {},
             virtual: {}, // 虚拟充值容器
             deleteUrl: require('../../../assets/images/delete_icon.png'),
             deleteUserOnCrad: false, // 解绑用户
@@ -63,11 +54,44 @@ export default {
         }
     },
     mounted () {
+        this.uid = this.$route.params.id
+        this.aid = this.$route.query.aid
+        this.walletid = this.$route.query.walletid
+        this.handleGetInitData({
+            id: this.uid,
+            aid: this.aid,
+            walletid: this.walletid,
+            type: 1 // 1 虚拟充值钱包
+        })
     },
     components: {
         memberListCard
     },
     methods: {
+        async handleGetInitData (data) {
+            try {
+                const { code, message, result } = await skipVirtualTopupPage(data)
+                if (code === 200) {
+                    const { id: uid, headimgurl, balance: topupmoney, sendmoney, username, realname, phoneNum: cellphone } = result.order
+                    const { id: aid, name: areaname } = result.areadata
+                    this.member = {
+                        aid,
+                        areaname,
+                        cellphone,
+                        headimgurl,
+                        realname,
+                        sendmoney,
+                        topupmoney,
+                        uid,
+                        username
+                    }
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
+            }
+        },
         handleVirtual (money, sendmoney) {
             this.virtual = {
                 money: money.toString(),
@@ -90,7 +114,8 @@ export default {
             }
             money = money === '空字符串' ? 0 : money
             sendmoney = sendmoney === '空字符串' ? 0 : sendmoney
-            alert(`${money},${sendmoney}`)
+            // alert(`${money},${sendmoney}`)
+            this.virtualPayMoneyFn({ money, sendmoney, type: 1, id: this.uid, aid: this.aid, walletid: this.walletid })
         },
         verifiMoney (money) {
             // eslint-disable-next-line no-debugger
@@ -114,6 +139,20 @@ export default {
                 return '空字符串'
             } else {
                 return '为非法数字'
+            }
+        },
+        async virtualPayMoneyFn (data) {
+            try {
+                const { code, message, result } = await virtualPayMoney(data, '虚拟充值中')
+                if (code === 200) {
+                    this.$toast('虚拟充值成功')
+                    this.$set(this.member, 'topupmoney', result.topupbalance)
+                    this.$set(this.member, 'sendmoney', result.sendbalance)
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
             }
         }
     }

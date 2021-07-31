@@ -1,6 +1,8 @@
 import axios from 'axios'
 import Qs from 'qs'
 import Vue from 'vue'
+import { Dialog } from 'vant'
+import store from '@/store'
 
 const api = process.env.NODE_ENV === 'production' ? '' : '/api'
 const baseURL = process.env.NODE_ENV === 'production' ? 'http://www.tengfuchong.com.cn' : ''
@@ -25,6 +27,17 @@ server.interceptors.request.use(config => {
 })
 
 server.interceptors.response.use(response => {
+    if (response.data.code === 90001) { // 缓存失效
+        store.commit('resetState')
+        Dialog.alert({
+            title: '提示',
+            message: HDWX.WECHAT_BROWSER_ENV ? '登录已过期，请重新打开管理系统' : '登录已过期',
+            beforeClose (action, done) {
+                done()
+                wx.closeWindow()
+            }
+        })
+    }
     return response
 }, error => {
     Promise.reject(error)

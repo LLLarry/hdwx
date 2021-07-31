@@ -12,14 +12,14 @@
             <div class="search-form d-flex justify-content-between align-items-center">
                 <van-search
                     class="flex-1"
-                    v-model="keywords"
+                    v-model="ordernum"
                     placeholder="请输入订单编号"
                 />
                 <van-button type="default" class="search-btn margin-left-2 text-success" @click="searchOrder">搜索</van-button>
             </div>
             <div class="d-flex justify-content-between align-items-center padding-x-3 padding-y-2">
                 <div @click="showCalendar = !showCalendar" class="d-flex align-items-center"><span>查询日期</span> <van-icon name="arrow-down" /></div>
-                <div @click="showCalendar = !showCalendar">{{searchTime.start}} ~ {{searchTime.end}}</div>
+                <div @click="showCalendar = !showCalendar">{{searchTime.startTime}} ~ {{searchTime.endTime}}</div>
                 <div class="text-success" @click="slideMenuIsShow=!slideMenuIsShow">筛选<i class="iconfont icon-shaixuan margin-left-1" ></i></div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                         </hd-select-box-item>
                     </hd-select-box>
                 </div>
-                <div v-show="payTypeIsShow">
+                <div v-show="false">
                     <hd-title>
                     支付类型
                     </hd-title>
@@ -75,7 +75,7 @@
             type="range"
             :min-date="new Date('2018-01-01')"
             :max-date="new Date"
-            :default-date="[new Date(searchTime.start), new Date(searchTime.end)]"
+            :default-date="[new Date(searchTime.startTime), new Date(searchTime.endTime)]"
             color="#07c160"
             @confirm="onConfirmCalendar"
         />
@@ -92,10 +92,11 @@
                                 <div class="">
                                     <div class="font-weight-bold text-000 text-size-default card-num">00023656</div>
                                 </div>
-                                <van-tag v-if="item.status === 1" type="primary">充值订单</van-tag>
-                                <van-tag v-else-if="item.status === 2" type="success">部分退费订单</van-tag>
-                                <van-tag v-else-if="item.status === 3" type="danger">消费订单</van-tag>
-                                <van-tag v-else-if="item.status === 4" type="warning">虚拟充值订单</van-tag>
+                                <van-tag v-if="item.paysource === 1" type="primary">充值订单</van-tag>
+                                <van-tag v-else-if="item.paysource === 2 || item.paysource === 3" type="danger">消费订单</van-tag>
+                                <van-tag v-else-if="item.paysource === 5" type="success">部分退费订单</van-tag>
+                                <van-tag v-else-if="item.paysource === 7" type="warning">虚拟充值订单</van-tag>
+                                <van-tag v-else-if="item.paysource === 6 || tem.paysource === 8" type="success">钱包退款订单</van-tag>
                             </div>
                         </div>
                         <hd-card class="padding-2 text-size-sm">
@@ -106,28 +107,30 @@
                             <hd-card-item>
                                 <span class="card-item-title text-333">
                                 {{
-                                    item.status === 1 ? '充值到账' :
-                                    item.status === 2 ? '部分退费' :
-                                    item.status === 3 ? '消费金额' :
-                                    item.status === 4 ? '充值到账' : ''
+                                    item.paysource === 1 ? '充值到账' :
+                                    (item.paysource === 2 || item.paysource === 3) ? '消费金额' :
+                                    item.paysource === 5 ? '部分退费' :
+                                    item.paysource === 6 ? '充值退款' :
+                                    item.paysource === 7 ? '虚拟充值' :
+                                    item.paysource === 8 ? '虚拟退款' : ''
                                 }}：</span>
-                                <span class="card-item-content text-666">{{item.handleMoney}}元</span>
+                                <span class="card-item-content text-666">{{item.accountmoney | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">所属用户：</span>
                                 <span class="card-item-content text-666">{{item.username}}</span>
                             </hd-card-item>
                             <hd-card-item>
-                                <span class="card-item-title text-333">充值金额：</span>
-                                <span class="card-item-content text-666">{{item.money}}元</span>
+                                <span class="card-item-title text-333">充值余额：</span>
+                                <span class="card-item-content text-666">{{item.topupbalance | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
-                                <span class="card-item-title text-333">赠送金额：</span>
-                                <span class="card-item-content text-666">{{item.sendmoney}}元</span>
+                                <span class="card-item-title text-333">赠送余额：</span>
+                                <span class="card-item-content text-666">{{item.sendbalance | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">创建时间：</span>
-                                <span class="card-item-content text-666">{{item.createTime}}</span>
+                                <span class="card-item-content text-666">{{item.create_time | fmtDate}}</span>
                             </hd-card-item>
                         </hd-card>
                     </div>
@@ -138,22 +141,24 @@
     </div>
 </template>
 <script>
-import { fmtDate } from '@/utils/util'
+import { fmtDate, dateRange } from '@/utils/util'
 import hdSelectBox from '@/components/hd-select-box'
 import hdSelectBoxItem from '@/components/hd-select-box-item'
 import hdCard from '@/components/hd-card'
 import hdCardItem from '@/components/hd-card-item'
 import hdScroll from '@/components/hd-scroll'
 import hdBottom from '@/components/hd-bottom'
-import { icConsumeRecord } from '@/require/mock'
-const MAX_LENGTH = 10
+import { inquireMemberRecord } from '@/require/member'
+const LIMIT = 10
 export default {
     data () {
+        const range = dateRange(new Date(), 30, 'YYYY/MM/DD')
         return {
-            cardUrl: require('@/assets/images/home_02.png'),
+            uid: '',
+            aid: '',
             scroll: null,
             currentPage: 1,
-            keywords: '',
+            ordernum: '',
             slideMenuIsShow: false, // 侧边菜单是否显示
             orderType: [
                 { text: '全部', value: 1 },
@@ -170,8 +175,8 @@ export default {
             selectPayType: 1,
             showCalendar: false,
             searchTime: {
-                start: fmtDate(new Date('2021-06-01'), 'YYYY/MM/DD'),
-                end: fmtDate(new Date(), 'YYYY/MM/DD')
+                startTime: range[0],
+                endTime: range[1]
             },
             list: [],
             status: 1, // 0 正在加载中 1 空闲状态 2 暂无更多数据
@@ -179,14 +184,21 @@ export default {
         }
     },
     mounted () {
-        this.gatConsumeRecord({ }, true)
-    },
-    computed: {
-        // 筛选支付方式是否显示
-        payTypeIsShow () {
-            return this.selectOrderType === 2
+        // 初始化数据
+        this.uid = this.$route.params.id
+        this.aid = this.$route.query.aid
+        this.searchForm = {
+            ordertype: this.selectOrderType,
+            ...this.searchTime
         }
+        this.gatConsumeRecord({ ...this.searchForm, uid: this.uid, aid: this.aid }, true)
     },
+    // computed: {
+    //     // 筛选支付方式是否显示
+    //     payTypeIsShow () {
+    //         return this.selectOrderType === 2
+    //     }
+    // },
     components: {
         hdSelectBox,
         hdSelectBoxItem,
@@ -204,13 +216,18 @@ export default {
         },
         // 确认选择日期
         onConfirmCalendar ([startDate, endDate]) {
-            const start = fmtDate(startDate, 'YYYY/MM/DD')
-            const end = fmtDate(endDate, 'YYYY/MM/DD')
+            const startTime = fmtDate(startDate, 'YYYY/MM/DD')
+            const endTime = fmtDate(endDate, 'YYYY/MM/DD')
             this.searchTime = {
-                start,
-                end
+                startTime,
+                endTime
             }
             this.showCalendar = false
+            this.searchForm = {
+                ordertype: this.selectOrderType,
+                ...this.searchTime
+            }
+            this.gatConsumeRecord({ ...this.searchForm, uid: this.uid, aid: this.aid }, true)
         },
         async gatConsumeRecord (data, init = false) {
             if (init) {
@@ -220,19 +237,20 @@ export default {
             }
             try {
                 this.status = 0
-                const { code, list, message } = await icConsumeRecord({
+                const { code, result, message } = await inquireMemberRecord({
                     ...data,
-                    currentPage: this.currentPage
+                    currentPage: this.currentPage,
+                    limit: LIMIT
                 })
                 if (code === 200) {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
                     if (init) {
-                        this.list = list
+                        this.list = result.consumeinfo
                     } else {
-                        this.list = [...this.list, ...list]
+                        this.list = [...this.list, ...result.consumeinfo]
                     }
                     // 更改状态，看是否还有数据
-                    if (list.length >= MAX_LENGTH) {
+                    if (result.consumeinfo.length >= LIMIT) {
                         this.status = 1
                     } else {
                         this.status = 2
@@ -241,15 +259,18 @@ export default {
                     this.$toast(message)
                 }
             } catch (e) {
-                console.log(e)
+                this.$toast('异常错误')
             } finally {
-                if (init) {
-                    // 初始化加载的时候刷新滚动对象，并滚动到起始位置
-                    this.scroll && this.scroll.refresh()
-                    this.scroll.scrollTo(0, 0, 0, undefined, {})
-                } else {
-                    // 非初始化加载完成的时候完成上啦加载操作
-                    this.scroll && this.scroll.finishPullUp()
+                if (this.scroll) {
+                    if (init) {
+                        // 初始化加载的时候刷新滚动对象，并滚动到起始位置
+                        this.scroll.refresh()
+                        this.scroll.scrollTo(0, 0, 0, undefined, {})
+                        this.scroll.finishPullUp()
+                    } else {
+                        // 非初始化加载完成的时候完成上啦加载操作
+                        this.scroll.finishPullUp()
+                    }
                 }
             }
         },
@@ -257,32 +278,37 @@ export default {
         pullingUpFn ({ scroll }) {
             // 当请求空闲的时候发送请求
             if (this.status === 1) {
-                this.gatConsumeRecord(this.searchForm)
+                this.gatConsumeRecord({ ...this.searchForm, uid: this.uid, aid: this.aid })
             }
         },
         // 搜索订单号
         searchOrder () {
-            this.searchForm = { keywords: this.keywords } // 搜索表单初始化
-            this.gatConsumeRecord(this.searchForm, true)
+            this.searchForm = { ordernum: this.ordernum } // 搜索表单初始化
+            this.gatConsumeRecord({ ...this.searchForm, uid: this.uid, aid: this.aid }, true)
         },
         // 筛选搜索
         filterSearch () {
             // 将搜索订单号条件置为空
-            this.keywords = ''
+            this.ordernum = undefined
             // 搜索条件中添加筛选类型和时间
             this.searchForm = {
-                selectOrderType: this.selectOrderType,
-                selectPayType: this.selectOrderType !== 2 ? undefined : this.selectPayType,
+                ordertype: this.selectOrderType,
                 ...this.searchTime
             }
             // 发送请求
-            this.gatConsumeRecord(this.searchForm, true)
+            this.gatConsumeRecord({ ...this.searchForm, uid: this.uid, aid: this.aid }, true)
             this.slideMenuIsShow = false
         },
         // 筛选重置
         filterReset () {
             this.selectOrderType = 1
-            this.selectPayType = 1
+            this.searchForm = {
+                ordertype: this.selectOrderType,
+                ...this.searchTime
+            }
+            // 发送请求
+            this.gatConsumeRecord({ ...this.searchForm, uid: this.uid, aid: this.aid }, true)
+            this.slideMenuIsShow = false
         }
     }
 }

@@ -62,6 +62,7 @@ export default {
                 bounce: this.bounce, // 当滚动超过边缘的时候会有一小段回弹动画。设置为 true 则开启动画。
                 mouseWheel: true, // 支持鼠标滚动
                 scrollbar: true, // 出现滚动条
+                HWCompositing: false, // 关闭硬件加速，取消translateZ(1px)
                 pullUpLoad: {
                     // 当上拉距离超过30px时触发 pullingUp 事件
                     threshold: 40

@@ -8,9 +8,14 @@
             <!--<div class="circular-5 rounded-circle position-absolute"></div> -->
             <div class="today-data d-flex flex-column justify-content-center align-items-center margin-top-4 margin-bottom-3">
                 <div class="item-title margin-bottom-2">今日收益</div>
-                <div class="item-result font-weight-bold text-size-lg">
+                <div class="item-result font-weight-bold text-size-lg" v-if="!isHide">
                     <i class="iconfont icon-fl-renminbi margin-right-2 position-relative yen"></i>
-                    <span>48.31</span>
+                    <span>{{ todayMoney | fmtMoney }}</span>
+                </div>
+                <div class="item-result font-weight-bold text-size-lg" v-else>
+                    <i class="iconfont icon-hao margin-right-1 text-size-md" />
+                    <i class="iconfont icon-hao margin-right-1 text-size-md" />
+                    <i class="iconfont icon-hao text-size-md" />
                 </div>
             </div>
             <van-grid
@@ -19,45 +24,18 @@
                 class="text-size-sm"
                 :class="{isShowIcon: isShowIcon}"
             >
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
-                </van-grid-item>
-                <van-grid-item>
-                    <div class="item-title margin-bottom-4">线上收益</div>
-                    <div class="item-result font-weight-bold">48.31</div>
+                <van-grid-item v-for="one in list" :key="one.title">
+                    <div class="item-title margin-bottom-4">{{one.title}}</div>
+                    <div class="item-result font-weight-bold" v-if="!isHide">{{one.value}}</div>
+                    <div class="item-result font-weight-bold" v-else>
+                        <i class="iconfont icon-hao margin-right-1 text-size-md" />
+                        <i class="iconfont icon-hao margin-right-1 text-size-md" />
+                        <i class="iconfont icon-hao text-size-md" />
+                    </div>
                 </van-grid-item>
             </van-grid>
             <div class="padding-x-4 text-center margin-x-3">
-                更新时间：<span>2021-06-28 11:10:31</span>
+                更新时间：<span>{{ updateTime }}</span>
             </div>
             <!--
             <div class="padding-x-4 text-center margin-x-3"></div>
@@ -69,10 +47,18 @@
             -->
             <div class="position-absolute contral">
                 <div class="icon-box margin-right-2 rounded-circle d-inline-block">
-                    <i class="iconfont icon-refresh d-block hd_animate hd_animate_rotate"></i>
+                    <i
+                        class="iconfont icon-refresh d-block hd_animate"
+                        :class="{hd_animate_rotate: loading}"
+                        @click="handleUpdate"
+                    ></i>
                 </div>
                 <div class="icon-box margin-right-2 rounded-circle d-inline-block">
-                    <i class="iconfont icon-yanjing rounded-circle"></i>
+                    <i
+                        class="iconfont rounded-circle"
+                        :class="[ isHide ? 'icon-eye' : 'icon-yanjing' ]"
+                         @click="isHide = !isHide"
+                    ></i>
                 </div>
             </div>
         </div>
@@ -102,22 +88,38 @@
 <script>
     // import { Notify } from 'vant'
     import { getDealHomePageData } from '@/require/home'
+    import { fmtMoney } from '@/utils/util'
     export default {
         data () {
             return {
                 active: 1,
+                list: [
+                    { title: '线上收益', value: 0 },
+                    { title: '未提现', value: 0 },
+                    { title: '昨日收益', value: 0 },
+                    { title: '投币收益', value: 0 },
+                    { title: '进入投币', value: 0 },
+                    { title: '昨日投币', value: 0 },
+                    { title: '总耗电量', value: 0 },
+                    { title: '今日耗电', value: 0 },
+                    { title: '昨日耗电', value: 0 }
+                ],
                 menuList: [
-                    { title: '设备管理', url: '/device/list', online: 5, total: 10 },
-                    { title: 'IC卡管理', url: '/ic/list', total: 20 },
-                    { title: '会员管理', url: '/member/list', total: 1596 },
-                    { title: '小区管理', total: 12, url: '/area/list' },
+                    { title: '设备管理', url: '/device/list', online: 0, total: 0 },
+                    { title: 'IC卡管理', url: '/ic/list', total: 0 },
+                    { title: '会员管理', url: '/member/list', total: 0 },
+                    { title: '小区管理', url: '/area/list', total: 0 },
                     { title: '设备绑定' },
                     { title: '历史收益' },
                     { title: '订单统计' },
                     { title: '充值管理' },
                     { title: '缴费管理', url: '/register' }
                 ],
-                isShowIcon: true // 是否显示投币收益
+                todayMoney: 0, // 今日收益
+                updateTime: '', // 更新时间
+                isShowIcon: true, // 是否显示投币收益
+                loading: false, // 是否正在更新数据
+                isHide: false // 是否开启隐藏模式
             }
         },
         mounted () {
@@ -127,24 +129,68 @@
             //         message: '当前数据非最新数据，如想查看最新数据，请点击下方“”按钮'
             //     })
             // }, 2000)
-            // this.$dialog.alert({
-            //     title: '提示',
-            //     message: JSON.stringify(this.$store.state),
-            //     beforeClose (action, done) {
-            //         done()
-            //         wx.closeWindow()
-            //     }
-            // })
-            this.getInitData()
+            this.getInitData({}, '正在加载中')
         },
         methods: {
-            async getInitData (data) {
+            async getInitData (data, isShowLoading) {
                 try {
-                    const { code, message, ...result } = await getDealHomePageData(data)
-                    alert(JSON.stringify(result))
+                    if (isShowLoading === false) {
+                        if (this.loading) return // 重复执行会取消最新请求
+                        this.loading = true
+                    }
+                    const { code, message, ...result } = await getDealHomePageData(data, isShowLoading)
+                    console.log(result)
+                    this.todayMoney = result.nowMoney
+                    this.isShowIcon = result.showincoins === 1
+                    if (this.isShowIcon) {
+                        this.list = [
+                            { title: '线上收益', value: fmtMoney(result.allMoney) },
+                            { title: '未提现', value: fmtMoney(result.earnings) },
+                            { title: '昨日收益', value: fmtMoney(result.yestMoney) },
+                            { title: '投币收益', value: result.totalcoins },
+                            { title: '今日投币', value: result.codenowcoins },
+                            { title: '昨日投币', value: result.codeyestcoins },
+                            { title: '总耗电量', value: fmtMoney(result.totalConsume) },
+                            { title: '今日耗电', value: fmtMoney(result.todayConsume) },
+                            { title: '昨日耗电', value: fmtMoney(result.yesterdayConsume) }
+                        ]
+                    } else {
+                        this.list = [
+                            { title: '线上收益', value: fmtMoney(result.allMoney) },
+                            { title: '未提现', value: fmtMoney(result.earnings) },
+                            { title: '昨日收益', value: fmtMoney(result.yestMoney) },
+                            { title: '总耗电量', value: fmtMoney(result.totalConsume) },
+                            { title: '今日耗电', value: fmtMoney(result.todayConsume) },
+                            { title: '昨日耗电', value: fmtMoney(result.yesterdayConsume) }
+                        ]
+                    }
+                    this.menuList = [
+                        { title: '设备管理', url: '/device/list', online: result.onlines, total: result.onlines + result.disline },
+                        { title: 'IC卡管理', url: '/ic/list', total: result.onlincardcount },
+                        { title: '会员管理', url: '/member/list', total: result.clientsnum },
+                        { title: '小区管理', url: '/area/list', total: result.areanum },
+                        { title: '设备绑定' },
+                        { title: '历史收益' },
+                        { title: '订单统计' },
+                        { title: '充值管理' },
+                        { title: '缴费管理', url: '/register' }
+                    ]
+                    this.updateTime = result.renewalTime
+                    // 当上次更新时间大于2小时，则发送请求重新获取最新数据
+                    if ((new Date()).getTime() - (new Date(result.renewalTime)).getTime() > 2 * 60 * 60 * 1000) {
+                        this.getInitData({ type: 1 }, false)
+                    }
                 } catch (e) {
-                    alert(message)
+                    console.log(message)
+                } finally {
+                    if (isShowLoading === false) {
+                        this.loading = false
+                    }
                 }
+            },
+            // 更新数据
+            handleUpdate () {
+                this.getInitData({ type: 1 }, false)
             }
         }
     }

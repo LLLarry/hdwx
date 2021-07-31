@@ -119,7 +119,7 @@ export default {
           this.$router.push({ path: '/device/portqrcode/' + this.code })
         break
         case '收费模板':
-          this.$router.push({ path: '/template/v3/' + this.code })
+          this.$router.push({ path: '/device/templatelist/' + this.code })
         break
         case '系统参数': break
         case '更换模块':

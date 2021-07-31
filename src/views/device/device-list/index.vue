@@ -2,9 +2,9 @@
     <div class="device-list position-relative d-flex flex-column">
         <div class="section shadow padding-bottom-2" :style="sectionTransZ">
             <van-tabs v-model="active" class="device-tab font-weight-bold">
-                <van-tab title="在线 1631"></van-tab>
-                <van-tab title="离线 202"></van-tab>
-                <van-tab title="全部 1833"></van-tab>
+                <van-tab :title="`在线 ${ source[0].total }`"></van-tab>
+                <van-tab :title="`离线 ${ source[1].total }`"></van-tab>
+                <van-tab :title="`全部 ${ source[2].total }`"></van-tab>
             </van-tabs>
             <div class="search-form d-flex padding-x-2 margin-top-2 align-items-center">
                 <van-dropdown-menu class="select-menu">
@@ -77,7 +77,7 @@
 <script>
 import hdScroll from '@/components/hd-scroll'
 import deviceItem from '@/components/device/device-item'
-import { getAjaxEquList } from '@/require/auth'
+import { getDeviceInfoList } from '@/require/device'
 export default {
     data () {
         return {
@@ -92,20 +92,23 @@ export default {
             source: [
                 {
                     list: [],
+                    total: 0, // 总数量
                     status: 1, // 0 正在加载中 1 空闲状态 2 更多数据
-                    equnum: 0, // 当前展示的设备数量
+                    currentPage: 1, // 当前页
                     scroll: null // 滚动实例
                 },
                 {
                     list: [],
+                    total: 0, // 总数量
                     status: 1, //  0 正在加载中 1 空闲状态 2 更多数据
-                    equnum: 0, // 当前展示的设备数量
+                    currentPage: 1, // 当前页
                     scroll: null // 滚动实例
                 },
                 {
                     list: [],
+                    total: 0, // 总数量
                     status: 1, // 0 正在加载中 1 空闲状态 2 更多数据
-                    equnum: 0, // 当前展示的设备数量
+                    currentPage: 1, // 当前页
                     scroll: null // 滚动实例
                 }
             ],
@@ -125,6 +128,7 @@ export default {
         this.asyGetAjaxEquList(0, true)
         this.asyGetAjaxEquList(1, true)
         this.asyGetAjaxEquList(2, true)
+        this.getDeviceNum()
     },
     components: {
         hdScroll,
@@ -151,30 +155,59 @@ export default {
         },
         /* 异步请求设备list */
         async asyGetAjaxEquList (index, init = false) {
-            if (!init) {
-                if ([0, 2].includes(this.source[index].status)) return false
+            try {
+                if (!init) { // 上拉加载
+                    if ([0, 2].includes(this.source[index].status)) return false
+                    this.source[index].currentPage++
+                } else {
+                    this.source[index].currentPage = 1
+                }
+                this.$set(this.source[index], 'status', 0)
+                const { code, result, message } = await getDeviceInfoList({
+                    // uid: 30,
+                    equnum: 5,
+                    currentPage: this.source[index].currentPage,
+                    querynum: index + 1,
+                    source: this.type + 1,
+                    parameter: this.parameter
+                }, '正在加载数据')
+                if (code === 200) {
+                    // 如果是初始化，需要将list置空之后再进行赋值
+                    let list = []
+                    if (init) {
+                        list = result.devicelist
+                    } else {
+                        list = [...this.source[index].list, ...result.devicelist]
+                    }
+                    this.$set(this.source[index], 'list', list)
+                    this.$set(this.source[index], 'equnum', this.source[index].list.length)
+                    if (result.devicelist.length < 5) {
+                        this.$set(this.source[index], 'status', 2) // 将状态置为无数据
+                    } else {
+                        this.$set(this.source[index], 'status', 1) // 将状态置为空闲
+                    }
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
             }
-            this.$set(this.source[index], 'status', 0)
-            const info = await getAjaxEquList({
-                uid: 30,
-                equnum: init ? 0 : this.source[index].equnum,
-                querynum: index + 1,
-                source: this.type + 1,
-                parameter: this.parameter
-            }, '正在加载数据')
-            // 如果是初始化，需要将list置空之后再进行赋值
-            let list = []
-            if (init) {
-                list = info.equlist
-            } else {
-                list = [...this.source[index].list, ...info.equlist]
-            }
-            this.$set(this.source[index], 'list', list)
-            this.$set(this.source[index], 'equnum', this.source[index].list.length)
-            if (info.equlist.length < 5) {
-                this.$set(this.source[index], 'status', 2) // 将状态置为无数据
-            } else {
-                this.$set(this.source[index], 'status', 1) // 将状态置为空闲
+        },
+        async getDeviceNum () {
+            try {
+                const { code, message, result } = await getDeviceInfoList({
+                    source: this.type + 1,
+                    parameter: this.parameter
+                }, '正在加载数据')
+                if (code === 200) {
+                    this.$set(this.source[0], 'total', result.onlineNum)
+                    this.$set(this.source[1], 'total', result.offlineNum)
+                    this.$set(this.source[2], 'total', result.totalNum)
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
             }
         },
         // 点击搜索按钮
@@ -182,7 +215,8 @@ export default {
             await Promise.all([
                 this.asyGetAjaxEquList(0, true),
                 this.asyGetAjaxEquList(1, true),
-                this.asyGetAjaxEquList(2, true)
+                this.asyGetAjaxEquList(2, true),
+                this.getDeviceNum()
             ])
             if (this.source[0].scroll) {
                 this.source[0].scroll.refresh()

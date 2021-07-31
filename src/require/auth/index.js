@@ -12,6 +12,19 @@ export const sendCodeAndgetUserInfo = (data) => {
     })
 }
 
+/**
+ * 发送cookie交给后台验证,当前cookie是否失效
+ * @param
+ * @returns
+ */
+ export const getDealAccountData = (data) => {
+    return ajax({
+        url: '/mobileMerchant/getDealAccountData',
+        method: 'post',
+        data
+    })
+}
+
 export const getAjaxEquList = (data, loadText) => {
     return ajax({
         url: '/equipment/getAjaxEquList',

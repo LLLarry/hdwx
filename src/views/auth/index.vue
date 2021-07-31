@@ -41,7 +41,6 @@ export default {
         ...mapMutations(['setUser']),
        async asySendCodeAndgetUserInfo (code) {
            const { code: status, message, dealuser, openid } = await sendCodeAndgetUserInfo({ code })
-        //    alert(JSON.stringify({ ...dealuser, openid }))
            if (status === 200) {
                this.setUser({ ...dealuser, openid })
                this.$router.replace({ path: '/' })

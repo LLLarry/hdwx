@@ -1,14 +1,23 @@
 import store from '../store'
 import { getType } from '@/utils/util'
-const { BASE_URL, WX_APPID } = HDWX
+const { BASE_URL, WX_APPID, WECHAT_BROWSER_ENV } = HDWX
+console.log('WECHAT_BROWSER_ENV', WECHAT_BROWSER_ENV)
 export default (router) => {
-    router.beforeEach((to, from, next) => {
-        console.log(to)
-        if (['/auth'].includes(to.path)) {
+    router.beforeEach(async (to, from, next) => {
+        console.log('to', to)
+        if (['/auth', '/register'].includes(to.path)) {
             next()
         } else if (getType(store.state.user.id) === 'undefined') {
-            // next()
-            window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/wx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+            if (WECHAT_BROWSER_ENV) {
+                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/wx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+            } else {
+                const result = await store.dispatch('verifyCookieIsExpire')
+                if (result === 200) {
+                    next()
+                } else {
+                    next('/register')
+                }
+            }
         } else {
             next()
         }

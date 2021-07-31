@@ -17,3 +17,37 @@ export const getType = (e) => {
 export const fmtDate = (date, type = 'YYYY-MM-DD HH:mm:ss') => {
     return dayjs(date).format(type)
 }
+
+/**
+ * 格式化金额
+ * @param {Number} money money 格式化金额
+ * @param {*} digit 保留几位小数
+ * @returns 解析之后的金额字符串
+ */
+ export const fmtMoney = (money, digit = 2) => {
+    if (typeof money !== 'number') {
+        money = Number.parseFloat(money)
+        money = Number.isNaN(money) ? 0 : money
+    }
+    return money.toFixed(digit)
+}
+
+/**
+ * 日期范围
+ * @param {Date} date 起始日期
+ * @param {Number} day 推迟天数
+ * @returns [Date, Date] 日期数组
+ */
+ export const dateRange = (date, day = 0, type = 'YYYY-MM-DD HH:mm:ss') => {
+    date = new Date(date)
+    const times = date.getTime()
+    if (Number.isNaN(times)) {
+        throw TypeError('date argument is not Date type')
+    }
+    const newTimes = times - day * 24 * 60 * 60 * 1000
+    if (times < newTimes) {
+        return [fmtDate(new Date(times), type), fmtDate(new Date(newTimes), type)]
+    } else {
+        return [fmtDate(new Date(newTimes), type), fmtDate(new Date(times), type)]
+    }
+}

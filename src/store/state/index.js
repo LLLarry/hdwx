@@ -1,5 +1,5 @@
 // 初始化state
-const initState = {
+export const initState = {
     user: {},
     global: {
         clientWidth: 375 // 全局屏幕宽度
