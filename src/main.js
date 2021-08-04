@@ -12,10 +12,16 @@ import loadingIndex from '@/components/hd-loading/loadingIndex'
 import '@/components/directive/hd-skeleton'
 import qrcode from 'vue-qrcode2'
 import '@/filter'
+import '@/directive'
+// import ECharts from 'vue-echarts'
+// import { use } from 'echarts/core'
+// import { CanvasRenderer } from 'echarts/renderers'
+// import { /* BarChart, */ PieChart } from 'echarts/charts'
+// import { /* GridComponent,  */TooltipComponent, TitleComponent, LegendComponent } from 'echarts/components'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
-RadioGroup, Radio, Switch
+RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker
 } from 'vant'
 
 Vue.use(loadingIndex)
@@ -56,6 +62,11 @@ Vue.use(CheckboxGroup)
 Vue.use(RadioGroup)
 Vue.use(Radio)
 Vue.use(Switch)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
+Vue.use(Cell)
+Vue.use(CellGroup)
+Vue.use(Picker)
 
 Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })
@@ -64,6 +75,17 @@ Vue.component('hd-title', HdTitle)
 Vue.use(require('vue-wechat-title'))
 
 Vue.use(qrcode)
+
+// use([
+//   CanvasRenderer,
+//   // BarChart,
+//   // GridComponent,
+//   TooltipComponent,
+//   TitleComponent,
+//   LegendComponent,
+//   PieChart
+// ])
+// Vue.component('v-chart', ECharts)
 
 new Vue({
   router,

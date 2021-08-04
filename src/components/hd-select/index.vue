@@ -9,7 +9,7 @@
     >
         <div class="popup-wrapper">
             <div class="popup-box-header d-flex align-items-center justify-content-center shadow-md">
-                <div>添加设备</div>
+                <div v-html="title"></div>
             </div>
             <div class="popup-box-content padding-3">
                 <div class="popup-box-title bg-gray padding-y-2 d-flex font-weight-bold align-items-center">
@@ -32,7 +32,7 @@
                             -->
                             <slot name="default" :row="item"></slot>
                             <div class="flex-1 text-center">
-                                <van-checkbox :name="item.id"></van-checkbox>
+                                <van-checkbox :name="item[keyString]" :disabled="item.disabled"></van-checkbox>
                             </div>
                         </div>
                     </van-checkbox-group>
@@ -44,7 +44,7 @@
                         >
                             <slot name="default" :row="item"></slot>
                             <div class="flex-1 text-center">
-                                 <van-radio :name="item.id"></van-radio>
+                                 <van-radio :name="item[keyString]" :disabled="item.disabled"></van-radio>
                             </div>
                         </div>
                     </van-radio-group>
@@ -76,6 +76,13 @@ export default {
         list: {
             type: Array,
             default: () => []
+        },
+        title: { // 弹出框标题
+            type: String
+        },
+        keyString: { // 主键
+            type: String,
+            default: 'id'
         }
     },
     data () {
@@ -88,9 +95,9 @@ export default {
         list: {
             handler (value) {
                 if (this.radio) {
-                    this.radioResult = this.list.filter(item => item.selected).map(item => item.id)[0]
+                    this.radioResult = this.list.filter(item => item.selected).map(item => item[this.keyString])[0]
                 } else {
-                   this.result = this.list.filter(item => item.selected).map(item => item.id)
+                   this.result = this.list.filter(item => item.selected).map(item => item[this.keyString])
                 }
             },
             immediate: true

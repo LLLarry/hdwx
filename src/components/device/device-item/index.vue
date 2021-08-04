@@ -32,15 +32,44 @@
            </span>
         </hd-card-item>
         <div class="device-contral d-flex justify-content-end w-100 margin-top-1">
-            <van-button type="primary" size="small" v-if="value.hardversion === '11'">从机</van-button>
-            <van-button type="primary" size="small" v-if="!['03', '04', '11'].includes(value.hardversion) && value.device_type !== 2 && deviceBindOwn">状态</van-button>
-            <van-button type="primary" size="small" v-if="deviceBindOwn" :to="`/device/manage/${value.code}`">管理</van-button>
-            <van-button type="primary" size="small" v-if="deviceBindOwn && value.state === 1 && value.device_type !== 2 && value.hardversion !== '11'">远程</van-button>
-            <van-button :type="value.state === 1 ? 'primary' : 'danger'" size="small" v-if="value.device_type !== 2">
+            <van-button
+                type="primary"
+                size="small"
+                v-if="value.hardversion === '11'"
+            >从机</van-button>
+            <van-button
+                type="primary"
+                size="small"
+                v-if="!['03', '04', '11'].includes(value.hardversion) && value.device_type !== 2 && deviceBindOwn"
+                :to="`/device/portstatus/${value.code}`"
+            >状态</van-button>
+            <van-button
+                type="primary"
+                size="small"
+                v-if="deviceBindOwn"
+                :to="`/device/manage/${value.code}`"
+            >管理</van-button>
+            <van-button
+                type="primary"
+                size="small"
+                v-if="deviceBindOwn && value.state === 1 && value.device_type !== 2 && value.hardversion !== '11'"
+            >远程</van-button>
+            <van-button
+                :type="value.state === 1 ? 'primary' : 'danger'" size="small"
+                v-if="value.device_type !== 2"
+            >
                 <img class="singal-icon" :src="require(`../../../assets/images/singal/${singalIcon}`)" />
             </van-button>
-            <van-button type="primary" size="small">统计</van-button>
-            <van-button type="primary" size="small">订单</van-button>
+            <van-button
+                type="primary"
+                size="small"
+                :to="`/device/statis/${value.code}`"
+            >统计</van-button>
+            <van-button
+                type="primary"
+                size="small"
+                :to="`/device/order/${value.code}`"
+            >订单</van-button>
         </div>
     </hd-card>
   </div>

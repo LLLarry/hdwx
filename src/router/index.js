@@ -152,6 +152,38 @@ const routes = [
     meta: {
       title: '模板列表'
     }
+  },
+  {
+    path: '/device/system/v2/:code',
+    name: 'device-system-v2',
+    component: () => import(/* webpackChunkName: "device-system-v2" */ '../views/device/device-system-params/v2/index.vue'),
+    meta: {
+      title: 'v2系统模板'
+    }
+  },
+  {
+    path: '/device/portstatus/:code',
+    name: 'device-port-status',
+    component: () => import(/* webpackChunkName: "device-port-status" */ '../views/device/device-port-status/index.vue'),
+    meta: {
+      title: '设备端口状态'
+    }
+  },
+  {
+    path: '/device/order/:code',
+    name: 'device-order',
+    component: () => import(/* webpackChunkName: "device-order" */ '../views/device/device-order/index.vue'),
+    meta: {
+      title: '设备端口状态'
+    }
+  },
+  {
+    path: '/device/statis/:code',
+    name: 'device-statis',
+    component: () => import(/* webpackChunkName: "device-statis" */ '../views/device/device-statis/index.vue'),
+    meta: {
+      title: '设备端口状态'
+    }
   }
 ]
 // process.env.BASE_URL

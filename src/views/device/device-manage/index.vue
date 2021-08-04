@@ -121,7 +121,9 @@ export default {
         case '收费模板':
           this.$router.push({ path: '/device/templatelist/' + this.code })
         break
-        case '系统参数': break
+        case '系统参数':
+          this.$router.push({ path: '/device/system/v2/' + this.code })
+        break
         case '更换模块':
           this.changeModel = true
           break

@@ -8,7 +8,8 @@ const resizeFn = () => {
     }
     // 设置浏览器宽度
     const clientWidth = html.clientWidth || html.offsetWidth
-    store.commit('setGlobalData', { clientWidth })
+    const clientHeight = html.clientHeight || html.offsetHeight
+    store.commit('setGlobalData', { clientWidth, clientHeight })
 }
 window.addEventListener('resize', resizeFn)
 resizeFn()

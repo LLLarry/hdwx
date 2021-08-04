@@ -2,7 +2,8 @@
 export const initState = {
     user: {},
     global: {
-        clientWidth: 375 // 全局屏幕宽度
+        clientWidth: 375, // 全局屏幕宽度
+        clientHeight: 812 // 全局屏幕高
     }
 }
 // 从缓存中获取state信息

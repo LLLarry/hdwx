@@ -4,8 +4,17 @@
     <!-- 顶部控制区域 -->
     <div class="border-bottom-1 border-ddd">
       <div class="padding-x-2 d-inline-block">
-        <template-input placeholder="请选择充电方式" readonly v-model="chargeType" :disabled="isSystemTem">
+        <template-input>
           充电计费方式：
+          <template #input>
+            <input
+              readonly
+              v-model="chargeType"
+              :disabled="isSystemTem"
+              @click="handleClickChargeType"
+              placeholder="请选择充电方式"
+              class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"/>
+          </template>
           <template #exec>
             <van-icon name="arrow-down" class="position-absolute post-arrow text-666" size="18"/>
           </template>
@@ -30,12 +39,13 @@
           v-model="alipay"
           size="24px"
           :disabled="isSystemTem"
+          active-color="#07c160"
         />
       </div>
       <p class="text-p padding-x-2 margin-bottom-1">提示：支付宝充电暂不支持部分退费</p>
     </div>
     <!-- 按电量计费 -->
-    <div class="mid mid1  border-bottom-1 border-ddd">
+    <div class="mid mid1  border-bottom-1 border-ddd" v-hd-mask:[hdMask1Text]="hdMask1">
       <hd-title exec position="center"> 收费标准 （按电量计费）</hd-title>
       <div class="post-session padding-x-2">
           <template-input
@@ -49,7 +59,7 @@
     </div>
 
     <!-- 按电量计费 -->
-    <div class="mid mid2  border-bottom-1 border-ddd">
+    <div class="mid mid2  border-bottom-1 border-ddd" v-hd-mask:[hdMask2Text]="hdMask2">
       <hd-title exec position="center"> 收费标准 （按功率计费）</hd-title>
       <p class="text-p text-center margin-bottom-1">(每小时收费：单位：元，功率区间：单位：瓦)</p>
       <div class="post-session d-flex justify-content-between padding-x-2 padding-y-1" v-for="ctemp in tempData.gather1" :key="ctemp.id">
@@ -67,7 +77,7 @@
               <template #input>
                 <input
                   v-model="ctemp.common1"
-                  :disabled="isSystemTem"
+                  :disabled="true"
                   class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
                   style="width: calc(50% - 1.5rem)"
                 />
@@ -81,15 +91,18 @@
               </template>
             </template-input>
           </div>
-          <div class="d-flex align-items-center justify-content-center padding-x-1">
+          <van-button :disabled="isSystemTem" class="border-0 d-flex align-items-center justify-content-center padding-x-1" @click="handRemoveCtem('gather1', ctemp)">
             <i class="iconfont icon-shanchu1 text-size-lg text-danger" :style="deleteIconStyle"></i>
-          </div>
+          </van-button>
       </div>
       <div class="d-flex justify-content-center margin-y-2">
         <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem('gather1')">添加一行</van-button>
       </div>
       <p class="text-p margin-bottom-1 padding-x-2">注意：设备能承受的最大功率由机器决定</p>
-      <!-- 收费说明 -->
+    </div>
+
+    <div class="mid border-bottom-1 border-ddd">
+       <!-- 收费说明 -->
       <div class="padding-x-2 margin-bottom-2">
         <div class="margin-y-2 text-p">收费说明：</div>
         <textarea
@@ -123,9 +136,9 @@
               input-style="width: calc(100% - 2.5rem);"
             ></template-input>
           </div>
-          <div class="d-flex align-items-center justify-content-center padding-x-1">
+          <van-button :disabled="isSystemTem" class="border-0 d-flex align-items-center justify-content-center padding-x-1" @click="handRemoveCtem('gather2', ctemp)">
             <i class="iconfont icon-shanchu1 text-size-lg text-danger" :style="deleteIconStyle"></i>
-          </div>
+          </van-button>
       </div>
       <div class="d-flex justify-content-center margin-y-2">
         <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem('gather2')">添加一行</van-button>
@@ -136,7 +149,7 @@
       <div class="post-session padding-bottom-2">
           <div class="padding-x-2 d-flex align-items-center padding-y-2">
             <div style="width:10em;">是否支持按金额充电:</div>
-            <van-switch v-model="alipay" size="24px" :disabled="isSystemTem" />
+            <van-switch v-model="tempData.walletpay" size="24px" :disabled="isSystemTem" active-color="#07c160" />
           </div>
           <p class="text-p padding-x-2 margin-bottom-1">说明：按金额充电即为临时充电</p>
       </div>
@@ -144,7 +157,7 @@
       <div class="post-session padding-bottom-2">
           <div class="padding-x-2 d-flex align-items-center padding-y-2">
             <div style="width:10em;">是否支持退费:</div>
-            <van-switch v-model="alipay" size="24px" :disabled="isSystemTem" />
+            <van-switch v-model="tempData.permit" size="24px" :disabled="isSystemTem" active-color="#07c160" />
           </div>
           <p class="text-p padding-x-2 margin-bottom-1">提示：充不完的费用 退回到虚拟钱包，下次充电可用</p>
       </div>
@@ -152,13 +165,13 @@
       <div class="post-session">
           <div class="padding-x-2 d-flex align-items-center padding-y-2">
             <div style="width:10em;">默认按金额充电:</div>
-            <van-switch v-model="alipay" size="24px" :disabled="isSystemTem" />
+            <van-switch v-model="tempData.grade" size="24px" :disabled="isSystemTem" active-color="#07c160" />
           </div>
           <p class="text-p padding-x-2 margin-bottom-1">说明：开启默认按金额充电，用户扫码时默认选中“按金额充电”选项</p>
       </div>
     </div>
 
-    <div class="mid mid2  border-bottom-1 border-ddd">
+    <div class="mid mid2  border-bottom-1 border-ddd" v-hd-mask:[hdMask3Text]="hdMask3">
         <hd-title exec position="center"> 按照金额充电（临时充电） </hd-title>
         <p class="text-p text-center margin-bottom-1">(充电时间：单位：元)</p>
         <div class="post-session d-flex justify-content-between padding-x-2 padding-y-1" v-for="ctemp in tempData.gather3" :key="ctemp.id">
@@ -180,50 +193,77 @@
               input-style="width: calc(100% - 2.5rem);"
             ></template-input>
             </div>
-            <div class="d-flex align-items-center justify-content-center padding-x-1">
+            <van-button  :disabled="isSystemTem" class="border-0 d-flex align-items-center justify-content-center padding-x-1" @click="handRemoveCtem('gather3', ctemp)">
               <i class="iconfont icon-shanchu1 text-size-lg text-danger" :style="deleteIconStyle"></i>
-            </div>
+            </van-button>
         </div>
         <div class="d-flex justify-content-center margin-y-2">
           <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem('gather3')">添加一行</van-button>
         </div>
         <p class="text-p padding-x-2 margin-bottom-1">备注：默认按照金额给予小功率电动车充电时间，如果电动车功率大，费用用完会提前自动停止。如果费用没有用完，如果支持退回虚拟钱包，就退回虚拟钱包，下次充电可用。如果不支持退费，不承担充电过程中的风险</p>
       </div>
-      <nav class="nav bg-white d-flex justify-content-around align-items-center">
-        <li class="nav-item">
-          <van-button type="primary" size="small" class="padding-x-4">返回</van-button>
-        </li>
-        <li class="nav-item">
-          <van-button type="primary" size="small" class="padding-x-4">预览</van-button>
-        </li>
-        <li class="nav-item">
-          <van-button type="primary" size="small" class="padding-x-4" @click="handleSave">保存</van-button>
-        </li>
-      </nav>
+      <!-- 底部导航 -->
+      <hd-nav :list="navList">
+        <template v-slot="{row}">
+          <van-button
+            size="small"
+            class="padding-x-4"
+            @click="row.onClick"
+            :icon="row.icon"
+            :type="row.type ? row.type : 'primary'"
+            round
+          >{{row.text}}</van-button>
+        </template>
+      </hd-nav>
+
+      <van-action-sheet
+        v-model="chargeTypeIsShow"
+        :actions="actions"
+        cancel-text="取消"
+        description="选择一种充电计费方式"
+        close-on-click-action
+        @select="handleSelectChargeType"
+      />
   </div>
 </template>
 
 <script>
 import TemplateHeader from '@/components/template/template-header'
 import TemplateInput from '@/components/template/template-input'
+import hdNav from '@/components/hd-nav'
 import { getV3TempData } from '@/require/member'
+import { addChildTemHelper } from './helper'
 export default {
     components: {
         TemplateHeader,
-        TemplateInput
+        TemplateInput,
+        hdNav
     },
     data () {
       return {
         alipay: true,
         number: 99,
-        tempData: {}
+        oldTempData: {}, // 旧的模板信息，目的是为了对比新的模板是否进行了更改
+        tempData: {},
+        navList: [
+          { text: '返回', icon: 'share-o' },
+          { text: '预览', icon: 'eye-o' },
+          { text: '保存', icon: 'pending-payment', onClick: this.handleSave, type: 'info' }
+        ],
+        chargeTypeIsShow: false, // 选择充电类型是否展示
+        // hdMask1: false,
+        hdMask1Text: '<span class="text-danger">未开启按电量计费<span>',
+        // hdMask2: false,
+        hdMask2Text: '<span class="text-danger">未开启功率计费<span>',
+        // hdMask3: false,
+        hdMask3Text: '<span class="text-danger">未开启临时充电<span>'
       }
     },
     computed: {
       // 充电类型
       chargeType () {
         const type = this.tempData.common2
-        return type === 1 ? '按照最大功率计费' : type === 2 ? '按照实时功率计费' : type === 3 ? '按照电量计费' : ''
+        return type === 1 ? '按照最大功率计费' : type === 2 ? '按照实时功率计费' : type === 3 ? '按照电量计费' : '按照最大功率计费'
       },
       // 是否是系统模板
       isSystemTem () {
@@ -232,6 +272,23 @@ export default {
       // 当系统模板时，颜色变为半透明
       deleteIconStyle () {
         return { opacity: this.isSystemTem ? 0.5 : 1 }
+      },
+      actions () {
+        const { common2 } = this.tempData
+        return [
+          { id: 1, name: '按照最大功率计费', subname: '按照充电设备上传的最大功率计费', color: (common2 !== 2 && common2 !== 3) ? '#07c160' : undefined },
+          { id: 2, name: '按照实时功率计费', subname: '按照充电设备上传的实时功率计费', color: common2 === 2 ? '#07c160' : undefined },
+          { id: 3, name: '按照电量计费', subname: '按照用户实际使用的电量计费', color: common2 === 3 ? '#07c160' : undefined }
+        ]
+      },
+      hdMask1 () { // 按电量计费遮罩层是否显示
+        return this.tempData.common2 !== 3
+      },
+      hdMask2 () { // 按功率计费遮罩层是否显示
+        return this.tempData.common2 === 3
+      },
+      hdMask3 () { // 按金额充电遮罩层是否显示
+        return this.tempData.walletpay === 2
       }
     },
     async mounted () {
@@ -246,8 +303,36 @@ export default {
         console.log(JSON.stringify(this.tempData, null, 2))
       },
       handAddCtem (from) {
-        const gather = this.tempData[from] || []
-        console.log(gather)
+        // console.log(from, gather)
+        let list = this.tempData[from]
+        const result = addChildTemHelper(from, list)
+        if (!Array.isArray(list)) {
+          list = []
+        }
+        console.log(list)
+        list.push(result)
+        this.$set(this.tempData, from, list)
+        console.log(this.tempData)
+      },
+      handleSelectChargeType (row) {
+          this.$set(this.tempData, 'common2', row.id)
+      },
+      handleClickChargeType () {
+        this.chargeTypeIsShow = true
+      },
+      handRemoveCtem (from, row) {
+        this.$dialog.confirm({
+          title: '提示',
+          message: '确认删除当前子模板吗？',
+          beforeClose: (action, done) => {
+            if (action === 'confirm') {
+              const newList = this.tempData[from].filter(({ id }) => id !== row.id)
+              this.$set(this.tempData, from, newList)
+            }
+            done()
+          }
+        })
+        console.log(from, row)
       }
     }
 }
@@ -260,6 +345,16 @@ export default {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+  }
+  input {
+    &[disabled] {
+      color: #999 !important;
+    }
+  }
+  textarea {
+    &[disabled] {
+      color: #999 !important;
+    }
   }
   .post-session {
     position: relative;

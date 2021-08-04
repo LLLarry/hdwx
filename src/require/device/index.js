@@ -14,3 +14,63 @@ export const getDeviceInfoList = (data, loadText) => {
         loadText
     })
 }
+
+/** ==============
+ * 获取设备系统参数
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const readsysteminfo = (data, loadText) => {
+    return ajax({
+        url: '/readsysteminfo',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/** ==============
+ * 获取商户下相同类型的设备
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const searchDeviceData = (data, loadText) => {
+    return ajax({
+        url: '/equipment/searchDeviceData',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/** ==============
+ * 保存系统参数
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const setSysParam = (data, loadText) => {
+    return ajax({
+        url: '/equipment/setSysParam',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/** ==============
+ * 设备订单数据
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const codetotrade = (data, loadText) => {
+    return ajax({
+        url: '/equipment/codetotrade',
+        method: 'post',
+        data,
+        loadText
+    })
+}
