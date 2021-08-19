@@ -1,9 +1,9 @@
 <template>
     <div class="area-list position-relative d-flex flex-column">
-        <div class="section shadow padding-bottom-2" :style="sectionTransZ">
+        <div class="section shadow padding-bottom-2">
             <van-tabs v-model="active" class="area-tab font-weight-bold">
-                <van-tab title="小区 12"></van-tab>
-                <van-tab title="合伙小区 3"></van-tab>
+                <van-tab :title="`小区 ${source[0].totalcount}`"></van-tab>
+                <van-tab :title="`合伙小区 ${source[1].totalcount}`"></van-tab>
             </van-tabs>
             <div class="search-form d-flex padding-x-2 margin-top-2 align-items-center" >
                 <span>小区名称</span>
@@ -53,27 +53,32 @@
                 </van-tab>
             </van-tabs>
         </main>
-        <div class="padding-1 text-center shadow" :style="sectionTransZ">
+        <div class="padding-1 text-center shadow">
             <van-button type="primary" size="small"  class="bottom-btn" @click="addAreaIsShow=true">添加小区</van-button>
         </div>
 
         <!-- 新增小区 -->
-        <add-area :addAreaIsShow="addAreaIsShow" @confirm="addAreaConfirm" :areaBeforeClose="areaBeforeClose"/>
+        <add-area
+            :addAreaIsShow="addAreaIsShow"
+            @confirm="addAreaConfirm"
+        />
     </div>
 </template>
 <script>
 import hdScroll from '@/components/hd-scroll'
 import areaItem from '@/components/area/area-item'
 import addArea from '@/components/area/add-area'
-import { devicelistAjax } from '@/require/mock'
-const LIMIT = 10
+import { inquireAreaInfor, insertAreaData } from '@/require/area'
+const LIMIT = 4
 export default {
     data () {
         return {
             active: 0,
             parameter: '', // 搜索条件
+            searchForm: {},
             source: [
                 {
+                    totalcount: 0,
                     list: [],
                     status: 1, // 0 正在加载中 1 空闲状态 2 更多数据
                     currentPage: 1, // 当前页数
@@ -81,6 +86,7 @@ export default {
                     leaveScrollY: 0 // 离开时滚动的距离
                 },
                 {
+                    totalcount: 0,
                     list: [],
                     status: 1, //  0 正在加载中 1 空闲状态 2 更多数据
                     currentPage: 1, // 当前页数
@@ -99,15 +105,6 @@ export default {
         hdScroll,
         areaItem,
         addArea
-    },
-    computed: {
-        sectionTransZ () {
-            const value = this.addAreaIsShow ? 'none' : 'translateZ(2px)'
-            return {
-                transform: value,
-                webkitTransform: value
-            }
-        }
     },
     watch: {
         // 监听路由的变化，当前路由调回来的时候将存储的位置信息重新赋值回来
@@ -145,71 +142,91 @@ export default {
         },
         /* 异步请求设备list */
         async asyGetDeviceList (index, init = false) {
-            if (!init) {
-                if ([0, 2].includes(this.source[index].status)) return false
-                this.source[index].currentPage++
-            } else {
-                this.source[index].currentPage = 1
-            }
-            this.$set(this.source[index], 'status', 0)
-            const { code, area, message } = await devicelistAjax({
-                type: index,
-                limit: LIMIT,
-                pages: this.source[index].currentPage,
-                keywords: this.keywords
-            }, '正在加载数据')
-            if (code === 200) {
-                // 如果是初始化，需要将list置空之后再进行赋值
-                let list = []
-                if (init) {
-                    list = area
+            try {
+                if (!init) {
+                    if ([0, 2].includes(this.source[index].status)) return false
+                    this.source[index].currentPage++
                 } else {
-                    list = [...this.source[index].list, ...area]
+                    this.source[index].currentPage = 1
                 }
-                this.$set(this.source[index], 'list', list)
-                if (area.length < LIMIT) {
-                    this.$set(this.source[index], 'status', 2) // 将状态置为无数据
+                this.$set(this.source[index], 'status', 0)
+                const { code, resultlist: area, totalcount, message } = await inquireAreaInfor({
+                    areaType: index + 1,
+                    limit: LIMIT,
+                    currentPage: this.source[index].currentPage,
+                    ...this.searchForm
+                }, '正在加载数据')
+                if (code === 200) {
+                    // 如果是初始化，需要将list置空之后再进行赋值
+                    let list = []
+                    if (init) {
+                        list = area
+                        this.source[index].totalcount = totalcount
+                    } else {
+                        list = [...this.source[index].list, ...area]
+                    }
+                    this.$set(this.source[index], 'list', list)
+                    if (area.length < LIMIT) {
+                        this.$set(this.source[index], 'status', 2) // 将状态置为无数据
+                    } else {
+                        this.$set(this.source[index], 'status', 1) // 将状态置为空闲
+                    }
                 } else {
+                    this.$toast(message)
                     this.$set(this.source[index], 'status', 1) // 将状态置为空闲
                 }
-            } else {
-                this.$toast(message)
-                this.$set(this.source[index], 'status', 1) // 将状态置为空闲
+            } catch (e) {
+                this.$toast('异常错误')
+            } finally {
+                const scroll = this.source[index].scroll
+                if (scroll) {
+                    this.$nextTick(() => {
+                        if (init) {
+                            scroll.refresh()
+                            scroll.finishPullUp()
+                            scroll.scrollTo(0, 0, 0, undefined, {})
+                        } else {
+                            scroll.finishPullUp()
+                        }
+                    })
+                }
             }
         },
         // 点击搜索按钮
-        async handleSearch () {
-            await Promise.all([
-                this.asyGetDeviceList(0, true),
-                this.asyGetDeviceList(1, true)
-            ])
-            if (this.source[0].scroll) {
-                this.source[0].scroll.refresh()
-                this.source[0].scroll.scrollTo(0, 0, 0, undefined, {})
-            }
-            if (this.source[1].scroll) {
-                this.source[1].scroll.refresh()
-                this.source[1].scroll.scrollTo(0, 0, 0, undefined, {})
-            }
+       handleSearch () {
+           this.searchForm = {
+               name: this.parameter
+           }
+            this.asyGetDeviceList(0, true)
+            this.asyGetDeviceList(1, true)
         },
         // 保存 scroll 实例
         getScroll ({ scroll, index }) {
             this.source[index].scroll = scroll
         },
         // 获取新增小区信息
-        addAreaConfirm (data) {
-            console.log(data)
-            setTimeout(() => {
-                this.addAreaIsShow = false
-            }, 3000)
-        },
-        areaBeforeClose (action, done) {
-            console.log(action)
-            if (action === 'confirm') {
-                console.log(111)
-            } else {
-                this.addAreaIsShow = false
+        async addAreaConfirm ({ name, address: street, selectAreaObj }) {
+            try {
+                const { city, county, province } = selectAreaObj
+                const { code, message } = await insertAreaData({
+                    name, // 小区名字
+                    province: province.code, // 省份编码
+                    city: city.code, // 市编码
+                    county: county.code, // 县编码
+                    street, // 街道地址
+                    usage: 2 // 默认 2  区分来源于手机端还是电脑端 1:电脑端  2:手机端
+                })
+                if (code === 200) {
+                    this.$toast('小区添加成功')
+                    this.asyGetDeviceList(0, true)
+                    this.asyGetDeviceList(1, true)
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
             }
+            this.addAreaIsShow = false
         }
     }
 }
@@ -220,7 +237,7 @@ export default {
     height: 100vh;
     .section {
         position:  relative;
-        // transform: translateZ(2px);
+        z-index: 1;
         &::after {
             content: '';
             position: absolute;

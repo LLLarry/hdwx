@@ -12,7 +12,7 @@
                     <van-tag type="success" :plain="from === 1" v-if="value.relevawalt === 1">关联钱包</van-tag>
                     <van-tag type="primary" :plain="from === 1" v-else>未关联钱包</van-tag>
                 </div>
-                <van-tag type="warning" v-if="value.status === 0">未激活</van-tag>
+                <van-tag type="warning" v-if="value.status === 0">未绑定</van-tag>
                 <van-tag type="primary" v-if="value.status === 1">正常</van-tag>
                 <van-tag type="danger" v-if="value.status === 2">挂失</van-tag>
             </div>
@@ -28,11 +28,11 @@
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">绑定人：</span>
-                <span class="card-item-content text-666">{{value.money}}元</span>
+                <span class="card-item-content text-666">{{value.touristnick}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">电话：</span>
-                <span class="card-item-content text-666">{{value.sendmoney}}元</span>
+                <span class="card-item-content text-666">{{value.touristphone}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">归属小区：</span>
@@ -44,9 +44,9 @@
             </hd-card-item>
         </hd-card>
         <div class="bottom padding-x-2 padding-bottom-2 d-flex justify-content-end" v-if="from === 1">
-            <van-button type="primary" size="mini" class="margin-right-1" plain round :to="`/ic/manage/${value.cardID}`">管理此卡</van-button>
+            <van-button type="primary" size="mini" class="margin-right-1" plain round :to="`/ic/manage/${value.id}`">管理此卡</van-button>
             <van-button type="info" size="mini" class="margin-right-1" :to="`/ic/record/${value.cardID}`" plain round >消费记录</van-button>
-            <van-button type="warning" size="mini" plain round>更改状态</van-button>
+            <van-button type="warning" size="mini" plain round @click="$emit('changeStatus', value)">更改状态</van-button>
         </div>
     </div>
 </template>

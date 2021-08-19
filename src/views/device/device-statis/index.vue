@@ -1,86 +1,80 @@
 <template>
     <div class="device-statis">
         <hd-title exec>功能开关</hd-title>
-        <v-chart class="chart" :option="option" v-if="isLoad" />
+        <section>
+          <div class="chart" ref="chart"></div>
+        </section>
     </div>
 </template>
 
 <script>
-import VChart, { THEME_KEY } from 'vue-echarts'
-import { ref, defineComponent, onBeforeMount } from '@vue/composition-api'
-export default defineComponent({
-  name: 'HelloWorld',
-  components: {
-    VChart
+// import VChart, { THEME_KEY } from 'vue-echarts'
+// import { ref, defineComponent, onBeforeMount } from '@vue/composition-api'
+export default {
+  name: 'device-statis',
+  data () {
+    return {
+      myChart: null
+    }
   },
-  provide: {
-    [THEME_KEY]: 'dark'
+  components: {},
+  mounted () {
+    this.init(this.$refs.chart)
   },
-  setup: () => {
-    // onBeforeMount(() => {
-    //     console.log('onBeforeMount')
-    // })
-    const isLoad = ref(false)
-    onBeforeMount(async () => {
-       const { CanvasRenderer } = await import('echarts/renderers')
-       const { use } = await import('echarts/core')
-       const { PieChart } = await import('echarts/charts')
-       const { TooltipComponent, TitleComponent, LegendComponent } = await import('echarts/components')
-        use([
-            CanvasRenderer,
-            TooltipComponent,
-            TitleComponent,
-            LegendComponent,
-            PieChart
-        ])
-        isLoad.value = true
-    })
-    const option = ref({
-      title: {
-        text: 'Traffic Sources',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines']
-      },
-      series: [
-        {
-          name: 'Traffic Sources',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: [
-            { value: 335, name: 'Direct' },
-            { value: 310, name: 'Email' },
-            { value: 234, name: 'Ad Networks' },
-            { value: 135, name: 'Video Ads' },
-            { value: 1548, name: 'Search Engines' }
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
+  methods: {
+    async init (dom) {
+      const echarts = await import('echarts')
+      this.myChart = echarts.init(dom)
+      this.myChart.setOption(this.getOptions())
+    },
+    getOptions () {
+      return {
+            // backgroundColor: '#090909',
+            title: {
+                text: '折线图堆叠'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['邮件营销']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: '邮件营销',
+                    type: 'line',
+                    stack: '总量',
+                    data: [120, 132, 101, 134, 90, 230, 210]
+                }
+            ]
         }
-      ]
-    })
-
-    return { option, isLoad }
+    }
   }
-})
+}
 </script>
 <style lang="scss">
 .device-statis {
     .chart {
-        height: 400px;
+        height: 200px;
     }
 }
 </style>

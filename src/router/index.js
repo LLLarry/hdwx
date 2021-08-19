@@ -82,7 +82,7 @@ const routes = [
     }
   },
   {
-    path: '/ic/manage/:cardId',
+    path: '/ic/manage/:id',
     name: 'ic-list-manage',
     component: () => import(/* webpackChunkName: "ic-list-manage" */ '../views/ic/ic-list-manage/index.vue'),
     meta: {

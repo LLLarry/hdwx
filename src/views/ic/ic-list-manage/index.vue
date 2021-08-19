@@ -52,35 +52,48 @@
 
         <!-- 解绑用户 -->
         <hd-overlay :show="deleteUserOnCrad" title="解绑用户" @close="deleteUserOnCrad = false">
-            <div class="text-center text-size-sm">
+            <div class="text-center text-size-sm" v-if="card.relevawalt !== 1">
                 当前<span class="text-danger">IC卡余额为(充值：{{card.money}}元、赠送：{{card.sendmoney}}元)</span>，解绑用户会自动清除卡余额
+            </div>
+            <div class="text-center text-size-sm" v-else>
+                当前<span class="text-danger">IC卡已关联钱包</span>，解绑用户会不会清除卡余额
             </div>
             <h5 class="text-center text-size-sm margin-top-3 margin-bottom-2">
                 会进行以下操作
             </h5>
-            <ul class="text-size-sm">
+            <ul class="text-size-sm" v-if="card.relevawalt !== 1">
                 <li class="margin-bottom-1"><p>1、IC卡余额清零</p></li>
                 <li class="margin-bottom-1"><p>2、解除IC卡与用户绑定的关系</p></li>
             </ul>
-            <van-button type="info"  size="small" class="w-100 margin-top-2">
-                <span class="position-relative">立即解绑</span>
+            <ul class="text-size-sm" v-else>
+                <li class="margin-bottom-1"><p>1、解除IC卡与用户绑定的关系</p></li>
+            </ul>
+            <van-button type="info"  size="small" class="w-100 margin-top-2" @click="unbind">
+                <span class="position-relative" >立即解绑</span>
             </van-button>
         </hd-overlay>
 
         <!-- 删除IC卡 -->
         <hd-overlay :show="deleteCrad" title="删除IC卡" @close="deleteCrad = false">
-            <div class="text-center text-size-sm">
+            <div class="text-center text-size-sm" v-if="card.relevawalt !== 1">
                 当前<span class="text-danger">IC卡余额为(充值：{{card.money}}元、赠送：{{card.sendmoney}}元)</span>，删除IC卡会自动清除卡余额
+            </div>
+            <div class="text-center text-size-sm" v-else>
+                当前<span class="text-danger">IC卡已关联钱包</span>，删除IC卡不会清除卡余额
             </div>
             <h5 class="text-center text-size-sm margin-top-3 margin-bottom-2">
                 会进行以下操作
             </h5>
-            <ul class="text-size-sm">
+            <ul class="text-size-sm" v-if="card.relevawalt !== 1">
                 <li class="margin-bottom-1"><p>1、IC卡余额清零</p></li>
                 <li class="margin-bottom-1"><p>2、解除IC卡与用户的绑定关系</p></li>
                 <li class="margin-bottom-1"><p>3、解除IC卡与商户的绑定的关系</p></li>
             </ul>
-            <van-button type="info"  size="small" class="w-100 margin-top-2">
+            <ul class="text-size-sm" v-else>
+                <li class="margin-bottom-1"><p>1、解除IC卡与用户的绑定关系</p></li>
+                <li class="margin-bottom-1"><p>2、解除IC卡与商户的绑定的关系</p></li>
+            </ul>
+            <van-button type="info"  size="small" class="w-100 margin-top-2" @click="deleteCard">
                 <span class="position-relative">立即删除</span>
             </van-button>
         </hd-overlay>
@@ -90,31 +103,13 @@
 import icListCard from '@/components/ic-list/ic-list-card'
 import hdOverlay from '@/components/hd-overlay'
 import { getType } from '@/utils/util'
+import { skipVirtualTopupPage, virtualPayMoney } from '@/require/member'
+import { unbindOnlineCard, deleteOnlineCard } from '@/require/ic'
 export default {
     data () {
         return {
-            card: {
-                aid: 2334,
-                areaaddress: '天悦2期',
-                areaname: '天悦二期',
-                cardID: '5C1FD62C',
-                create_time: '2021-06-28T02:12:24.000+0000',
-                dealername: '张克庆',
-                dealernick: '心想事成',
-                figure: '5C1FD62C',
-                id: 17855,
-                merid: 683922,
-                money: 100,
-                relevawalt: 2,
-                remark: null,
-                sendmoney: 0,
-                status: 1,
-                touristbalance: null,
-                touristnick: null,
-                touristphone: null,
-                type: 1,
-                uid: 0
-            },
+            id: '',
+            card: {},
             virtual: {}, // 虚拟充值容器
             deleteUrl: require('../../../assets/images/delete_icon.png'),
             deleteUserOnCrad: false, // 解绑用户
@@ -122,12 +117,46 @@ export default {
         }
     },
     mounted () {
+        this.id = this.$route.params.id
+        this.handleGetInitData({ id: this.id })
     },
     components: {
         icListCard,
         hdOverlay
     },
     methods: {
+         async handleGetInitData (data) {
+            try {
+                const { code, message, ...result } = await skipVirtualTopupPage({
+                    ...data,
+                    type: 2 //  1:用户  2:在线卡
+                })
+                if (code === 200) {
+                  this.card = {
+                        aid: result.aid,
+                        areaname: result.areaname,
+                        cardID: result.cardID,
+                        create_time: result.createTime,
+                        touristnick: result.touristnick,
+                        figure: result.figure,
+                        id: result.id,
+                        merid: result.merid,
+                        money: result.money,
+                        relevawalt: result.relevawalt,
+                        remark: null,
+                        sendmoney: result.sendmoney,
+                        status: result.status,
+                        touristphone: result.touristphone,
+                        type: result.type,
+                        uid: result.uid
+                    }
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
+            }
+        },
         handleVirtual (money, sendmoney) {
             this.virtual = {
                 money: money.toString(),
@@ -150,7 +179,7 @@ export default {
             }
             money = money === '空字符串' ? 0 : money
             sendmoney = sendmoney === '空字符串' ? 0 : sendmoney
-            alert(`${money},${sendmoney}`)
+            this.virtualPayMoneyFn({ money, sendmoney, type: 2, id: this.id, aid: this.card.aid })
         },
         verifiMoney (money) {
             // eslint-disable-next-line no-debugger
@@ -175,6 +204,79 @@ export default {
             } else {
                 return '为非法数字'
             }
+        },
+        async virtualPayMoneyFn (data) {
+            try {
+                const { code, message } = await virtualPayMoney(data, '虚拟充值中')
+                if (code === 200) {
+                    const money = this.card.money + data.money < 0 ? 0 : this.card.money + data.money
+                    const sendmoney = this.card.sendmoney + data.sendmoney < 0 ? 0 : this.card.sendmoney + data.sendmoney
+                    this.$dialog.alert({
+                        title: '虚拟充值成功',
+                        message: this.getHtml(data, money, sendmoney),
+                        theme: 'round-button'
+                    })
+                    this.$set(this.card, 'money', money)
+                    this.$set(this.card, 'sendmoney', sendmoney)
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
+            }
+        },
+        getHtml (card, money, sendmoney) {
+            return `<div class="text-left" style="line-height: 0.9;">
+                        <div class="margin-b-1">您已成功虚拟充值【${this.card.cardID}】在线卡</div>
+                        <div class="bg-gray rounded margin-bottom-1 padding-x-3 padding-y-1">
+                            <div>虚拟充值</div>
+                            <div>充值金额：<span class="text-success">${card.money}元</span></div>
+                            <div>赠送金额：<span class="text-success">${card.sendmoney}元</span></div>
+                        </div>
+                        <div class="bg-gray rounded padding-2">
+                            <div>卡余额为</div>
+                            <div>充值金额：<span class="text-success">${money}元</span></div>
+                            <div>赠送金额：<span class="text-success">${sendmoney}元</span></div>
+                        </div>
+                    </div>`.replace(/[\n\r]/g, '')
+        },
+        // 解绑在线卡
+        unbind () {
+            unbindOnlineCard({ onlineid: this.id, conti: 2 })
+            .then(res => {
+                if (res.code === 200) {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message: '在线卡解绑成功',
+                        theme: 'round-button',
+                        beforeClose: (action, done) => {
+                            done()
+                            this.$router.replace({ path: '/ic/list' })
+                        }
+                    })
+                } else {
+                    this.$toast(res.message)
+                }
+            })
+        },
+        // 删除在线卡
+        deleteCard () {
+            deleteOnlineCard({ onlineid: this.id })
+            .then(res => {
+                if (res.code === 200) {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message: '在线卡删除成功',
+                        theme: 'round-button',
+                        beforeClose: (action, done) => {
+                            done()
+                            this.$router.replace({ path: '/ic/list' })
+                        }
+                    })
+                } else {
+                    this.$toast(res.message)
+                }
+            })
         }
     }
 }

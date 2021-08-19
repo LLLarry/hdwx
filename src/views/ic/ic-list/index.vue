@@ -1,9 +1,9 @@
 <template>
     <div class="ic-list position-relative d-flex flex-column">
-        <div class="section shadow padding-bottom-2" :style="sectionTransZ">
+        <div class="section shadow padding-bottom-2">
             <div class="search-form d-flex padding-x-2 margin-top-2 align-items-center">
                 <van-dropdown-menu class="select-menu">
-                    <van-dropdown-item v-model="type" :options="option1" @open="dropMenuStatus=1" @closed="dropMenuStatus=2" />
+                    <van-dropdown-item get-container=".dropMenu" v-model="type" :options="option1" @open="dropMenuStatus=1" @closed="dropMenuStatus=2" />
                 </van-dropdown-menu>
                 <van-search
                     v-model="keywords"
@@ -14,9 +14,9 @@
             </div>
             <div class="padding-top-2">
                 <van-dropdown-menu class="select-menu">
-                    <van-dropdown-item v-model="value2" :options="option2"  @open="dropMenuStatus=1" @change="asyInquireOnlineData(true)" />
-                    <van-dropdown-item v-model="value3" :options="option3"  @open="dropMenuStatus=1" @change="asyInquireOnlineData(true)" />
-                    <van-dropdown-item v-model="value4" :options="option4"  @open="dropMenuStatus=1" @change="asyInquireOnlineData(true)" />
+                    <van-dropdown-item get-container=".dropMenu" v-model="value2" :options="option2"  @open="dropMenuStatus=1" @change="asyInquireOnlineData(true)" />
+                    <van-dropdown-item get-container=".dropMenu" v-model="value3" :options="option3"  @open="dropMenuStatus=1" @change="asyInquireOnlineData(true)" />
+                    <van-dropdown-item get-container=".dropMenu" v-model="value4" :options="option4"  @open="dropMenuStatus=1" @change="asyInquireOnlineData(true)" />
                 </van-dropdown-menu>
             </div>
             <div class="padding-top-2 padding-x-2 d-flex justify-content-around text-size-sm">
@@ -32,19 +32,34 @@
                 @getScroll="getScroll"
             >
                 <div class="padding-top-3">
-                    <ic-list-card v-for="card in list" :key="card.id" :value="card"/>
+                    <ic-list-card
+                        v-for="card in list"
+                        :key="card.id" :value="card"
+                        @changeStatus="changeStatus"
+                    />
                     <div
                         class="text-center padding-bottom-3 text-666"
                     >{{ status === 2 ? '暂无更多数据' : '正在加载更多' }}</div>
                 </div>
             </hd-scroll>
         </main>
+
+         <van-action-sheet
+            v-model="actionIsShow"
+            :actions="actions"
+            cancel-text="取消"
+            :description="descMessage"
+            close-on-click-action
+            @select="handldConfirmChangeStatus"
+        />
+        <!-- 下拉菜单挂载的节点 -->
+        <div class="dropMenu" />
     </div>
 </template>
 <script>
 import hdScroll from '@/components/hd-scroll'
 import icListCard from '@/components/ic-list/ic-list-card'
-import { inquireOnlineData } from '@/require/ic'
+import { inquireOnlineData, changeOnlineCardStatus } from '@/require/ic'
 const REQUIRE_LENGTH = 35 // 请求返回值数量
 export default {
     data () {
@@ -55,12 +70,9 @@ export default {
                 { text: 'IC卡号', value: 1 },
                 { text: '手机号', value: 2 }
             ],
-            value2: 0,
+            value2: '',
             option2: [
-                { text: '所有小区', value: 0 },
-                { text: '测试小区1', value: 1 },
-                { text: '测试小区2', value: 2 },
-                { text: '测试小区3', value: 3 }
+                { text: '所有小区', value: '' }
             ],
             value3: 0,
             option3: [
@@ -82,24 +94,31 @@ export default {
             currentPage: 1, // 当前页
             datasize: 0, // 在线卡数量
             datatopupmoney: 0, // 在线卡充值金额
-            datasendmoney: 0 // 在线卡赠送金额
+            datasendmoney: 0, // 在线卡赠送金额
+            actionIsShow: false, // 是否现在线卡状态
+            actions: [
+                { name: '正常', id: 1 },
+                { name: '挂失', id: 2 },
+                { name: '未绑定', id: 0 }
+            ],
+            actionRow: {} // 更改在显卡状态
         }
     },
     mounted () {
         this.asyInquireOnlineData(true)
     },
-    computed: {
-        sectionTransZ () {
-            const value = this.dropMenuStatus === 1 ? 'none' : 'translateZ(2px)'
-            return {
-                transform: value,
-                webkitTransform: value
-            }
-        }
-    },
     components: {
         hdScroll,
         icListCard
+    },
+    computed: {
+        descMessage () {
+            if (this.actionIsShow) {
+                const cardID = this.actionRow.cardID ? this.actionRow.cardID : ''
+                return `更改${cardID}卡状态`
+            }
+            return ''
+        }
     },
     methods: {
         // 点击搜索按钮
@@ -114,44 +133,104 @@ export default {
         getScroll ({ scroll, index }) {
             this.scroll = scroll
         },
-        async pullingUpFn ({ scroll }) {
+        pullingUpFn ({ scroll }) {
             if (this.status !== 2) {
-                await this.asyInquireOnlineData()
-                this.$nextTick(() => {
-                    scroll.finishPullUp()
-                })
+                console.log('status', status)
+                this.asyInquireOnlineData()
             }
         },
         /* 异步请求card list */
         async asyInquireOnlineData (init = false) {
-            if (!init) { // 非初始化状态
-                if ([0, 2].includes(this.status)) return false // 正在加载中、无数据 取消请求
-                this.currentPage++
-            } else {
-                this.currentPage = 1
+            try {
+                if (!init) { // 非初始化状态
+                    if ([0, 2].includes(this.status)) return false // 正在加载中、无数据 取消请求
+                    this.currentPage++
+                } else {
+                    this.currentPage = 1
+                }
+                this.status = 0
+                const { code, message, result } = await inquireOnlineData({
+                    type: this.type,
+                    keywords: this.keywords,
+                    areaId: this.value2,
+                    cardtype: this.value3, // 卡类型   1:正常卡  2:挂失卡  3:未绑定卡
+                    cardrank: this.value4, // 1:充值金额按从大到小  2:充值金额按从小到大
+                    currentPage: this.currentPage,
+                    limit: REQUIRE_LENGTH,
+                    source: 2 // 来源； 手机端 默认固定传值 2
+                }, '正在加载数据')
+                if (code === 200) {
+                    // 如果是初始化，需要将list置空之后再进行赋值
+                    const { datalist, datasize, datatopupmoney, datasendmoney, areaData } = result
+                    if (init) {
+                        this.list = datalist
+                        this.datasize = datasize // 在线卡数量
+                        this.datatopupmoney = datatopupmoney // 在线卡充值金额
+                        this.datasendmoney = datasendmoney // 在线卡赠送金额
+                        this.option2 = areaData.reduce((acc, item) => {
+                            acc.push({ text: item.name, value: item.id })
+                            return acc
+                        }, [{ text: '所有小区', value: '' }])
+                    } else {
+                        this.list = [...this.list, ...datalist]
+                    }
+                    if (datalist.length < REQUIRE_LENGTH) {
+                        this.status = 2 // 将状态置为无数据
+                    } else {
+                        this.status = 1 // 将状态置为空闲
+                    }
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
+            } finally {
+                if (this.scroll) {
+                    this.$nextTick(() => {
+                        if (init) {
+                            this.scroll.refresh()
+                            this.scroll.finishPullUp()
+                            this.scroll.scrollTo(0, 0, 0, undefined, {})
+                        } else {
+                            this.scroll.finishPullUp()
+                        }
+                    })
+                }
             }
-            this.status = 0
-            const { datalist, datasize, datatopupmoney, datasendmoney } = await inquireOnlineData({
-                type: this.type,
-                keywords: this.keywords,
-                areaId: '',
-                currentPage: this.currentPage,
-                limit: REQUIRE_LENGTH
-            }, '正在加载数据')
-            // 如果是初始化，需要将list置空之后再进行赋值
-            if (init) {
-                this.list = datalist
-                this.datasize = datasize // 在线卡数量
-                this.datatopupmoney = datatopupmoney // 在线卡充值金额
-                this.datasendmoney = datasendmoney // 在线卡赠送金额
-            } else {
-                this.list = [...this.list, ...datalist]
+        },
+        /* 更改在线卡状态 */
+        async asyChangeOnlineCardStatus (data) {
+            try {
+                const { code, message } = await changeOnlineCardStatus(data)
+                console.log(code)
+                if (code === 200) {
+                    this.$set(this.actionRow, 'status', data.status)
+                    // this.actionRow.status = data.status
+                    this.$toast(`【${this.actionRow.cardID}】卡状态修改成功`)
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
             }
-            if (datalist.length < REQUIRE_LENGTH) {
-                this.status = 2 // 将状态置为无数据
-            } else {
-                this.status = 1 // 将状态置为空闲
-            }
+        },
+        // 商户选择卡状态后的回调
+        handldConfirmChangeStatus ({ id, name, subname }) {
+            // 调用修改卡状态方法
+            this.asyChangeOnlineCardStatus({ id: this.actionRow.id, status: id })
+        },
+        changeStatus (row) {
+            this.actionRow = row
+            this.actions.forEach(item => {
+                if (item.id === row.status) {
+                    item.subname = '当前所属状态'
+                    item.color = '#1989fa'
+                } else {
+                    delete item.subname
+                    delete item.color
+                }
+            })
+            this.actionIsShow = true
         }
     }
 }
@@ -162,7 +241,8 @@ export default {
     height: 100vh;
     .section {
         position:  relative;
-        transform: translateZ(2px);
+        z-index: 1;
+        // transform: translateZ(2px);
         &::after {
             content: '';
             position: absolute;
@@ -208,6 +288,10 @@ export default {
     main {
         flex: 1;
         overflow-y: auto;
+    }
+    .dropMenu {
+        position:  relative;
+        z-index: 2;
     }
 }
 </style>

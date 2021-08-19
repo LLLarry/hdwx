@@ -17,27 +17,27 @@
         </hd-card-item>
         <hd-card-item>
             <span class="area-item-title text-333">设备数量：</span>
-            <span class="area-item-content text-666">{{value.equcount}}元</span>
+            <span class="area-item-content text-666">{{value.equcount}}</span>
         </hd-card-item>
         <hd-card-item>
             <span class="area-item-title text-333">昨日设备使用率：</span>
-            <span class="area-item-content text-666">{{value.usagerate}}%</span>
+            <span class="area-item-content text-666">{{value.usagerate | fmtMoney}}%</span>
         </hd-card-item>
         <hd-card-item>
             <span class="area-item-title text-333">总在线收益：</span>
-            <span class="area-item-content text-666">{{value.total_online_earn}}</span>
+            <span class="area-item-content text-666">{{value.total_online_earn | fmtMoney}}元</span>
         </hd-card-item>
          <hd-card-item>
             <span class="area-item-title text-333">今日在线收益：</span>
-            <span class="area-item-content text-666">{{value.totalOnlineEarn}}</span>
+            <span class="area-item-content text-666">{{value.totalOnlineEarn | fmtMoney}}元</span>
         </hd-card-item>
         <hd-card-item>
             <span class="area-item-title text-333">总消费金额：</span>
-            <span class="area-item-content text-666">{{value.totalconsumemoney}}</span>
+            <span class="area-item-content text-666">{{value.totalconsumemoney | fmtMoney}}元</span>
         </hd-card-item>
          <hd-card-item>
             <span class="area-item-title text-333">今日消费金额：</span>
-            <span class="area-item-content text-666">{{value.consumemoney}}</span>
+            <span class="area-item-content text-666">{{value.consumemoney | fmtMoney}}元</span>
         </hd-card-item>
         <hd-card-item>
            <span>端口状态：</span>
@@ -48,7 +48,7 @@
            </span>
         </hd-card-item>
         <div class="area-contral d-flex justify-content-end w-100 margin-top-1">
-            <van-button type="primary" size="small" @click="$router.push(`/area/manage/${value.value}`)">管理</van-button>
+            <van-button type="primary" size="small" @click="$router.push(`/area/manage/${value.id}`)">管理</van-button>
             <van-button type="primary" size="small">统计</van-button>
         </div>
     </hd-card>

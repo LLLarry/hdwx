@@ -96,7 +96,7 @@
                                 <van-tag v-else-if="item.paysource === 2 || item.paysource === 3" type="danger">消费订单</van-tag>
                                 <van-tag v-else-if="item.paysource === 5" type="success">部分退费订单</van-tag>
                                 <van-tag v-else-if="item.paysource === 7" type="warning">虚拟充值订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 6 || tem.paysource === 8" type="success">钱包退款订单</van-tag>
+                                <van-tag v-else-if="item.paysource === 6 || item.paysource === 8" type="success">钱包退款订单</van-tag>
                             </div>
                         </div>
                         <hd-card class="padding-2 text-size-sm">
