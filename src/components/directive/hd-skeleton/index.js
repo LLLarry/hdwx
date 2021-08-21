@@ -26,7 +26,9 @@ Vue.directive('no-data', {
             el._dom.type = binding.value
             el.appendChild(el._dom.$el)
         } else {
-            el.removeChild(el._dom.$el)
+            if (el.contains(el._dom.$el)) {
+                el.removeChild(el._dom.$el)
+            }
         }
     }
 })

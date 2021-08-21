@@ -5,6 +5,7 @@
             left-text="返回"
             left-arrow
             class="header-fixed"
+            @click-left="$router.go(-1)"
         />
         <main>
             <hd-line height="1.6rem"/>
@@ -12,11 +13,11 @@
             <van-tabs v-model="active">
                 <van-tab title="合伙人管理">
                     <hd-title class="bg-white" exec>合伙人管理</hd-title>
-                    <area-partner :noData="noData" />
+                    <area-partner :noData="noData" :partlist="partlist" @reflesh="reflesh" />
                 </van-tab>
                 <van-tab title="设备管理">
                     <hd-title class="bg-white" exec>设备管理</hd-title>
-                    <areaAdevice :list="list" />
+                    <areaAdevice :existdevice="existdevice" :noexistdevice="noexistdevice" @reflesh="reflesh" />
                 </van-tab>
                 <van-tab title="钱包模板">
                     <!-- 钱包充值模板 -->
@@ -29,10 +30,13 @@
                                 </div>
                             </template>
                         </hd-title>
-                        <ul class="d-flex flex-wrap temp-warp padding-x-3">
-                            <li class="padding-2 margin-bottom-3 text-center rounded" v-for="item in 5" :key="item">
-                                <div>充100元送10元</div>
-                                <div class="margin-top-1 text-size-sm text-999"><span class="margin-right-2">充值100元</span> <span>到账110元</span></div>
+                        <div v-no-data="!walletTemplate"></div>
+                        <ul class="d-flex flex-wrap temp-warp padding-x-3" v-if="walletTemplate">
+                            <li class="padding-2 margin-bottom-3 text-center rounded"
+                                v-for="item in walletTemplate.gather"
+                                :key="item.id">
+                                <div>{{item.name}}</div>
+                                <div class="margin-top-1 text-size-sm text-999"><span class="margin-right-2">充值{{item.money}}元</span> <span>到账{{item.remark}}元</span></div>
                             </li>
                         </ul>
                     </div>
@@ -49,17 +53,18 @@
                                 </div>
                             </template>
                         </hd-title>
-                        <ul class="d-flex flex-wrap temp-warp padding-x-3">
-                            <li class="padding-2 margin-bottom-3 text-center rounded" v-for="item in 5" :key="item">
-                                <div>充100元送10元</div>
-                                <div class="margin-top-1 text-size-sm text-999"><span class="margin-right-2">充值100元</span> <span>到账110元</span></div>
+                        <div v-no-data="!oncardTemplate"></div>
+                        <ul class="d-flex flex-wrap temp-warp padding-x-3" v-if="oncardTemplate">
+                            <li class="padding-2 margin-bottom-3 text-center rounded" v-for="item in oncardTemplate.gather" :key="item.id">
+                                <div>{{item.name}}</div>
+                                <div class="margin-top-1 text-size-sm text-999"><span class="margin-right-2">充值{{item.money}}元</span> <span>到账{{item.remark}}元</span></div>
                             </li>
                         </ul>
                     </div>
                 </van-tab>
             </van-tabs>
             <hd-nav :list="[{ text: '删除小区' }]">
-                <van-button type="danger" size="small"  class="w-50">删除小区</van-button>
+                <van-button type="danger" size="small"  class="w-50" @click="handleDelete">删除小区</van-button>
             </hd-nav>
         </main>
         <!-- <footer class="shadow"></footer> -->
@@ -69,7 +74,7 @@
 import areaPartner from './area-partner'
 import areaAdevice from './area-device'
 import hdNav from '@/components/hd-nav'
-import { inquireAreaDataById } from '@/require/area'
+import { inquireAreaDataById, dealeteAreaInfo } from '@/require/area'
 export default {
     data () {
         return {
@@ -79,13 +84,15 @@ export default {
             noDataText2: {
                 description: '本小区暂无绑定的设备'
             },
+            partlist: [], // 合伙人列表
+            existdevice: [], // 已绑定的设备
+            noexistdevice: [], // 未绑定的设备
+            oncardTemplate: {}, // 在线卡模板
+            walletTemplate: {}, // 钱包模板
             list: []
         }
     },
     mounted () {
-        for (let i = 0; i < 20; i++) {
-            this.list.push({ id: i, name: ('a' + i), selected: i === 10 })
-        }
         this.id = this.$route.params.id
         this.init()
     },
@@ -97,11 +104,51 @@ export default {
     methods: {
         async init () {
             try {
-                await inquireAreaDataById({
+                const { code, message, partlist, existdevice, noexistdevice, oncardTemplate, walletTemplate } = await inquireAreaDataById({
                     id: this.id
                 })
+                if (code === 200) {
+                    this.partlist = partlist
+                    this.existdevice = existdevice
+                    this.noexistdevice = noexistdevice
+                    this.oncardTemplate = oncardTemplate
+                    this.walletTemplate = walletTemplate
+                } else {
+                    this.$toast(message)
+                }
             } catch (error) {
+                this.$toast('异常错误')
             }
+        },
+        reflesh () {
+            this.init()
+        },
+        // 删除小区
+        handleDelete () {
+            this.$dialog.confirm({
+                title: '提示',
+                message: '是否删除当前小区？',
+                beforeClose: async (action, done) => {
+                    if (action === 'confirm') {
+                        const { code: status, message } = await dealeteAreaInfo({ aid: this.id })
+                        done()
+                        if (status === 200) {
+                            setTimeout(() => {
+                                return this.$dialog.alert({
+                                title: '提示',
+                                    message: '已成功删除当前小区'
+                                }).then(() => {
+                                    this.$router.replace({ path: '/area/list' })
+                                })
+                            }, 300)
+                        } else {
+                            this.$toast(message)
+                        }
+                    } else {
+                        done()
+                    }
+                }
+            })
         }
     }
 }
