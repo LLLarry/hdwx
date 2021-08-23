@@ -51,6 +51,17 @@
 @import './assets/style/hdwx-bootstrap.css';
 // @import './assets/style/iconfont.css';
 @import './assets/style/animate.css';
+@font-face {
+    font-family: "mathNum";
+    src: url("./assets/fonts/number/DINMITTELSCHRIFT.woff2") format("woff2"),
+        url("./assets/fonts/number/DINMITTELSCHRIFT.woff") format("woff"),
+        url("./assets/fonts/number/DINMITTELSCHRIFT.ttf") format("truetype"),
+        url("./assets/fonts/number/DINMITTELSCHRIFT.eot") format("embedded-opentype"),
+        url("./assets/fonts/number/DINMITTELSCHRIFT.svg") format("svg");
+}
+.math-num {
+    font-family: "mathNum";
+}
 #app {
   min-height: 100vh;
 }

@@ -70,10 +70,10 @@ export default {
     methods: {
         async handleGetInitData (data) {
             try {
-                const { code, message, result } = await skipVirtualTopupPage(data)
+                const { code, message, order, areadata } = await skipVirtualTopupPage(data)
                 if (code === 200) {
-                    const { id: uid, headimgurl, balance: topupmoney, sendmoney, username, realname, phoneNum: cellphone } = result.order
-                    const { id: aid, name: areaname } = result.areadata
+                    const { id: uid, headimgurl, balance: topupmoney, sendmoney, username, realname, phoneNum: cellphone } = order
+                    const { id: aid, name: areaname } = areadata
                     this.member = {
                         aid,
                         areaname,
@@ -143,11 +143,11 @@ export default {
         },
         async virtualPayMoneyFn (data) {
             try {
-                const { code, message, result } = await virtualPayMoney(data, '虚拟充值中')
+                const { code, message, topupbalance, sendbalance } = await virtualPayMoney(data, '虚拟充值中')
                 if (code === 200) {
                     this.$toast('虚拟充值成功')
-                    this.$set(this.member, 'topupmoney', result.topupbalance)
-                    this.$set(this.member, 'sendmoney', result.sendbalance)
+                    this.$set(this.member, 'topupmoney', topupbalance)
+                    this.$set(this.member, 'sendmoney', sendbalance)
                 } else {
                     this.$toast(message)
                 }

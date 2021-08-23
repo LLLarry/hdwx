@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home bg-gray">
         <div class="data-content position-relative text-white padding-bottom-3 padding-top-1">
             <div class="circular-1 rounded-circle position-absolute"></div>
             <div class="circular-2 rounded-circle position-absolute"></div>
@@ -81,7 +81,6 @@
                 </van-grid-item>
             </van-grid>
         </section>
-        <hd-line height="1.3rem" />
     </div>
 </template>
 
@@ -110,7 +109,7 @@
                     { title: '会员管理', url: '/member/list', total: 0 },
                     { title: '小区管理', url: '/area/list', total: 0 },
                     { title: '设备绑定' },
-                    { title: '历史收益' },
+                    { title: '历史收益', url: '/history/profit' },
                     { title: '订单统计' },
                     { title: '充值管理' },
                     { title: '缴费管理', url: '/register' }
@@ -170,7 +169,7 @@
                         { title: '会员管理', url: '/member/list', total: result.clientsnum },
                         { title: '小区管理', url: '/area/list', total: result.areanum },
                         { title: '设备绑定' },
-                        { title: '历史收益' },
+                        { title: '历史收益', url: '/history/profit' },
                         { title: '订单统计' },
                         { title: '充值管理' },
                         { title: '缴费管理', url: '/register' }
@@ -198,7 +197,8 @@
 
 <style lang="scss">
     .home {
-        padding-bottom: 1.4rem;
+        min-height: 100vh;
+        padding-bottom: 1.8rem;
         .data-content {
             width: 100%;
             min-height: 40vh;
@@ -302,6 +302,11 @@
         .home-menu {
             .menu-icon {
                 width: 35%;
+            }
+        }
+        section {
+            .van-grid-item__content--center {
+                padding: 0.15rem 0.21333rem;
             }
         }
     }

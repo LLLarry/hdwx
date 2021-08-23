@@ -237,7 +237,7 @@ export default {
             }
             try {
                 this.status = 0
-                const { code, result, message } = await inquireMemberRecord({
+                const { code, message, ...result } = await inquireMemberRecord({
                     ...data,
                     currentPage: this.currentPage,
                     limit: LIMIT
@@ -245,12 +245,12 @@ export default {
                 if (code === 200) {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
                     if (init) {
-                        this.list = result.consumeinfo
+                        this.list = result.recordInfo
                     } else {
-                        this.list = [...this.list, ...result.consumeinfo]
+                        this.list = [...this.list, ...result.recordInfo]
                     }
                     // 更改状态，看是否还有数据
-                    if (result.consumeinfo.length >= LIMIT) {
+                    if (result.recordInfo.length >= LIMIT) {
                         this.status = 1
                     } else {
                         this.status = 2
@@ -259,6 +259,7 @@ export default {
                     this.$toast(message)
                 }
             } catch (e) {
+                console.log('e', e)
                 this.$toast('异常错误')
             } finally {
                 if (this.scroll) {

@@ -6,6 +6,7 @@
         @save="onSave"
         :contact-info="{ name: '012092', tel: '15036012092' }"
     />
+    环境： {{ WECHAT_BROWSER_ENV }}
   </div>
 </template>
 
@@ -13,6 +14,11 @@
 import ajax from '@/require/ajax'
 // const baseUrl = process.env.NODE_ENV === 'production' ? '' : '/api'
 export default {
+    data () {
+        return {
+            WECHAT_BROWSER_ENV: window.HDWX.WECHAT_BROWSER_ENV
+        }
+    },
     methods: {
         onSave ({ tel, name }) {
             // console.log(content)

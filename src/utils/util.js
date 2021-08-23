@@ -51,3 +51,48 @@ export const fmtDate = (date, type = 'YYYY-MM-DD HH:mm:ss') => {
         return [fmtDate(new Date(newTimes), type), fmtDate(new Date(times), type)]
     }
 }
+
+/**
+ * 获取指定日期所属的周一 和 周日日期
+ * @param {Date} date
+ * @param {Number} num 当前周的 正数：前几个周 负数： 后几个周
+ * @param {Number} type 格式化类型
+ * @returns [Date, Date] 日期数组
+ */
+export const getWeekRange = (date = new Date(), num = 0, type = 'YYYY-MM-DD HH:mm:ss') => {
+    date = new Date(date)
+    const times = date.getTime()
+    if (Number.isNaN(times)) {
+        throw TypeError('date argument is not Date type')
+    }
+    if (getType(num) === 'string') {
+        type = num
+        num = 0
+    }
+    const daysValue = dayjs(date).day() === 0 ? dayjs(date).add(-1, 'day') : dayjs(date)
+    const start = daysValue.startOf('week').add(1, 'day').add(num, 'week').format(type)
+    const end = daysValue.endOf('week').add(1, 'day').add(num, 'week').format(type)
+    return [start, end]
+}
+
+/**
+ * 获取指定日期所属的月初 和 月末日期
+ * @param {Date} date
+ * @param {Number} num 当前月的 正数：前几个月 负数： 后几个月
+ * @param {String} type 格式化类型
+ * @returns [Date, Date] 日期数组
+ */
+ export const getMonthRange = (date = new Date(), num = 0, type = 'YYYY-MM-DD HH:mm:ss') => {
+    date = new Date(date)
+    const times = date.getTime()
+    if (Number.isNaN(times)) {
+        throw TypeError('date argument is not Date type')
+    }
+    if (getType(num) === 'string') {
+        type = num
+        num = 0
+    }
+    const start = dayjs(date).add(num, 'month').startOf('month').format(type)
+    const end = dayjs(date).add(num, 'month').endOf('month').format(type)
+    return [start, end]
+}

@@ -184,6 +184,14 @@ const routes = [
     meta: {
       title: '设备端口状态'
     }
+  },
+  {
+    path: '/history/profit',
+    name: 'history-profit',
+    component: () => import(/* webpackChunkName: "history-profit" */ '../views/history-profit/index.vue'),
+    meta: {
+      title: '历史收益统计'
+    }
   }
 ]
 // process.env.BASE_URL

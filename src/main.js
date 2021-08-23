@@ -21,7 +21,7 @@ import '@/directive'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
-RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker
+RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover
 } from 'vant'
 
 Vue.use(loadingIndex)
@@ -67,6 +67,7 @@ Vue.use(CollapseItem)
 Vue.use(Cell)
 Vue.use(CellGroup)
 Vue.use(Picker)
+Vue.use(Popover)
 
 Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })
