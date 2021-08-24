@@ -1,5 +1,5 @@
 <template>
-    <div class="device-order position-relative bg-gray overflow-hidden">
+    <div class="order-profit position-relative bg-gray overflow-hidden">
         <!-- 顶部操作 -->
         <div class="header bg-white shadow position-absolute padding-bottom-1">
             <!--
@@ -25,8 +25,17 @@
         </div>
         <!-- 顶部操作 -->
         <!-- 侧边操作 -->
-        <van-popup v-model="slideMenuIsShow" position="top" :style="{ width: '100%', maxHeight: '70%' }" >
-            <div class="filter-box">
+        <van-popup class="popup-box overflow-hidden" v-model="slideMenuIsShow" position="top" :style="{ width: '100%', maxHeight: '75%' }" >
+            <div class="filter-box h-100 overflow-auto">
+                 <div>
+                    <hd-title>
+                    设备号
+                    </hd-title>
+
+                    <div>
+                        <van-search v-model="code" placeholder="请输入设备号" left-icon="" />
+                    </div>
+                </div>
                 <div>
                     <hd-title>
                     订单类型
@@ -34,11 +43,28 @@
 
                     <hd-select-box class="padding-x-3">
                         <hd-select-box-item
-                            v-for="item in orderType"
+                            v-for="item in orderTypeList"
                             :key="item.text"
                             :value="item"
-                            :selected="selectOrderType"
+                            :selected="ordertype"
                             @onChange="handleOrderTypeChange"
+                        >
+                            {{item.text}}
+                        </hd-select-box-item>
+                    </hd-select-box>
+                </div>
+                <div>
+                    <hd-title>
+                    订单状态
+                    </hd-title>
+
+                    <hd-select-box class="padding-x-3">
+                        <hd-select-box-item
+                            v-for="item in statusList"
+                            :key="item.text"
+                            :value="item"
+                            :selected="status"
+                            @onChange="handleOrderStatusChange"
                         >
                             {{item.text}}
                         </hd-select-box-item>
@@ -50,10 +76,10 @@
                     </hd-title>
                     <hd-select-box class="padding-x-3">
                         <hd-select-box-item
-                            v-for="item in payType"
+                            v-for="item in paytypeList"
                             :key="item.text"
                             :value="item"
-                            :selected="selectPayType"
+                            :selected="paytype"
                             @onChange="handlePayTypeChange"
                         >
                             {{item.text}}
@@ -61,7 +87,7 @@
                     </hd-select-box>
                 </div>
             </div>
-            <div class="filter-bottom position-absolute d-flex padding-3">
+            <div class="filter-bottom d-flex padding-3">
                 <van-button type="default" class="flex-1" @click="filterReset">重置</van-button>
                 <van-button type="primary" class="flex-2 margin-left-2" @click="filterSearch">确定</van-button>
             </div>
@@ -83,57 +109,35 @@
             <hd-scroll @pullingUpFn = "pullingUpFn" @getScroll="({ scroll }) => this.scroll = scroll">
                 <div class="padding-y-3">
                     <div
-                        class="record-card position-relativetext-size-md text-666 shadow margin-x-2 rounded-md overflow-hidden margin-bottom-3 bg-white"
+                        class="record-card position-relative text-size-md text-666 overflow-hidden margin-bottom-3"
                         v-for="item in list" :key="item.id"
                     >
-                        <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
-                            <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
-                                <div class="">
-                                    <div class="font-weight-bold text-000 text-size-default card-num">20210802195354890008600</div>
-                                </div>
-                                <van-tag v-if="item.paysource === 1" type="primary">充值订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 2 || item.paysource === 3" type="danger">消费订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 5" type="success">部分退费订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 7" type="warning">虚拟充值订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 6 || item.paysource === 8" type="success">钱包退款订单</van-tag>
+                        <div class="order-item d-flex padding-2 bg-gray">
+                            <div class="left d-flex justify-content-center align-items-center">
+                                <i class="iconfont icon-big-Pay" v-if="item.paytype === 3 || item.paytype === 5"></i>
+                                <i class="iconfont icon-qianbao" v-else-if="item.paytype === 1 || item.paytype === 6"></i>
+                                <i class="iconfont icon-weixin"  v-else-if="item.paytype === 2 || item.paytype === 2"></i>
+                                <img class="yinlian" src="../../assets/images/yinlian.png" v-else-if="item.paytype === 12 || item.paytype === 13" />
+                            </div>
+                            <div class="center padding-x-1 margin-left-1">
+                                <p class="margin-bottom-1">{{item.ordernum}}</p>
+                                <p class="text-333 font-weight-bold margin-bottom-1">{{item.code}}</p>
+                                <p class="text-p">{{item.createTtime}}</p>
+                            </div>
+                            <div class="right d-flex flex-column justify-content-between text-right">
+                                <p class="">支付
+                                    <span
+                                        class="font-weight-bold"
+                                        :class="[item.status === 1 ? 'text-success' : 'text-danger']"
+                                    >&yen;{{item.money | fmtMoney}}</span></p>
+                                <p
+                                    class="text-999 text-right">
+                                    {{ item.status === 1 ? '订单完成' : item.status === 2 ? '退款完成' : '' }}
+                                </p>
                             </div>
                         </div>
-                        <hd-card class="padding-2 text-size-sm">
-                            <hd-card-item class="">
-                                <span class="card-item-title text-333">订单号：</span>
-                                <span class="card-item-content text-666">{{item.ordernum}}</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">
-                                {{
-                                    item.paysource === 1 ? '充值到账' :
-                                    (item.paysource === 2 || item.paysource === 3) ? '消费金额' :
-                                    item.paysource === 5 ? '部分退费' :
-                                    item.paysource === 6 ? '充值退款' :
-                                    item.paysource === 7 ? '虚拟充值' :
-                                    item.paysource === 8 ? '虚拟退款' : ''
-                                }}：</span>
-                                <span class="card-item-content text-666">{{item.accountmoney | fmtMoney}}元</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">所属用户：</span>
-                                <span class="card-item-content text-666">{{item.username}}</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">充值余额：</span>
-                                <span class="card-item-content text-666">{{item.topupbalance | fmtMoney}}元</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">赠送余额：</span>
-                                <span class="card-item-content text-666">{{item.sendbalance | fmtMoney}}元</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">创建时间：</span>
-                                <span class="card-item-content text-666">{{item.create_time | fmtDate}}</span>
-                            </hd-card-item>
-                        </hd-card>
                     </div>
-                    <hd-bottom :status="status" />
+                    <hd-bottom :status="loadStatus" />
                 </div>
             </hd-scroll>
         </main>
@@ -143,120 +147,114 @@
 import { fmtDate, dateRange } from '@/utils/util'
 import hdSelectBox from '@/components/hd-select-box'
 import hdSelectBoxItem from '@/components/hd-select-box-item'
-import hdCard from '@/components/hd-card'
-import hdCardItem from '@/components/hd-card-item'
+// import hdCard from '@/components/hd-card'
+// import hdCardItem from '@/components/hd-card-item'
 import hdScroll from '@/components/hd-scroll'
 import hdBottom from '@/components/hd-bottom'
-import { codetotrade } from '@/require/device'
+import { inquireTraOrderData } from '@/require/order-profit'
 const LIMIT = 10
 export default {
     data () {
         const range = dateRange(new Date(), 30, 'YYYY/MM/DD')
         return {
-            uid: '',
-            aid: '',
             scroll: null,
             currentPage: 1,
             ordernum: '',
+            code: '', // 搜索设备号
             slideMenuIsShow: false, // 侧边菜单是否显示
-            orderType: [
-                { text: '全部', value: 1 },
-                { text: '正常', value: 2 },
-                { text: '部分退费', value: 3 },
-                { text: '全额退费', value: 4 }
+            orderTypeList: [
+                { text: '全部', value: '' },
+                { text: '消费订单', value: 1 },
+                { text: '充值订单', value: 2 }
             ],
-            selectOrderType: 1,
-            payType: [
-                { text: '全部', value: 1 },
-                { text: '微信支付', value: 2 },
-                { text: '支付宝支付', value: 3 },
-                { text: '钱包支付', value: 4 },
-                { text: '包月支付', value: 5 },
-                { text: '银联支付', value: 5 }
+            ordertype: '',
+            statusList: [
+                { text: '全部', value: '' },
+                { text: '正常', value: 1 },
+                { text: '退款', value: 2 }
             ],
-            selectPayType: 1,
+            status: '',
+            paytypeList: [
+                { text: '全部', value: '' },
+                { text: '钱包', value: 1 },
+                { text: '微信', value: 2 },
+                { text: '支付宝', value: 3 },
+                { text: '银联', value: 4 }
+            ],
+            paytype: 1,
             showCalendar: false,
             searchTime: {
                 startTime: range[0],
                 endTime: range[1]
             },
             list: [],
-            status: 1, // 0 正在加载中 1 空闲状态 2 暂无更多数据
+            loadStatus: 1, // 0 正在加载中 1 空闲状态 2 暂无更多数据
             searchForm: {} // 搜索form
         }
     },
     mounted () {
         // 初始化数据
-        this.uid = this.$route.params.id
-        this.aid = this.$route.query.aid
         this.searchForm = {
-            ordertype: this.selectOrderType,
             ...this.searchTime
         }
-        this.gatDeviceOrder(this.searchForm, true)
+        this.gatOrder(this.searchForm, true)
     },
-    // computed: {
-    //     // 筛选支付方式是否显示
-    //     payTypeIsShow () {
-    //         return this.selectOrderType === 2
-    //     }
-    // },
     components: {
         hdSelectBox,
         hdSelectBoxItem,
-        hdCard,
-        hdCardItem,
+        // hdCard,
+        // hdCardItem,
         hdScroll,
         hdBottom
     },
     methods: {
         handleOrderTypeChange ({ text, value }) {
-            this.selectOrderType = value
+            this.ordertype = value
+        },
+        handleOrderStatusChange ({ text, value }) {
+            this.status = value
         },
         handlePayTypeChange ({ text, value }) {
-            this.selectPayType = value
+            this.paytype = value
         },
         // 确认选择日期
         onConfirmCalendar ([startDate, endDate]) {
             const startTime = fmtDate(startDate, 'YYYY/MM/DD')
             const endTime = fmtDate(endDate, 'YYYY/MM/DD')
-            this.searchTime = {
+            this.showCalendar = false
+            this.searchForm = {
+                ...this.searchTime,
+                ...this.searchForm,
                 startTime,
                 endTime
             }
-            this.showCalendar = false
-            this.searchForm = {
-                ordertype: this.selectOrderType,
-                ...this.searchTime
-            }
-            this.gatDeviceOrder(this.searchForm, true)
+            this.gatOrder(this.searchForm, true)
         },
-        async gatDeviceOrder (data, init = false) {
+        async gatOrder (data, init = false) {
             if (init) {
                this.currentPage = 1
             } else {
                 ++this.currentPage
             }
             try {
-                this.status = 0
-                const { code, result, message } = await codetotrade({
+                this.loadStatus = 0
+                const { code, resultlist, message } = await inquireTraOrderData({
                     ...data,
                     currentPage: this.currentPage,
-                    code: '000130',
                     limit: LIMIT
                 })
                 if (code === 200) {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
                     if (init) {
-                        this.list = result.consumeinfo
+                        this.list = resultlist
                     } else {
-                        this.list = [...this.list, ...result.consumeinfo]
+                        this.list = [...this.list, ...resultlist]
                     }
                     // 更改状态，看是否还有数据
-                    if (result.consumeinfo.length >= LIMIT) {
-                        this.status = 1
+                    if (resultlist.length >= LIMIT) {
+                        this.loadStatus = 1
                     } else {
-                        this.status = 2
+                        this.loadStatus = 2
                     }
                 } else {
                     this.$toast(message)
@@ -280,45 +278,42 @@ export default {
         // 触发上啦加载
         pullingUpFn ({ scroll }) {
             // 当请求空闲的时候发送请求
-            if (this.status === 1) {
-                this.gatDeviceOrder(this.searchForm)
+            if (this.loadStatus === 1) {
+                this.gatOrder(this.searchForm)
             }
         },
         // 搜索订单号
         searchOrder () {
             this.searchForm = { ordernum: this.ordernum } // 搜索表单初始化
-            this.gatDeviceOrder(this.searchForm, true)
+            this.gatOrder(this.searchForm, true)
         },
         // 筛选搜索
         filterSearch () {
-            // 将搜索订单号条件置为空
-            this.ordernum = undefined
             // 搜索条件中添加筛选类型和时间
             this.searchForm = {
-                ordertype: this.selectOrderType,
-                ...this.searchTime
+                ...this.searchTime,
+                status: this.status,
+                code: this.code,
+                paytype: this.paytype,
+                ordertype: this.ordertype
             }
             // 发送请求
-            this.gatDeviceOrder(this.searchForm, true)
+            this.gatOrder(this.searchForm, true)
             this.slideMenuIsShow = false
         },
         // 筛选重置
         filterReset () {
-            this.selectOrderType = 1
-            this.searchForm = {
-                ordertype: this.selectOrderType,
-                ...this.searchTime
-            }
-            // 发送请求
-            this.gatDeviceOrder(this.searchForm, true)
-            this.slideMenuIsShow = false
+            this.status = ''
+            this.code = ''
+            this.paytype = ''
+            this.ordertype = ''
         }
     }
 }
 </script>
 
 <style lang="scss">
-.device-order {
+.order-profit {
     height: 100vh;
     .header {
         width: 100%;
@@ -341,23 +336,50 @@ export default {
             margin-left: -5px;
         }
     }
-    .filter-box {
-        padding-top: 84px;
-        padding-bottom: 74px;
-    }
-    .filter-bottom {
-        bottom: 0;
-        left: 0;
-        right: 0;
+    .popup-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .filter-box {
+            padding-top: 84px;
+            flex: 1;
+        }
+        .filter-bottom {
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
     }
     main {
         padding-top: 84px;
         height: 100vh;
         box-sizing: border-box;
+        background-color: #efeff4;
         .record-card {
-            .top {
-                .top-title {
-                    border-bottom: 1px dotted #ccc;
+            .order-item {
+                .left {
+                    width: 50px;
+                    i {
+                        font-size: 45px;
+                        &.icon-weixin {
+                            color: #22B14C;
+                        }
+                        &.icon-qianbao {
+                            color: #E4BB3C;
+                        }
+                        &.icon-big-Pay {
+                            color: #06B4FD;
+                        }
+                    }
+                    .yinlian {
+                        width: 45px;
+                    }
+                }
+                .center {
+                    width: calc(100% - 140px);
+                }
+                .right {
+                     width: 90px;
                 }
             }
         }

@@ -110,7 +110,7 @@
                     { title: '小区管理', url: '/area/list', total: 0 },
                     { title: '设备绑定' },
                     { title: '历史收益', url: '/history/profit' },
-                    { title: '订单统计' },
+                    { title: '订单统计', url: '/order/profit' },
                     { title: '充值管理' },
                     { title: '缴费管理', url: '/register' }
                 ],
@@ -170,7 +170,7 @@
                         { title: '小区管理', url: '/area/list', total: result.areanum },
                         { title: '设备绑定' },
                         { title: '历史收益', url: '/history/profit' },
-                        { title: '订单统计' },
+                        { title: '订单统计', url: '/order/profit' },
                         { title: '充值管理' },
                         { title: '缴费管理', url: '/register' }
                     ]
