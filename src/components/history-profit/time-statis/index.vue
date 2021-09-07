@@ -30,7 +30,7 @@
 
         <div>
             <hd-title exec >营收明细</hd-title>
-            <list-item :type="3" />
+            <list-item :type="3" v-for="item in resultlist" :key="item.countTime" :data="item" />
         </div>
     </div>
 </template>
@@ -40,24 +40,50 @@ import hdCard from '@/components/hd-card'
 import hdCardItem from '@/components/hd-card-item'
 import ListItem from '@/components/history-profit/list-item'
 export default {
+    props: {
+        resultTotal: {
+            type: Object
+        },
+        resultlist: {
+            type: Array
+        }
+    },
     components: {
         hdCard,
         hdCardItem,
         ListItem
     },
+    computed: {
+        gather () {
+            if (this.resultTotal) {
+                const { totalmoney, totalonearn, totalcoinsearn, totaloncardmoney, totalconsumemoney, totalconsumequantity } = this.resultTotal
+                return {
+                    total: totalmoney,
+                    list: [
+                        { title: '线上收益', value: totalonearn, decimal: 2 },
+                        { title: '投币收益', value: totalcoinsearn, decimal: 0 },
+                        { title: '刷卡收益', value: totaloncardmoney, decimal: 2 },
+                        { title: '消费金额', value: totalconsumemoney, decimal: 2 },
+                        { title: '耗电量', value: totalconsumequantity, decimal: 2 }
+                    ]
+                }
+            } else {
+                return {
+                    total: 0,
+                    list: [
+                        { title: '线上收益', value: 0, decimal: 2 },
+                        { title: '投币收益', value: 0, decimal: 0 },
+                        { title: '刷卡收益', value: 0, decimal: 2 },
+                        { title: '消费金额', value: 0, decimal: 2 },
+                        { title: '耗电量', value: 0, decimal: 2 }
+                    ]
+                }
+            }
+        }
+    },
     data () {
         return {
-            showPopover: false,
-            gather: {
-                total: 0,
-                list: [
-                    { title: '线上收益', value: 0, decimal: 2 },
-                    { title: '投币收益', value: 0, decimal: 0 },
-                    { title: '刷卡收益', value: 0, decimal: 2 },
-                    { title: '消费金额', value: 0, decimal: 2 },
-                    { title: '耗电量', value: 0, decimal: 2 }
-                ]
-            }
+            showPopover: false
         }
     }
 }

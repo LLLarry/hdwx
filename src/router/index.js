@@ -200,6 +200,15 @@ const routes = [
     meta: {
       title: '订单统计'
     }
+  },
+  {
+    path: '/mine',
+    name: 'mine',
+    component: () => import(/* webpackChunkName: "mine" */ '../views/mine/index.vue'),
+    meta: {
+      showTabBar: true,
+      title: '个人中心'
+    }
   }
 ]
 // process.env.BASE_URL

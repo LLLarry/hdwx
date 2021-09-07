@@ -137,8 +137,10 @@
                         if (this.loading) return // 重复执行会取消最新请求
                         this.loading = true
                     }
-                    const { code, message, ...result } = await getDealHomePageData(data, isShowLoading)
-                    console.log(result)
+                    const { code, message, hasdata, ...result } = await getDealHomePageData(data, isShowLoading)
+                    if (hasdata === 1) {
+                        this.getInitData({ type: 1 }, '数据更新中')
+                    }
                     this.todayMoney = result.nowMoney
                     this.isShowIcon = result.showincoins === 1
                     if (this.isShowIcon) {

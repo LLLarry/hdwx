@@ -13,7 +13,7 @@ import ScrollBar from '@better-scroll/scroll-bar'
 BScroll.use(ObserveDOM)
 BScroll.use(Pullup)
 BScroll.use(MouseWheel)
-  BScroll.use(ScrollBar)
+BScroll.use(ScrollBar)
 
 export default {
     props: {

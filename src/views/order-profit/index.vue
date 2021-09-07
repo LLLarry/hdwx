@@ -147,8 +147,6 @@
 import { fmtDate, dateRange } from '@/utils/util'
 import hdSelectBox from '@/components/hd-select-box'
 import hdSelectBoxItem from '@/components/hd-select-box-item'
-// import hdCard from '@/components/hd-card'
-// import hdCardItem from '@/components/hd-card-item'
 import hdScroll from '@/components/hd-scroll'
 import hdBottom from '@/components/hd-bottom'
 import { inquireTraOrderData } from '@/require/order-profit'
@@ -202,8 +200,6 @@ export default {
     components: {
         hdSelectBox,
         hdSelectBoxItem,
-        // hdCard,
-        // hdCardItem,
         hdScroll,
         hdBottom
     },

@@ -74,3 +74,18 @@ export const getDeviceInfoList = (data, loadText) => {
         loadText
     })
 }
+
+// /** ==============
+//  * 查询端口状态
+//  * @param {*} data
+//  * @param {*} loadText
+//  * @returns
+//  */
+//  export const querystate = (data, loadText) => {
+//     return ajax({
+//         url: '/querystate',
+//         method: 'post',
+//         data,
+//         loadText
+//     })
+// }

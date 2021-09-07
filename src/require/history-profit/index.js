@@ -4,9 +4,9 @@ import ajax from '../ajax'
  * @param {*} data {
  * @returns
  */
-export const inquireDealidIncomeRecord = (data, loadText) => {
+export const inquireEarningCollectInfo = (data, loadText) => {
     return ajax({
-        url: '/mobileMerchant/inquireDealidIncomeRecord',
+        url: '/mobileMerchant/inquireEarningCollectInfo',
         method: 'post',
         data,
         loadText
