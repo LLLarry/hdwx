@@ -19,7 +19,7 @@ import '@/directive'
 // import { /* BarChart, */ PieChart } from 'echarts/charts'
 // import { /* GridComponent,  */TooltipComponent, TitleComponent, LegendComponent } from 'echarts/components'
 import {
-Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
+Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
 RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover
 } from 'vant'
@@ -34,6 +34,7 @@ Vue.use(Loading)
 Vue.use(Dialog)
 Vue.use(Tab)
 Vue.use(Tabs)
+Vue.use(Form)
 Vue.use(Field)
 Vue.use(Button)
 Vue.use(DropdownMenu)

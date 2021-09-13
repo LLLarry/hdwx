@@ -13,14 +13,14 @@
                 </div>
                 <div class="account margin-top-4 padding-bottom-2 d-flex justify-content-around">
                     <div class="d-flex flex-column align-items-center justify-content-center">
-                        <div class="">余额明细</div>
+                        <div class="btn-box">余额明细</div>
                     </div>
                     <div class="d-flex flex-column align-items-center justify-content-center">
                         <div class="title margin-bottom-1">账户余额</div>
                         <div class="math-num money">&yen; 3568.12</div>
                     </div>
                     <div class="d-flex flex-column align-items-center justify-content-center">
-                        <div class="">提现到微信</div>
+                        <div class="btn-box">提现到微信</div>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
         <main>
             <hd-title exec class="bg-white">我的银行卡</hd-title>
             <van-cell-group>
-                <van-cell title="我的银行卡" is-link>
+                <van-cell title="我的银行卡" is-link to="/withdraw/mybankcard">
                     <template #icon>
                         <img class="icon-img margin-right-1" src="../../assets/images/银行类app图标_14.png" alt="">
                     </template>
@@ -46,7 +46,7 @@
                         </div>
                     </template>
                     <van-cell-group>
-                        <van-cell title="提现到微信零钱" label="实时到账" is-link></van-cell>
+                        <van-cell title="提现到微信零钱" label="实时到账" is-link to="/withdraw/wechat"></van-cell>
                         <van-cell title="提现到银行卡" label="第二个工作日到账" is-link></van-cell>
                         <van-cell title="提现到对公账户" label="七个工作日内到账" is-link></van-cell>
                     </van-cell-group>
@@ -180,6 +180,15 @@ export default {
       .account {
           .money {
               font-size: 20px;
+          }
+          .btn-box {
+              border: 1px solid #fff;
+              padding: 3px 10px;
+              border-radius: 4px;
+              background: rgba(255, 255, 255, .1);
+              &:active {
+                  background: rgba(255, 255, 255, .2);
+              }
           }
       }
     }

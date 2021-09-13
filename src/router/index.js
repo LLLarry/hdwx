@@ -209,13 +209,32 @@ const routes = [
       showTabBar: true,
       title: '个人中心'
     }
+  },
+  {
+    path: '/withdraw/mybankcard',
+    name: 'mybankcard',
+    component: () => import(/* webpackChunkName: "my-bank-card" */ '../views/withdraw/my-bank-card/index.vue'),
+    meta: {
+      title: '我的银行卡'
+    }
+  },
+  {
+    path: '/withdraw/wechat',
+    name: 'withdrawWechat',
+    component: () => import(/* webpackChunkName: "withdraw-wechat" */ '../views/withdraw/withdraw-wechat/index.vue'),
+    meta: {
+      title: '提现到微信零钱'
+    }
   }
 ]
 // process.env.BASE_URL
 const router = new VueRouter({
   mode: 'history',
   base: '/wx',
-  routes
+  routes,
+  scrollBehavior (to, from) {
+    return { x: 0, y: 0 }
+  }
 })
 
 // 鉴权函数
