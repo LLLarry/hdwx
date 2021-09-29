@@ -9,10 +9,12 @@ import Navigation from 'vue-navigation'
 import HdLine from '@/components/hd-line'
 import HdTitle from '@/components/hd-title'
 import loadingIndex from '@/components/hd-loading/loadingIndex'
+import VueMeta from 'vue-meta'
 import '@/components/directive/hd-skeleton'
 import qrcode from 'vue-qrcode2'
 import '@/filter'
 import '@/directive'
+
 // import ECharts from 'vue-echarts'
 // import { use } from 'echarts/core'
 // import { CanvasRenderer } from 'echarts/renderers'
@@ -77,6 +79,19 @@ Vue.component('hd-title', HdTitle)
 Vue.use(require('vue-wechat-title'))
 
 Vue.use(qrcode)
+
+Vue.use(VueMeta, {
+  // optional pluginOptions
+  refreshOnceOnNavigation: true
+})
+
+Vue.mixin({
+  metaInfo () {
+      return {
+          title: this.titleText
+      }
+  }
+})
 
 // use([
 //   CanvasRenderer,

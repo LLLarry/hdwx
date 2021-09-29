@@ -23,7 +23,7 @@ server.interceptors.request.use(config => {
         url: isMock(config.url) ? config.url : api + config.url
     }
 }, error => {
-    Promise.reject(error)
+    return Promise.reject(error)
 })
 
 server.interceptors.response.use(response => {
@@ -40,7 +40,7 @@ server.interceptors.response.use(response => {
     }
     return response
 }, error => {
-    Promise.reject(error)
+    return Promise.reject(error)
 })
 
 export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '正在加载中' } = {}) => {

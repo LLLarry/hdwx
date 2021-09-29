@@ -1,5 +1,5 @@
 module.exports = {
-    publicPath: process.env.NODE_ENV === 'production' ? '/wx' : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/merwx' : '/',
     configureWebpack: {
         entry: {
             initWecharFont: './src/assets/js/initWechatFont.js'

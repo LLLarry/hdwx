@@ -5,12 +5,19 @@
                 到账方式
             </div>
             <div class="flex-1 padding-x-3">
-                <div class="d-flex justify-content-between align-items-center" @click="show = true">
-                    <span>微信零钱</span>
+                <div class="d-flex justify-content-between align-items-center" @click="handleToggle">
+                    <span>{{accountInfo.bankname}}</span>
                     <van-icon name="arrow" size="16" />
                 </div>
+                <div class="d-flex justify-content-between align-items-center margin-top-1" v-if="accountInfo.type !== 3">
+                    ({{accountInfo.bankcardnum}})
+                </div>
                 <div class="d-flex justify-content-between align-items-center margin-top-1">
-                    <p class="text-size-sm text-p">实时到账</p>
+                    <p class="text-size-sm text-p">{{
+                        accountInfo.type === 3 ? '实时到账' :
+                        accountInfo.type === 1 ? '第二个工作日到账' :
+                        accountInfo.type === 2 ? '七个工作日内到账' : ''
+                     }}</p>
                 </div>
             </div>
         </div>
@@ -46,11 +53,38 @@
             </div>
             <section :style="{ maxHeight: '70vh' }" class="overflow-auto">
                 <hd-title exec>微信列表</hd-title>
-                <bank-card class="margin-bottom-3 margin-x-3" showStar v-for="num in 1" :key="num" selected/>
+                <bank-card
+                    class="margin-bottom-3 margin-x-3"
+                    :type="3"
+                    showStar
+                    v-for="item in wechatList"
+                    :key="item.id"
+                    :data="item"
+                    @handleSelect="handleSelect"
+                    :selected="item.id === accountInfo.id"
+                />
                 <hd-title exec>银行卡列表</hd-title>
-                <bank-card class="margin-bottom-3 margin-x-3" showStar v-for="num in 2" :key="num"/>
+                <bank-card
+                    class="margin-bottom-3 margin-x-3"
+                    :type="1"
+                    showStar
+                    v-for="item in bankCardList"
+                    :key="item.id"
+                    @handleSelect="handleSelect"
+                    :data="item"
+                    :selected="item.id === accountInfo.id"
+                />
                 <hd-title exec>对公账户列表</hd-title>
-                <bank-card class="margin-bottom-3 margin-x-3" showStar v-for="num in 1" :key="num"/>
+                <bank-card
+                    class="margin-bottom-3 margin-x-3"
+                    :type="2"
+                    showStar
+                    v-for="item in companyBnkCardList"
+                    :key="item.id"
+                    @handleSelect="handleSelect"
+                    :data="item"
+                    :selected="item.id === accountInfo.id"
+                />
             </section>
         </van-popup>
     </div>
@@ -58,6 +92,8 @@
 
 <script>
 import BankCard from '@/components/withdraw/bank-card'
+import { merBankCardData } from '@/require/withdraw'
+import { fmtBankCard } from '../helper'
 export default {
     components: {
         BankCard
@@ -68,7 +104,21 @@ export default {
             money: '', // 输入的金额
             rate: 0.006, // 提现的费率
             feeRateMoney: '', // 手续费
-            show: false
+            show: false,
+            accountInfo: { bankname: '微信零钱', id: -1, type: 3 },
+            wechatList: [{ bankname: '微信零钱', id: -1, type: 3 }], // 微信列表
+            bankCardList: [], // 个人银行卡
+            companyBnkCardList: [] // 对公账户银行卡
+        }
+    },
+    computed: {
+        titleText () {
+            switch (this.accountInfo.type) {
+                case 1 : return '提现到银行卡'
+                case 2 : return '提现到对公账户'
+                case 3 : return '提现到微信零钱'
+                default: return '提现'
+            }
         }
     },
     watch: {
@@ -111,6 +161,31 @@ export default {
                 message: moeny
             })
             console.log(moeny)
+        },
+        // 切换提现方式
+        async handleToggle () {
+            try {
+                const { code, message, bankCardList = [], companyBnkCardList = [] } = await merBankCardData()
+                if (code === 200) {
+                    this.bankCardList = fmtBankCard(bankCardList)
+                    this.companyBnkCardList = fmtBankCard(companyBnkCardList)
+                    this.show = true
+                } else {
+                    this.$toast(message)
+                }
+            } catch (error) {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: '异常错误'
+                }).then(() => {
+                    wx.closeWindow()
+                })
+            }
+        },
+        // 选择到账方式
+        handleSelect (value) {
+            this.accountInfo = value
+            this.show = false
         }
     }
 }

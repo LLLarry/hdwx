@@ -9,7 +9,7 @@ export default (router) => {
             next()
         } else if (getType(store.state.user.id) === 'undefined') {
             if (WECHAT_BROWSER_ENV) {
-                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/wx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/merwx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
             } else {
                 const result = await store.dispatch('verifyCookieIsExpire')
                 if (result === 200) {

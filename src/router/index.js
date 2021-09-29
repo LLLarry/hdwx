@@ -225,12 +225,20 @@ const routes = [
     meta: {
       title: '提现到微信零钱'
     }
+  },
+  {
+    path: '/withdraw/setbankcard/:type/:id',
+    name: 'set-bank-card',
+    component: () => import(/* webpackChunkName: "set-bank-card" */ '../views/withdraw/set-bank-card/index.vue'),
+    meta: {
+      title: '设置银行卡'
+    }
   }
 ]
 // process.env.BASE_URL
 const router = new VueRouter({
   mode: 'history',
-  base: '/wx',
+  base: '/merwx',
   routes,
   scrollBehavior (to, from) {
     return { x: 0, y: 0 }
