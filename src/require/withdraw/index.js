@@ -68,3 +68,17 @@ export const merBankCardData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 提现记录查询
+ * @param {*} data
+ * @returns
+ */
+ export const merWithdrawRecord = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/merWithdrawRecord',
+        method: 'post',
+        data,
+        loadText
+    })
+}

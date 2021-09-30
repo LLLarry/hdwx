@@ -1,23 +1,22 @@
 <template>
-    <div class="withdrap-wechat">
+    <div class="withdraw-page">
         <div class="d-flex bg-gray padding-y-4">
             <div class="padding-x-4">
                 到账方式
             </div>
             <div class="flex-1 padding-x-3">
                 <div class="d-flex justify-content-between align-items-center" @click="handleToggle">
-                    <span>{{accountInfo.bankname}}</span>
+                    <div>
+                        {{accountInfo.bankname}}
+                        <span class="text-p text-size-sm" v-if="accountInfo.type === 2">（对公账户）</span>
+                    </div>
                     <van-icon name="arrow" size="16" />
                 </div>
-                <div class="d-flex justify-content-between align-items-center margin-top-1" v-if="accountInfo.type !== 3">
+                <div class="d-flex justify-content-between align-items-center margin-top-1" v-if="accountInfo.type !== 3 && accountInfo.bankcardnum">
                     ({{accountInfo.bankcardnum}})
                 </div>
                 <div class="d-flex justify-content-between align-items-center margin-top-1">
-                    <p class="text-size-sm text-p">{{
-                        accountInfo.type === 3 ? '实时到账' :
-                        accountInfo.type === 1 ? '第二个工作日到账' :
-                        accountInfo.type === 2 ? '七个工作日内到账' : ''
-                     }}</p>
+                    <p class="text-size-sm text-p">{{accountTime}}</p>
                 </div>
             </div>
         </div>
@@ -43,7 +42,7 @@
         </div>
 
         <div class="padding-x-4">
-            <van-button type="primary" block class="comfirm" @click="confirm">实时到账，确认提现</van-button>
+            <van-button type="primary" block class="comfirm" @click="confirm">{{accountTime}}，确认提现</van-button>
         </div>
 
         <!-- 弹出层-选择提现方式 -->
@@ -92,8 +91,7 @@
 
 <script>
 import BankCard from '@/components/withdraw/bank-card'
-import { merBankCardData } from '@/require/withdraw'
-import { fmtBankCard } from '../helper'
+import { getBankList } from '@/views/withdraw/helper'
 export default {
     components: {
         BankCard
@@ -105,7 +103,7 @@ export default {
             rate: 0.006, // 提现的费率
             feeRateMoney: '', // 手续费
             show: false,
-            accountInfo: { bankname: '微信零钱', id: -1, type: 3 },
+            accountInfo: {}, // 当前选择的账户
             wechatList: [{ bankname: '微信零钱', id: -1, type: 3 }], // 微信列表
             bankCardList: [], // 个人银行卡
             companyBnkCardList: [] // 对公账户银行卡
@@ -117,6 +115,15 @@ export default {
                 case 1 : return '提现到银行卡'
                 case 2 : return '提现到对公账户'
                 case 3 : return '提现到微信零钱'
+                default: return '提现'
+            }
+        },
+        // 到账时间
+        accountTime () {
+            switch (this.accountInfo.type) {
+                case 1 : return '第二个工作日到账'
+                case 2 : return '七个工作日内到账'
+                case 3 : return '实时到账'
                 default: return '提现'
             }
         }
@@ -139,7 +146,46 @@ export default {
             this.money = value
         }
     },
+    mounted () {
+        this.init()
+    },
     methods: {
+        async init () {
+            try {
+                // 获取银行卡列表
+                const { bankCardList = [], companyBnkCardList = [] } = await getBankList()
+                this.bankCardList = bankCardList
+                this.companyBnkCardList = companyBnkCardList
+                const { type } = this.$route.params
+                const { id } = this.$route.query
+                switch (Number(type)) {
+                    case 1 :
+                    this.accountInfo = this.bankCardList.find(item => item.id === Number(id))
+                        break
+                    case 2 :
+                    this.accountInfo = this.companyBnkCardList.find(item => item.id === Number(id))
+                        break
+                    case 3 :
+                    this.accountInfo = this.wechatList[0]
+                        break
+                    default :
+                        this.$dialog.alert({
+                            title: '提示',
+                            message: '异常错误'
+                        }).then(() => {
+                            this.$router.go(-1)
+                        })
+                        break
+                }
+            } catch (error) {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: '异常错误'
+                }).then(() => {
+                    this.$router.go(-1)
+                })
+            }
+        },
         cashAll () {
             this.money = this.totolMoney
         },
@@ -163,25 +209,28 @@ export default {
             console.log(moeny)
         },
         // 切换提现方式
-        async handleToggle () {
-            try {
-                const { code, message, bankCardList = [], companyBnkCardList = [] } = await merBankCardData()
-                if (code === 200) {
-                    this.bankCardList = fmtBankCard(bankCardList)
-                    this.companyBnkCardList = fmtBankCard(companyBnkCardList)
-                    this.show = true
-                } else {
-                    this.$toast(message)
-                }
-            } catch (error) {
-                this.$dialog.alert({
-                    title: '提示',
-                    message: '异常错误'
-                }).then(() => {
-                    wx.closeWindow()
-                })
-            }
+        handleToggle () {
+            this.show = true
         },
+         // 获取银行卡账户
+        // async getBankCard () {
+        //     try {
+        //         const { code, message, bankCardList = [], companyBnkCardList = [] } = await merBankCardData()
+        //         if (code === 200) {
+        //             this.bankCardList = fmtBankCard(bankCardList)
+        //             this.companyBnkCardList = fmtBankCard(companyBnkCardList)
+        //         } else {
+        //             this.$toast(message)
+        //         }
+        //     } catch (error) {
+        //         this.$dialog.alert({
+        //             title: '提示',
+        //             message: '异常错误'
+        //         }).then(() => {
+        //             wx.closeWindow()
+        //         })
+        //     }
+        // },
         // 选择到账方式
         handleSelect (value) {
             this.accountInfo = value
@@ -192,7 +241,7 @@ export default {
 </script>
 
 <style lang="scss">
-.withdrap-wechat {
+.withdraw-page {
     min-height: 100vh;
     background: #f8f8f8;
     .money-box {

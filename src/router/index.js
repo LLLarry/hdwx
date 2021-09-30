@@ -219,11 +219,11 @@ const routes = [
     }
   },
   {
-    path: '/withdraw/wechat',
-    name: 'withdrawWechat',
-    component: () => import(/* webpackChunkName: "withdraw-wechat" */ '../views/withdraw/withdraw-wechat/index.vue'),
+    path: '/withdraw/page/:type',
+    name: 'withdrawPage',
+    component: () => import(/* webpackChunkName: "withdraw-page" */ '../views/withdraw/withdraw-page/index.vue'),
     meta: {
-      title: '提现到微信零钱'
+      title: '提现'
     }
   },
   {

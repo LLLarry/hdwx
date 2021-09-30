@@ -2,7 +2,13 @@
     <div class="">
         <hd-title exec>个人银行卡</hd-title>
         <div>
-            <bank-card class="margin-bottom-3 margin-x-3" v-for="item in bankCardList" :key="item.id" :data="item"/>
+            <div v-no-data="bankCardList.length <= 0"></div>
+            <bank-card
+                class="margin-bottom-3 margin-x-3"
+                v-for="item in bankCardList"
+                :key="item.id"
+                :data="item"
+            />
             <div class="text-white rounded-lg text-size-md d-flex flex-column align-items-center justify-content-center">
                 <van-button type="primary" icon="plus" size="small" class="padding-x-4" @click="addBankCardFn(1)">添加银行卡</van-button>
             </div>
@@ -10,10 +16,18 @@
         <hd-line height=".6rem" />
         <hd-title exec>对公银行卡</hd-title>
         <div>
-            <bank-card class="margin-bottom-3 margin-x-3" v-for="item in companyBnkCardList" :key="item.id" :data="item" :type="2"/>
+            <div v-no-data="companyBnkCardList.length <= 0"></div>
+            <bank-card
+                class="margin-bottom-3 margin-x-3"
+                v-for="item in companyBnkCardList"
+                :key="item.id"
+                :data="item"
+                :type="2"
+            />
             <div class="text-white rounded-lg text-size-md d-flex flex-column align-items-center justify-content-center">
                 <van-button type="primary" icon="plus" size="small" class="padding-x-4" @click="addBankCardFn(2)" v-if="companyBnkCardList.length <= 0">添加银行卡</van-button>
             </div>
+            <div class="margin-3 text-center text-p text-size-sm">每个账户仅支持添加一张“对公银行卡”</div>
         </div>
         <van-popup v-model="slideAddBankCardIsShow" position="top" :style="{ width: '100%', maxHeight: '70%' }" >
             <div class="padding-3">
