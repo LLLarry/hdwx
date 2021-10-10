@@ -15,6 +15,7 @@
     "@better-scroll/scroll-bar": "^2.4.2",
     "amfe-flexible": "^2.2.1",
     "axios": "^0.21.1",
+    "clipboard": "^2.0.8",
     "core-js": "^3.16.1",
     "dayjs": "^1.10.6",
     "echarts": "^5.1.2",

@@ -82,3 +82,45 @@ export const merBankCardData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 跳转获取提现到微信费率、用户信息、可提现总金额
+ * @param {*} data {
+ * @returns
+ */
+ export const weChatWithdraw = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/weChatWithdraw',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/**
+ * 微信提现
+ * @param {*} data { money 金额 realname  姓名
+ * @returns
+ */
+ export const weChatWithdrawaccess = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/weChatWithdrawaccess',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/**
+ * 提现到银行卡
+ * @param {*} data { bankcardid  银行卡id, money 金额, subPartner  是否为特约合伙人
+ * @returns
+ */
+ export const withdrawaccess = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/withdrawaccess',
+        method: 'post',
+        data,
+        loadText
+    })
+}

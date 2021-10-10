@@ -4,13 +4,13 @@
             <van-image
                 width="45"
                 height="45"
-                :src="cardUrl"
+                :src="value.headimgurl | fmtAvatar"
                 class="rounded-circle overflow-hidden"
             />
             <div class="flex-1 margin-left-2 d-flex justify-content-between align-items-center">
                 <div class="">
                     <div class="font-weight-bold text-000 text-size-default card-num">{{value.nick}}</div>
-                    <div>{{value.uid && value.uid.toString().padStart(8, '0')}}</div>
+                    <div>{{value.username}}</div>
                 </div>
             </div>
         </div>
@@ -24,8 +24,8 @@
                 <span class="card-item-content text-666">{{value.sendmoney}}元</span>
             </hd-card-item>
             <hd-card-item>
-                <span class="card-item-title text-333">绑定人：</span>
-                <span class="card-item-content text-666">{{value.username}}</span>
+                <span class="card-item-title text-333">用户ID：</span>
+                <span class="card-item-content text-666">{{value.uid && value.uid.toString().padStart(8, '0')}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">电话：</span>
@@ -62,11 +62,11 @@ export default {
             default: 1 // 1 默认从列表中传值， 2 从管理中传值
         }
     },
-    computed: {
-        cardUrl () {
-            return this.value.headimgurl ? this.value.headimgurl : require('@/assets/images/home_02.png')
-        }
-    },
+    // computed: {
+    //     cardUrl () {
+    //         return this.value.headimgurl ? this.value.headimgurl : require('@/assets/images/home_02.png')
+    //     }
+    // },
     components: {
         hdCard,
         hdCardItem

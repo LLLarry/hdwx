@@ -4,7 +4,7 @@
         is-edit
         show-set-default
         @save="onSave"
-        :contact-info="{ name: '012092', tel: '15036012092' }"
+        :contact-info="{ name: '123456', tel: '15093219054' }"
     />
     环境： {{ WECHAT_BROWSER_ENV }}
   </div>
@@ -31,7 +31,10 @@ export default {
                     isolate: 1
                 }
             }).then(res => {
-                alert(res.userInfo.message)
+                const flag = confirm(res.userInfo.message)
+                if (flag) {
+                    this.$router.replace({ path: '/' })
+                }
             })
         }
     }

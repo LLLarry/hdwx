@@ -233,6 +233,30 @@ const routes = [
     meta: {
       title: '设置银行卡'
     }
+  },
+  {
+    path: '/withdraw/record',
+    name: 'withdraw-record',
+    component: () => import(/* webpackChunkName: "withdraw-record" */ '../views/withdraw/withdraw-record/index.vue'),
+    meta: {
+      title: '提现记录'
+    }
+  },
+  {
+    path: '/subAccount',
+    name: 'sub-account',
+    component: () => import(/* webpackChunkName: "sub-account" */ '../views/mine/sub-account/index.vue'),
+    meta: {
+      title: '子账号'
+    }
+  },
+  {
+    path: '/income',
+    name: 'income-details',
+    component: () => import(/* webpackChunkName: "income-details" */ '../views/mine/income-details/index.vue'),
+    meta: {
+      title: '商户收益明细'
+    }
   }
 ]
 // process.env.BASE_URL

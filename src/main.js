@@ -1,6 +1,7 @@
 import 'amfe-flexible'
 import '@/utils/resizeFontSize'
 import '@/utils/global'
+// import '@/assets/js/stop-drop'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'

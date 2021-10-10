@@ -12,7 +12,13 @@
                 <van-cell-group>
                     <van-cell v-for="one in wrapper" :key="one.key" :title="one.title">
                         <template #right-icon>
-                            <van-switch size="24px" active-color="rgb(7, 193, 96)" v-model="one.checked" />
+                            <van-switch
+                                size="24px"
+                                active-color="rgb(7, 193, 96)"
+                                v-model="one.checked"
+                                :loading="one.loading"
+                                @input="(checked) => handleInput(one.key, checked)"
+                            />
                         </template>
                     </van-cell>
                 </van-cell-group>
@@ -48,6 +54,7 @@
                             class="padding-y-3 margin-right-4"
                             type="info"
                             native-type="submit"
+                            icon="edit"
                             @click="editting = true"
                         >编辑</van-button>
                          <van-button
@@ -58,6 +65,8 @@
                             class="padding-y-3 margin-right-4"
                             type="primary"
                             native-type="submit"
+                            icon="idcard"
+                            @click="changeServerPhone"
                         >保存</van-button>
                     </div>
                 </div>
@@ -67,6 +76,10 @@
 </template>
 
 <script>
+import { updateAccountPhoneById, settingAuthoritySwitch } from '@/require/mine'
+import { mapState } from 'vuex'
+// 同步关键字
+// const syncKeys = ['withmess', 'ordermess', 'showincoins', 'incoinrefund', 'walletcommon']
 export default {
     props: {
         authority: {
@@ -95,6 +108,9 @@ export default {
             editting: false // 是否正在编辑
         }
     },
+    computed: {
+        ...mapState(['user'])
+    },
     watch: {
         authority: {
             handler (list) {
@@ -113,6 +129,55 @@ export default {
                 this.phone = value
             },
             immediate: true
+        }
+    },
+    methods: {
+        async changeServerPhone () {
+            try {
+                const { code, message } = await updateAccountPhoneById({
+                    type: 1,
+                    uid: this.user.id,
+                    phone: this.phone
+                })
+                if (code === 200) {
+                    this.editting = false
+                    this.$dialog.alert({
+                        title: '提示',
+                        message: '修改成功'
+                    }).then(() => {
+                        this.$emit('reloadData')
+                    })
+                } else {
+                    this.$toast(message)
+                }
+            } catch (error) {
+                 this.$toast('异常错误')
+            }
+        },
+        // 监听开关点击
+        async handleInput (key, checked) {
+            const one = this.wrapper.find(item => item.key === key)
+            this.$set(one, 'loading', true)
+            const flag = await this.changeSwitchSync({ [key]: checked ? 1 : 2 })
+            if (flag) {
+                one.checked = checked
+            } else {
+                one.checked = !checked
+            }
+            this.$delete(one, 'loading')
+        },
+        // 同步修改用户设置
+        async changeSwitchSync (map = {}) {
+            const { code, message } = await settingAuthoritySwitch({
+                ...map,
+                merid: this.user.id,
+                source: 2
+            }, false)
+            if (code !== 200) {
+                this.$toast(message)
+                return false
+            }
+            return true
         }
     }
 }

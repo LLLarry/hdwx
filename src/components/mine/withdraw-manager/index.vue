@@ -45,7 +45,7 @@
             </van-collapse-item>
         </van-collapse>
         <van-cell-group>
-            <van-cell title="提现记录" is-link>
+            <van-cell title="提现记录" is-link to="/withdraw/record">
                 <template #icon>
                     <img class="icon-img margin-right-1" src="../../../assets/images/mine/订单 (1).png" alt="">
                 </template>

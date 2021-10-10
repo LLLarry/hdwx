@@ -70,6 +70,7 @@
                     :icon="require(`../../assets/images/home_${(index+1).toString().padStart(2, '0')}.png`)"
                     :text="item.title"
                     :to="item.url"
+                    @click="handleClick(item)"
                 >
                     <van-image class="menu-icon margin-bottom-1" :src="require(`../../assets/images/home_${(index+1).toString().padStart(2, '0')}.png`)" />
                     <div class="menu-title margin-bottom-1">{{item.title}}</div>
@@ -88,6 +89,7 @@
     // import { Notify } from 'vant'
     import { getDealHomePageData } from '@/require/home'
     import { fmtMoney } from '@/utils/util'
+    import { scanQRCode } from '@/utils/wechat-util'
     export default {
         data () {
             return {
@@ -192,6 +194,15 @@
             // 更新数据
             handleUpdate () {
                 this.getInitData({ type: 1 }, false)
+            },
+            async handleClick ({ title }) {
+                if (title !== '设备绑定') return false
+                const info = await scanQRCode(window.location.href)
+                console.log(info)
+                this.$dialog.alert({
+                    title: '提示123',
+                    message: info
+                })
             }
         }
     }

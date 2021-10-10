@@ -35,14 +35,17 @@
                     总金额：{{ totolMoney }} 元
                     <span style="color: #0984B5;" class="margin-left-1" @click="cashAll">全部提现</span>
                 </p>
+                <p class="text-p" v-else-if="(Number(money) >= 0) && (Number(money) < 5)">
+                    最低提现金额为 5 元
+                </p>
                 <p class="text-p" v-else>
-                    额外扣除 &yen;{{feeRateMoney}} 服务费 （费率{{rate * 100}}%）
+                    额外扣除 &yen;{{feeRateMoney}} 服务费 （费率{{accountInfo.rate}}‰）
                 </p>
             </div>
         </div>
 
         <div class="padding-x-4">
-            <van-button type="primary" block class="comfirm" @click="confirm">{{accountTime}}，确认提现</van-button>
+            <van-button type="primary" block class="comfirm" @click="confirm" :disabled="!(Number(money) >= 5)">{{accountTime}}，确认提现</van-button>
         </div>
 
         <!-- 弹出层-选择提现方式 -->
@@ -86,27 +89,42 @@
                 />
             </section>
         </van-popup>
+
+        <van-dialog
+            v-model="dialogShow"
+            title="提示"
+            show-cancel-button
+            @confirm="setRealname"
+            @cancel="realnameVal = ''"
+        >
+            <div class="text-size-md padding-3 text-center text-p">请先填写真实姓名，填写的真实姓名要与微信实名一致</div>
+            <van-field v-model="user.realname" placeholder="请先填写真实姓名" />
+        </van-dialog>
     </div>
 </template>
 
 <script>
 import BankCard from '@/components/withdraw/bank-card'
 import { getBankList } from '@/views/withdraw/helper'
+import { weChatWithdraw, weChatWithdrawaccess, withdrawaccess } from '@/require/withdraw'
 export default {
     components: {
         BankCard
     },
     data () {
         return {
-            totolMoney: 5563.32, // 总资产
+            totolMoney: 0, // 总资产
             money: '', // 输入的金额
-            rate: 0.006, // 提现的费率
+            // rate: 0.006, // 提现的费率
             feeRateMoney: '', // 手续费
             show: false,
             accountInfo: {}, // 当前选择的账户
-            wechatList: [{ bankname: '微信零钱', id: -1, type: 3 }], // 微信列表
+            wechatList: [{ bankname: '微信零钱', id: -1, type: 3, rate: 6 }], // 微信列表
             bankCardList: [], // 个人银行卡
-            companyBnkCardList: [] // 对公账户银行卡
+            companyBnkCardList: [], // 对公账户银行卡
+            subPartner: false, // 是不是特约合伙人
+            user: {}, // 提现人信息
+            dialogShow: false
         }
     },
     computed: {
@@ -137,20 +155,24 @@ export default {
             // 根据提现金额计算出提现手续费
             const copyMoney = parseFloat(value)
             if (!isNaN(copyMoney)) {
-                this.feeRateMoney = (copyMoney * this.rate).toFixed(2)
+                this.feeRateMoney = (copyMoney * this.accountInfo.rate / 1000).toFixed(2)
             }
             // 当提现金额大于最大金额时，使用最大金额作为提现金额
             if (copyMoney > this.totolMoney) {
                 value = this.totolMoney
             }
             this.money = value
+        },
+        rate (val) {
+             this.feeRateMoney = (this.money * val).toFixed(2)
         }
     },
-    mounted () {
-        this.init()
+    async mounted () {
+        await this.init()
+        await this.initBank()
     },
     methods: {
-        async init () {
+        async initBank () {
             try {
                 // 获取银行卡列表
                 const { bankCardList = [], companyBnkCardList = [] } = await getBankList()
@@ -160,13 +182,13 @@ export default {
                 const { id } = this.$route.query
                 switch (Number(type)) {
                     case 1 :
-                    this.accountInfo = this.bankCardList.find(item => item.id === Number(id))
+                        this.accountInfo = this.bankCardList.find(item => item.id === Number(id))
                         break
                     case 2 :
-                    this.accountInfo = this.companyBnkCardList.find(item => item.id === Number(id))
+                        this.accountInfo = this.companyBnkCardList.find(item => item.id === Number(id))
                         break
                     case 3 :
-                    this.accountInfo = this.wechatList[0]
+                        this.accountInfo = this.wechatList[0]
                         break
                     default :
                         this.$dialog.alert({
@@ -186,55 +208,132 @@ export default {
                 })
             }
         },
+        async init () {
+            try {
+                const { code, message, rate, user, subPartner, earningsmoney } = await weChatWithdraw()
+                if (code === 200) {
+                    this.subPartner = subPartner
+                    this.wechatList[0].rate = rate
+                    this.totolMoney = earningsmoney
+                    this.user = user
+                } else {
+                    this.$dialog.alert({
+                    title: '提示',
+                        message
+                    }).then(() => {
+                        this.$router.go(-1)
+                    })
+                }
+            } catch (error) {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: '异常错误'
+                }).then(() => {
+                    this.$router.go(-1)
+                })
+            }
+        },
         cashAll () {
             this.money = this.totolMoney
         },
         confirm () {
-            const moeny = parseFloat(this.money)
-            if (isNaN(moeny)) {
-                return this.$dialog.alert({
-                    title: '提示',
-                    message: '提现金额为非法数字或未输入提现金额，请重新输入'
-                })
-            }
-            if (moeny <= 0) {
-                return this.$dialog.alert({
-                    title: '提示',
-                    message: '提现金额必须为正数'
-                })
-            }
-            this.$dialog.alert({
-                message: moeny
+            if (!this.checkParams()) return false
+            this.$dialog.confirm({
+                title: '提示',
+                message: '确认提现吗？'
             })
-            console.log(moeny)
+            .then(() => {
+                if (this.accountInfo.type === 1 || this.accountInfo.type === 2) {
+                    this.cashToBank({
+                        bankcardid: this.accountInfo.id,
+                        money: this.money,
+                        subPartner: this.subPartner
+                    })
+                } else if (this.accountInfo.type === 3) {
+                    this.cashToWechat({
+                        money: this.money,
+                        realname: this.user.realname
+                    })
+                }
+            })
         },
         // 切换提现方式
         handleToggle () {
             this.show = true
         },
-         // 获取银行卡账户
-        // async getBankCard () {
-        //     try {
-        //         const { code, message, bankCardList = [], companyBnkCardList = [] } = await merBankCardData()
-        //         if (code === 200) {
-        //             this.bankCardList = fmtBankCard(bankCardList)
-        //             this.companyBnkCardList = fmtBankCard(companyBnkCardList)
-        //         } else {
-        //             this.$toast(message)
-        //         }
-        //     } catch (error) {
-        //         this.$dialog.alert({
-        //             title: '提示',
-        //             message: '异常错误'
-        //         }).then(() => {
-        //             wx.closeWindow()
-        //         })
-        //     }
-        // },
+        // 提现到微信零钱
+        async cashToWechat (data) {
+            try {
+                const { code, message } = await weChatWithdrawaccess(data)
+                if (code === 200) {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message: '成功'
+                    }).then(() => {
+                        this.mounted()
+                    })
+                } else {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message
+                    })
+                }
+            } catch (error) {
+                this.$toast('异常错误')
+            }
+        },
+        // 提现到银行卡或对公账户
+        async cashToBank (data) {
+            try {
+                const { code, message } = await withdrawaccess(data)
+                if (code === 200) {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message: '成功'
+                    }).then(() => {
+                        this.mounted()
+                    })
+                } else {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message
+                    })
+                }
+            } catch (error) {
+                this.$toast('异常错误')
+            }
+        },
         // 选择到账方式
         handleSelect (value) {
             this.accountInfo = value
             this.show = false
+        },
+        checkParams () {
+            const moeny = parseFloat(this.money)
+            if (isNaN(moeny)) {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: '提现金额为非法数字或未输入提现金额，请重新输入'
+                })
+                return false
+            }
+            if (moeny <= 0) {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: '提现金额必须为正数'
+                })
+                return false
+            }
+            const realname = this.user.realname
+            if (!realname) {
+                this.dialogShow = true
+                return false
+            }
+            return true
+        },
+        // 提交真实姓名弹框
+        setRealname () {
+            this.confirm()
         }
     }
 }
