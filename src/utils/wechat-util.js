@@ -31,19 +31,19 @@ const wxReady = () => {
  * @param {*} pageUrl 地址url
  * @returns Promise
  */
-export const scanQRCode = async (pageUrl) => {
-        await wxConfig(pageUrl, ['scanQRCode'])
-        wxReady()
-        .then(() => {
-            wx.scanQRCode({
-                needResult: 0,
-                scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
-                success: ({ resultStr }) => {
-                    return Promise.resolve(resultStr)
-                }
-            })
+export const scanQRCode = (pageUrl) => {
+    wxConfig(pageUrl, ['scanQRCode'])
+    wxReady()
+    .then(() => {
+        wx.scanQRCode({
+            needResult: 0,
+            scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+            success: ({ resultStr }) => {
+                return Promise.resolve(resultStr)
+            }
         })
-        .catch(e => {
-            return Promise.reject(e)
-        })
+    })
+    .catch(e => {
+        return Promise.reject(e)
+    })
 }
