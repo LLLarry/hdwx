@@ -1,8 +1,10 @@
 // 微信工具
 import { sdkWxGet } from '@/require/home'
+import { Dialog } from 'vant'
 
 // 获取微信加密信息
-const wxConfig = async (pageUrl, jsApiList) => {
+const wxConfig = async (jsApiList) => {
+    const pageUrl = encodeURIComponent(window.sessionStorage.getItem('__init_url__'))
     const { appId, nonceStr, signature, timestamp: timestampStr } = await sdkWxGet({ pageUrl })
     const timestamp = Number(timestampStr)
     wx.config({
@@ -21,6 +23,13 @@ const wxReady = () => {
             resolve()
         })
         wx.error((res) => {
+            Dialog.alert({
+                title: '提示',
+                message: '请重新尝试'
+            })
+            .then(() => {
+                window.location.reload()
+            })
             reject(res)
         })
     })
@@ -31,19 +40,21 @@ const wxReady = () => {
  * @param {*} pageUrl 地址url
  * @returns Promise
  */
-export const scanQRCode = (pageUrl) => {
-    wxConfig(pageUrl, ['scanQRCode'])
-    wxReady()
-    .then(() => {
-        wx.scanQRCode({
-            needResult: 0,
-            scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
-            success: ({ resultStr }) => {
-                return Promise.resolve(resultStr)
-            }
+export const scanQRCode = () => {
+   return new Promise((resolve, reject) => {
+        wxConfig(['scanQRCode'])
+        wxReady()
+        .then(() => {
+            wx.scanQRCode({
+                needResult: 1,
+                scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
+                success: ({ resultStr }) => {
+                    resolve(resultStr)
+                }
+            })
         })
-    })
-    .catch(e => {
-        return Promise.reject(e)
-    })
+        .catch(e => {
+            reject(e)
+        })
+   })
 }

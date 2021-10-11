@@ -18,7 +18,8 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '../views/home/index.vue'),
     meta: {
       showTabBar: true,
-      title: '首页'
+      title: '首页',
+      wxsdk: true // 当前页面是否调用微信sdk
     }
   },
   {
@@ -256,6 +257,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "income-details" */ '../views/mine/income-details/index.vue'),
     meta: {
       title: '商户收益明细'
+    }
+  },
+  {
+    path: '/income/record/:id',
+    name: 'income-details-record',
+    component: () => import(/* webpackChunkName: "income-details-record" */ '../views/mine/income-details-record/index.vue'),
+    meta: {
+      title: '收益详情'
     }
   }
 ]

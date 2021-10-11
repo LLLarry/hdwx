@@ -66,9 +66,9 @@ export const getDeviceInfoList = (data, loadText) => {
  * @param {*} loadText
  * @returns
  */
- export const codetotrade = (data, loadText) => {
+ export const inquireDeviceOrderData = (data, loadText) => {
     return ajax({
-        url: '/equipment/codetotrade',
+        url: '/mobileMerchant/inquireDeviceOrderData',
         method: 'post',
         data,
         loadText

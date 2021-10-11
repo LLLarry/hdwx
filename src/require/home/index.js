@@ -26,3 +26,17 @@ export const getDealHomePageData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 商户绑定设备
+ * @param {*} data { pageUrl： 页面地址 }
+ * @returns
+ */
+ export const bindingDevice = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/bindingDevice',
+        method: 'post',
+        data,
+        loadText
+    })
+}

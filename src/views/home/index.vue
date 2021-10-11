@@ -87,12 +87,14 @@
 
 <script>
     // import { Notify } from 'vant'
-    import { getDealHomePageData } from '@/require/home'
+    import { getDealHomePageData, bindingDevice } from '@/require/home'
     import { fmtMoney } from '@/utils/util'
     import { scanQRCode } from '@/utils/wechat-util'
+    import parseURL from '@/utils/parse-url'
     export default {
         data () {
             return {
+                tt: false,
                 active: 1,
                 list: [
                     { title: '线上收益', value: 0 },
@@ -123,14 +125,14 @@
                 isHide: false // 是否开启隐藏模式
             }
         },
-        mounted () {
+        async mounted () {
             // setTimeout(() => {
             //     Notify({
             //         type: 'primary',
             //         message: '当前数据非最新数据，如想查看最新数据，请点击下方“”按钮'
             //     })
             // }, 2000)
-            this.getInitData({}, '正在加载中')
+            // this.getInitData({}, '正在加载中')
         },
         methods: {
             async getInitData (data, isShowLoading) {
@@ -189,19 +191,33 @@
                     if (isShowLoading === false) {
                         this.loading = false
                     }
+                    this.tt = true
                 }
             },
             // 更新数据
             handleUpdate () {
                 this.getInitData({ type: 1 }, false)
             },
-            async handleClick ({ title }) {
+            handleClick ({ title }) {
                 if (title !== '设备绑定') return false
-                const info = await scanQRCode(window.location.href)
-                console.log(info)
-                this.$dialog.alert({
-                    title: '提示123',
-                    message: info
+                // 调取扫一扫，获取扫码信息
+                scanQRCode()
+                .then(res => {
+                    const { status, message, ...result } = parseURL(res)
+                    if (status !== 200) return this.$toast(message)
+                    if (!result.code) return this.$toast('请扫描设备的二维码')
+                    bindingDevice({
+                        devicenum: result.code
+                    })
+                    .then(res => {
+                        this.$toast(res.message)
+                    })
+                    .catch(e => {
+                        this.$toast('异常错误')
+                    })
+                })
+                .catch(err => {
+                    console.log('errerr', err)
                 })
             }
         }

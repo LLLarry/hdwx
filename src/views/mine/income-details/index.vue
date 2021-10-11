@@ -51,9 +51,11 @@
         <main>
             <hd-scroll @pullingUpFn = "pullingUpFn" @getScroll="({ scroll }) => this.scroll = scroll">
                 <div class="padding-y-3">
-                    <div
+                    <router-link
                         class="record-card position-relativetext-size-md text-666 shadow margin-x-2 rounded-md overflow-hidden margin-bottom-3 bg-white"
                         v-for="item in list" :key="item.id"
+                        :to="`/income/record/${item.id}`"
+                        tag="div"
                     >
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
                             <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
@@ -100,7 +102,7 @@
                                 </span>
                             </hd-card-item>
                         </hd-card>
-                    </div>
+                    </router-link>
                     <hd-bottom :status="status" />
                 </div>
             </hd-scroll>

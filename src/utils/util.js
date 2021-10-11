@@ -96,3 +96,8 @@ export const getWeekRange = (date = new Date(), num = 0, type = 'YYYY-MM-DD HH:m
     const end = dayjs(date).add(num, 'month').endOf('month').format(type)
     return [start, end]
 }
+
+export const isiOS = () => {
+    const u = navigator.userAgent
+    return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+}

@@ -35,7 +35,6 @@ export default {
                 wx.closeWindow()
             })
         }
-        console.log(this.$router)
     },
     methods: {
         ...mapMutations(['setUser']),
@@ -43,7 +42,10 @@ export default {
            const { code: status, message, dealuser, openid } = await sendCodeAndgetUserInfo({ code })
            if (status === 200) {
                this.setUser({ ...dealuser, openid })
-               this.$router.replace({ path: '/' })
+            //    this.$router.replace({ path: '/' })
+                // window.history.go(-(window.history.length - 1))
+                // this.$router.replace({ path: '/' })
+                window.location.replace('/merwx')
            } else {
                 this.$dialog.alert({
                     title: '验证失败',
