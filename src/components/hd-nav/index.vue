@@ -14,8 +14,10 @@
 <script>
 export default {
     props: {
-        list: Array,
-        default: () => []
+        list: {
+            type: Array,
+            default: () => []
+        }
     }
 }
 </script>

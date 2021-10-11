@@ -266,6 +266,14 @@ const routes = [
     meta: {
       title: '收益详情'
     }
+  },
+  {
+    path: '/order/detail/:id',
+    name: 'order-detail-id',
+    component: () => import(/* webpackChunkName: "order-detail-id" */ '../views/order-profit/order-detail/index.vue'),
+    meta: {
+      title: '订单列表详情'
+    }
   }
 ]
 // process.env.BASE_URL

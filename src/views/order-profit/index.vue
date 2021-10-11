@@ -108,9 +108,11 @@
         <main>
             <hd-scroll @pullingUpFn = "pullingUpFn" @getScroll="({ scroll }) => this.scroll = scroll">
                 <div class="padding-y-3">
-                    <div
+                    <router-link
                         class="record-card position-relative text-size-md text-666 overflow-hidden margin-bottom-3"
                         v-for="item in list" :key="item.id"
+                        :to="`/order/detail/${item.id}`"
+                        tag="div"
                     >
                         <div class="order-item d-flex padding-2 bg-gray">
                             <div class="left d-flex justify-content-center align-items-center">
@@ -136,7 +138,7 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </router-link>
                     <hd-bottom :status="loadStatus" />
                 </div>
             </hd-scroll>

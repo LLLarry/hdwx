@@ -27,19 +27,36 @@
           </section>
       </div>
       <hd-order :list="list">
+          <template #title>
+              付款金额 <span class="text-size-lg">&yen; 3.00</span>
+          </template>
+          <template #focus>
+              <span>订单状态</span>
+              <span>正常</span>
+              <!-- <span style="color: #f0ff0c;">正常</span> -->
+          </template>
           <!-- <template #child v-slot:default="{row}">
               {{row}}
               9631
           </template> -->
       </hd-order>
+
+      <hd-nav :list="[{}]">
+          <div class="w-100 d-flex justify-content-end align-items-center">
+                <van-button type="primary" size="small">功率曲线</van-button>
+                <van-button disabled type="info"  size="small" class="margin-x-3">&nbsp;&nbsp;退&nbsp;&nbsp;&nbsp;&nbsp;款&nbsp;&nbsp;</van-button>
+          </div>
+      </hd-nav>
   </div>
 </template>
 
 <script>
 import HdOrder from '@/components/hd-order'
+import HdNav from '@/components/hd-nav'
 export default {
     components: {
-        HdOrder
+        HdOrder,
+        HdNav
     },
     data () {
         return {
@@ -52,10 +69,4 @@ export default {
 </script>
 
 <style lang="scss">
-.income-dr {
-    min-height: 100vh;
-    .money-contral {
-        border-top: 1px dotted #fff;
-    }
-}
 </style>
