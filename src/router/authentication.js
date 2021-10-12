@@ -8,12 +8,23 @@ export default (router) => {
         if (['/auth', '/register'].includes(to.path)) {
             next()
         } else if (getType(store.state.user.id) === 'undefined') {
-            if (WECHAT_BROWSER_ENV && ENV !== 'development') {
-                window.location.replace(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/merwx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`)
+            // if (WECHAT_BROWSER_ENV && ENV !== 'development') {
+            //     window.location.replace(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/merwx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`)
+            // } else {
+            //     const result = await store.dispatch('verifyCookieIsExpire')
+            //     if (result === 200) {
+            //         next()
+            //     } else {
+            //         next('/register')
+            //     }
+            // }
+
+            const result = await store.dispatch('verifyCookieIsExpire')
+            if (result === 200) {
+                next()
             } else {
-                const result = await store.dispatch('verifyCookieIsExpire')
-                if (result === 200) {
-                    next()
+                if (WECHAT_BROWSER_ENV && ENV !== 'development') {
+                    window.location.replace(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${encodeURIComponent(`${BASE_URL}/merwx/auth`)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`)
                 } else {
                     next('/register')
                 }

@@ -132,9 +132,18 @@
             //         message: '当前数据非最新数据，如想查看最新数据，请点击下方“”按钮'
             //     })
             // }, 2000)
-            // this.getInitData({}, '正在加载中')
+            this.getInitData({}, '正在加载中')
         },
         methods: {
+            check () {
+                getNetworkType()
+                .then((res) => {
+                    console.log('res123', res)
+                })
+                .catch((err) => {
+                    console.log('err123', err)
+                })
+            },
             async getInitData (data, isShowLoading) {
                 try {
                     if (isShowLoading === false) {
@@ -197,6 +206,7 @@
             // 更新数据
             handleUpdate () {
                 this.getInitData({ type: 1 }, false)
+                this.check()
             },
             handleClick ({ title }) {
                 if (title !== '设备绑定') return false

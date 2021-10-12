@@ -29,6 +29,7 @@
 </template>
 
 <script>
+    // import { getNetworkType } from '@/utils/wechat-util'
     export default {
         data () {
             return {
@@ -36,6 +37,11 @@
                 showTabBar: false
             }
         },
+        // created () {
+        //   getNetworkType().then(newWork => {
+        //     console.log('newWork', newWork)
+        //   })
+        // },
         watch: {
           $route: {
             handler (route) {

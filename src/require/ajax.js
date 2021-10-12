@@ -29,14 +29,17 @@ server.interceptors.request.use(config => {
 server.interceptors.response.use(response => {
     if (response.data.code === 90001) { // 缓存失效
         store.commit('resetState')
-        Dialog.alert({
-            title: '提示',
-            message: HDWX.WECHAT_BROWSER_ENV ? '登录已过期，请重新打开管理系统' : '登录已过期',
-            beforeClose (action, done) {
-                done()
-                wx.closeWindow()
-            }
-        })
+        // 当检验cookie时，cookie失效，不进行提示
+        if (!response.config.url.includes('/mobileMerchant/getDealAccountData')) {
+            Dialog.alert({
+                title: '提示',
+                message: HDWX.WECHAT_BROWSER_ENV ? '登录已过期，请重新打开管理系统' : '登录已过期',
+                beforeClose (action, done) {
+                    done()
+                    wx.closeWindow()
+                }
+            })
+        }
     }
     return response
 }, error => {
