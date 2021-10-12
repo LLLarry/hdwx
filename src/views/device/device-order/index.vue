@@ -118,15 +118,21 @@
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333" v-if="item.paysource">充电功率：</span>
-                                <span class="card-item-content text-666 text-link">
+                                <router-link class="card-item-content text-666 text-link" :to="`/order/powercurve/${item.id}`">
                                     查看功率
-                                </span>
+                                </router-link>
                             </hd-card-item>
                              <hd-card-item>
                                 <span class="card-item-title text-333" v-if="item.paysource">操作：</span>
                                 <span class="card-item-content text-666 text-link">
-                                    <van-button type="info" size="mini" v-if="(item.status === 1) || ( item.status !== 1 && item !== 2)">退款</van-button>
-                                    <van-button type="warning" size="mini" v-if="item.status !== 1 && item === 2">撤回</van-button>
+                                    <van-button
+                                        type="primary"
+                                        size="mini"
+                                        v-if="item.status === 1"
+                                        @click="handleRefund(item)"
+                                    >退款</van-button>
+                                    <van-button type="primary" size="mini" v-if="item.status !== 1 && item !== 2" disabled>退款</van-button>
+                                    <van-button type="warning" size="mini" v-if="item.status !== 1 && item === 2" @click="handleRefund(item.chargeid)">撤回</van-button>
                                 </span>
                             </hd-card-item>
                             <hd-card-item>
@@ -150,6 +156,8 @@ import hdCardItem from '@/components/hd-card-item'
 import hdScroll from '@/components/hd-scroll'
 import hdBottom from '@/components/hd-bottom'
 import { inquireDeviceOrderData } from '@/require/device'
+import { verifyorder } from '@/require/home'
+import { refundUtil, recall } from '@/utils/refund-util'
 const LIMIT = 10
 export default {
     data () {
@@ -239,7 +247,7 @@ export default {
             }
             try {
                 this.status = 0
-                const { code, message, ...tradedataList } = await inquireDeviceOrderData({
+                const { code, message, ...result } = await inquireDeviceOrderData({
                     ...data,
                     currentPage: this.currentPage,
                     code: this.code,
@@ -249,7 +257,7 @@ export default {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
                     // eslint-disable-next-line no-debugger
                     if (init) {
-                        this.list = tradedataList.tradedataList
+                        this.list = result.tradedataList
                     } else {
                         this.list = [...this.list, ...result.tradedataList]
                     }
@@ -313,6 +321,98 @@ export default {
             // 发送请求
             this.gatDeviceOrder(this.searchForm, true)
             this.slideMenuIsShow = false
+        },
+        async handleRefund ({ id: orderId, paytype, paysource, ordernum }) {
+            this.$dialog.confirm({
+                title: '提示',
+                message: '确认退费吗？'
+            })
+            .then(() => {
+                this.refundFn(orderId, paytype, paysource, ordernum)
+            })
+        },
+        async refundFn ({ id: orderId, paytype, paysource, ordernum }) {
+            const { code, id, message } = await verifyorder({ ordernum, paysource })
+            let oid
+            if (code === 200) {
+                oid = id
+            } else {
+                return this.$toast(message)
+            }
+
+            let refundState // 1:充电、 2:离线、 3:投币
+            let payTypeNum // 支付类型
+            let wolfkey = 0
+            if (paysource === 1) { // 充电模块
+                switch (paytype) {
+                    case 1: payTypeNum = 3; break
+                    case 2: payTypeNum = 1; break
+                    case 3: payTypeNum = 2; break
+                    case 4: payTypeNum = 5; break
+                    case 5: payTypeNum = 6; break
+                    case 12: payTypeNum = 1; break
+                }
+                refundState = 1
+            } else if (paysource === 2) { // 充电模块
+                switch (paytype) {
+                    case 1: payTypeNum = 3; break
+                    case 2: payTypeNum = 1; break
+                    case 3: payTypeNum = 2; break
+                    case 4: payTypeNum = 5; wolfkey = 3; break
+                    case 5: payTypeNum = 6; wolfkey = 4; break
+                    case 12: payTypeNum = 1; break
+                }
+                refundState = 3
+            } else if (paysource === 3) { // 离线充值机
+                switch (paytype) {
+                    case 1: payTypeNum = 3; break
+                    case 2: payTypeNum = 1; break
+                    case 3: payTypeNum = 2; break
+                }
+                refundState = 2
+            } else if (paysource === 4) { // 用户充值钱包
+                switch (paytype) {
+                    case 2: payTypeNum = 1; break
+                }
+                refundState = 4
+            }
+            refundUtil(payTypeNum, {
+                id: oid,
+                refundState,
+                pwd: 0,
+                utype: 2,
+                wolfkey
+            })
+            .then(res => {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: res
+                })
+                .then(() => {
+                    this.gatDeviceOrder(this.searchForm, true)
+                })
+            })
+            .catch(error => {
+                this.$dialog.alert({
+                    title: '提示',
+                    message: error
+                })
+            })
+        },
+        // 撤回
+        handleRecall (id) {
+            this.$dialog.confirm({
+                title: '提示',
+                message: '确认部分退费吗？'
+            })
+            .then(() => {
+                recall({
+                    id
+                })
+                .then(() => {
+                    this.gatDeviceOrder(this.searchForm, true)
+                })
+            })
         }
     }
 }

@@ -274,6 +274,14 @@ const routes = [
     meta: {
       title: '订单列表详情'
     }
+  },
+  {
+    path: '/order/powercurve/:id',
+    name: 'power-curve',
+    component: () => import(/* webpackChunkName: "power-curve" */ '../views/order-profit/power-curve/index.vue'),
+    meta: {
+      title: '订单功率曲线'
+    }
   }
 ]
 // process.env.BASE_URL
