@@ -29,7 +29,7 @@
     </div>
     <!-- 设备二维码 -->
     <hd-overlay :show="isShow" :title="`设备${code}端口二维码`" @close="isShow = false">
-      <div v-if="isShow">
+      <div v-if="showDeviceQRcode">
         <hd-qrcode :qrcode="qrcode" />
         <p class="text-center text-size-sm text-666">长按识别或保存二维码</p>
       </div>
@@ -41,23 +41,20 @@
 import hdOverlay from '@/components/hd-overlay'
 import hdQrcode from '@/components/hd-qrcode'
 import { mapState } from 'vuex'
+import { inquireDeviceMmanageInfo } from '@/require/device'
+import { getInfoByHdVersion } from '@/utils/util'
+const { PROXY_BASE_URL } = window.HDWX
 export default {
   data () {
     return {
       code: this.$route.params.code,
-      list: [
-        { title: '设备二维码', icon: require('../../../assets/images/home_05.png') },
-        { title: '端口二维码', icon: require('../../../assets/images/home_05.png') },
-        { title: '收费模板', icon: require('../../../assets/images/home_07.png') },
-        { title: '系统参数', icon: require('../../../assets/images/device-system.png') },
-        { title: '更换模块', icon: require('../../../assets/images/home_01.png') },
-        { title: '断开重连', icon: require('../../../assets/images/home_09.png') }
-      ],
       qrList: undefined,
       qrcode: {
           key: 1
       },
-      isShow: false
+      result: {},
+      isShow: false,
+      showDeviceQRcode: false
     }
   },
   components: {
@@ -65,26 +62,55 @@ export default {
     hdQrcode
   },
   mounted () {
-      const arr = Array(20).fill(1).map((item, index) => ({ port: (index + 1) }))
-      this.qrList = arr
-      setTimeout(() => {
-        this.qrList = this.qrList.map(item => {
-            return {
-                ...item,
-                qrcode: {
-                    value: '9965465465sadsaswwwaad',
-                    key: item.port,
-                    size: this.global.clientWidth * 0.23, // 二维码大小
-                    title: `${this.code}-${item.port.toString().padStart(2, 0)}`
-                }
-            }
-        })
-      }, 500)
+      this.init()
   },
   computed: {
     ...mapState(['global'])
   },
+  watch: {
+    // 监听设备二维码关闭的时候,延迟移除二维码
+    isShow: {
+      handler (flag) {
+        if (flag) {
+          this.showDeviceQRcode = true
+        } else {
+          setTimeout(() => {
+            this.showDeviceQRcode = false
+          }, 300)
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
+    async init () {
+      try {
+        const { code, message, ...result } = await inquireDeviceMmanageInfo({ code: this.code })
+        if (code === 200) {
+          this.result = result
+          const { portNum, portPath, portKey } = getInfoByHdVersion(result.deviceversion)
+          const arr = Array(portNum).fill(1).map((item, index) => ({ port: (index + 1) }))
+          // this.qrList = arr
+          // setTimeout(() => {
+            this.qrList = arr.map(item => {
+                return {
+                    ...item,
+                    qrcode: {
+                        value: `${PROXY_BASE_URL}${portPath}?${portKey}=${this.code}${item.port}`,
+                        key: item.port,
+                        size: this.global.clientWidth * 0.23, // 二维码大小
+                        title: `${this.code}-${item.port.toString().padStart(2, 0)}`
+                    }
+                }
+            })
+          // }, 500)
+        } else {
+          this.$toast(message)
+        }
+      } catch (error) {
+        this.$toast('异常错误')
+      }
+    },
     handleClick (qrcode) {
       this.qrcode = { ...qrcode, size: this.global.clientWidth * 0.59 }
       this.isShow = true

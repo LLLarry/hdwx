@@ -97,7 +97,72 @@ export const getWeekRange = (date = new Date(), num = 0, type = 'YYYY-MM-DD HH:m
     return [start, end]
 }
 
+/**
+ * 查询是否是苹果设备
+ * @returns Boolean
+ */
 export const isiOS = () => {
     const u = navigator.userAgent
     return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+}
+
+/**
+ * 通过硬件版本号获取设备的“端口数量”和“扫码路径”以及“参数键名”
+ * @returns Boolean
+ */
+ export const getInfoByHdVersion = (hdVersion) => {
+    const map = { // 硬件版本号对应端口数量
+        '00': 10,
+        '01': 10,
+        '02': 2,
+        '03': 10,
+        '04': 0,
+        '05': 16,
+        '06': 20,
+        '07': 1,
+        '08': 10,
+        '09': 16,
+        10: 20,
+        11: 0
+    }
+    if (Number(hdVersion) !== 11) { // 非一拖二设备
+        return {
+            portNum: map[hdVersion], // 端口数量
+            path: '/oauth2pay', // 扫设备二维码路径
+            key: 'code', // 扫设备二维码键名
+            portPath: '/oauth2Portpay', // 扫端口二维码路径
+            portKey: 'codeAndPort' // 扫端口二维码键名
+        }
+    } else { // 一拖二设备
+        return {
+            portNum: map[hdVersion], // 端口数量
+            path: '/oauth2pay', // 扫设备二维码路径
+            key: 'code', // 扫设备二维码键名
+            portPath: '/oauth2Addrpay', // 扫从机二维码路径
+            portKey: 'addrnum' // 扫从机二维码键名
+        }
+    }
+}
+
+/**
+ * 通过硬件版本号获取硬件版本名
+ * @param {*} hv 硬件版本号
+ * @returns String
+ */
+export const getDeviceVersionName = (hv) => {
+    const map = {
+        '00': '出厂默认设置',
+        '01': '十路智慧款',
+        '02': '电轿款',
+        '03': '脉冲板子',
+        '04': '离线充值机',
+        '05': '十六路智慧款',
+        '06': '二十路智慧款',
+        '07': '单路交流桩',
+        '08': '新版10路智慧款V3',
+        '09': '新版2路智慧款V3',
+        10: '新版20路智慧款V3',
+        11: '1拖2'
+    }
+    return map[hv]
 }

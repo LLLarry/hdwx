@@ -160,7 +160,7 @@ export const getDealHomePageData = (data, loadText) => {
  */
  export const verifyorder = (data, loadText) => {
     return ajax({
-        url: '/wxpay/verifyorder',
+        url: '/mobileMerchant/verifyTradeOrderStatus',
         method: 'post',
         data,
         loadText

@@ -5,13 +5,18 @@
           <template #title>
               付款金额 <span class="text-size-lg">&yen; {{partrecord.money | fmtMoney}}</span>
           </template>
+          <template #desc>
+              <div class="padding-y-2"></div>
+          </template>
           <template #focus>
               <span>订单状态</span>
-              <span v-if="partrecord.status === 1">正常</span>
-              <span v-if="partrecord.status !== 1">
-                  <span v-if="paysource === 1 && order.number === 2" style="color: #f0ff0c;">部分退款</span>
-                  <span v-else class="text-danger">退款</span>
-              </span>
+              <div v-if="!loading">
+                    <span v-if="partrecord.status === 1">正常</span>
+                    <span v-if="partrecord.status !== 1">
+                        <span v-if="paysource === 1 && order.number === 2" style="color: #f0ff0c;">部分退款</span>
+                        <span v-else class="text-danger">退款</span>
+                    </span>
+              </div>
               <!-- <span style="color: #f0ff0c;">正常</span> -->
           </template>
           <!-- <template #child v-slot:default="{row}">
@@ -46,6 +51,7 @@ export default {
     },
     data () {
         return {
+            loading: false,
             list: [],
             id: '', // 交易id
             equip: {},
@@ -300,8 +306,13 @@ export default {
     methods: {
         async init () {
             try {
-                const { code, message, equip, order, partrecord, tourist, user, paysource, paytype, status, ordersource, orderrefid } = await orderinquiredetails({ orderid: this.id })
+                this.loading = true
+                const { code, message, equip: fmtEquip, order: fmtOrder, partrecord: fmtPartrecord, tourist, user: fmtUser, paysource, paytype, status, ordersource, orderrefid } = await orderinquiredetails({ orderid: this.id })
                 if (code === 200) {
+                    const equip = fmtEquip || {}
+                    const order = fmtOrder || {}
+                    const partrecord = fmtPartrecord || {}
+                    const user = fmtUser || {}
                     this.equip = equip
                     this.order = order
                     this.partrecord = partrecord
@@ -335,7 +346,7 @@ export default {
                             { title: '订单编号', content: order.ordernum },
                             { title: '付款方式', content: parType },
                             { title: '用户昵称', content: tourist.username },
-                            { title: '用户ID', content: partrecord.uid.padStart(8, '0') },
+                            { title: '用户ID', content: (partrecord.uid).toString().padStart(8, '0') },
                             { title: '小区名称', content: equip.areaname === null ? '— —' : equip.areaname },
                             { title: '设备名称', content: equip.remark === null ? '— —' : equip.remark },
                             { title: '设备编号', content: equip.code }
@@ -347,6 +358,8 @@ export default {
             } catch (error) {
                 console.log(error)
                 this.$toast('异常错误')
+            } finally {
+                this.loading = false
             }
         },
         // 退费/撤回按钮

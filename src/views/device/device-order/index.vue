@@ -118,7 +118,7 @@
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333" v-if="item.paysource">充电功率：</span>
-                                <router-link class="card-item-content text-666 text-link" :to="`/order/powercurve/${item.id}`">
+                                <router-link class="card-item-content text-666 text-link" :to="`/order/powercurve/${item.chargeid}`">
                                     查看功率
                                 </router-link>
                             </hd-card-item>
@@ -331,7 +331,8 @@ export default {
                 this.refundFn(orderId, paytype, paysource, ordernum)
             })
         },
-        async refundFn ({ id: orderId, paytype, paysource, ordernum }) {
+        async refundFn (orderId, paytype, paysource, ordernum) {
+            console.log('paysource, ordernum', paysource, ordernum)
             const { code, id, message } = await verifyorder({ ordernum, paysource })
             let oid
             if (code === 200) {

@@ -282,6 +282,14 @@ const routes = [
     meta: {
       title: '订单功率曲线'
     }
+  },
+  {
+    path: '/device/info/:code',
+    name: 'device-info',
+    component: () => import(/* webpackChunkName: "device-info" */ '../views/device/device-info/index.vue'),
+    meta: {
+      title: '设备信息'
+    }
   }
 ]
 // process.env.BASE_URL

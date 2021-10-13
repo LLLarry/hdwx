@@ -89,3 +89,258 @@ export const getDeviceInfoList = (data, loadText) => {
 //         loadText
 //     })
 // }
+
+/*
+  通过设备号查询设备信息
+* @param {*} data
+* @param {*} loadText
+* @returns
+*/
+export const inquireDeviceMmanageInfo = (data, loadText) => {
+   return ajax({
+       url: '/mobileMerchant/inquireDeviceMmanageInfo',
+       method: 'post',
+       data,
+       loadText
+   })
+}
+
+/*
+* 设备状态查看
+* @param {*} data { code: 设备号， addr?: 从机地址 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireDeviceStatus = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireDeviceStatus',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 更新端口状态（设备）
+* @param {*} data { code: 设备号， port: 端口 }
+* @param {*} loadText
+* @returns
+*/
+export const querystate = (data, loadText) => {
+    return ajax({
+        url: '/querystate',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 更新端口状态（从机）
+* @param {*} data { code: 设备号， port: 端口， addr: 从机地址 }
+* @param {*} loadText
+* @returns
+*/
+export const queryPortStatus = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/queryPortStatus',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 锁定端口状态（设备）
+* @param {*} data { code: 设备号， port: 端口 }
+* @param {*} loadText
+* @returns
+*/
+export const lock = (data, loadText) => {
+    return ajax({
+        url: '/lock',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 锁定端口状态（从机）
+* @param {*} data { code: 设备号， port: 端口， addr: 从机地址 }
+* @param {*} loadText
+* @returns
+*/
+export const lockOrUnlockPort = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/lockOrUnlockPort',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 远程充电（设备）
+* @param {*} data { code: 设备号， port: 端口 }
+* @param {*} loadText
+* @returns
+*/
+export const testpaytoport = (data, loadText) => {
+    return ajax({
+        url: '/testpaytoport',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 远程充电（从机）
+* @param {*} data { code: 设备号， port: 端口， addr: 从机地址 }
+* @param {*} loadText
+* @returns
+*/
+export const startCharge = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/startCharge',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 远程断电（设备）
+* @param {*} data { code: 设备号， port: 端口 }
+* @param {*} loadText
+* @returns
+*/
+export const stopRechargeByPort = (data, loadText) => {
+    return ajax({
+        url: '/stopRechargeByPort',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 远程断电（从机）
+* @param {*} data { code: 设备号， port: 端口， addr: 从机地址 }
+* @param {*} loadText
+* @returns
+*/
+export const stopCharge = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/stopCharge',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 更新设备报警状态
+* @param {*} data { code: 设备号， type: 温度1 烟感2 总功率3 }
+* @param {*} loadText
+* @returns
+*/
+export const getDeviceNowArgument = (data, loadText) => {
+    return ajax({
+        url: '/getDeviceNowArgument',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 更新IMEI号
+* @param {*} data { code1: 旧设备号，code2: 新设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const merTranspositionImei = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/merTranspositionImei',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 设备断开重连
+* @param {*} data { code: 设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const removeClient = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/removeClient',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 更改设备的硬件版本号 、设备名称、所属小区
+* @param {*} data { code: 设备号， hardversion?: 硬件版本号， devicename?: aid?: 小区id  }
+* @param {*} loadText
+* @returns
+*/
+export const updateDeviceInfoByCode = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/updateDeviceInfoByCode',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 获取商户名下的小区列表
+* @param {*} data {  }
+* @param {*} loadText
+* @returns
+*/
+export const getDealAreaListInfo = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/getDealAreaListInfo',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 解绑小区
+* @param {*} data { code： 设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const dealUnbindDevice = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/dealUnbindDevice',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 获取系统参数信息
+* @param {*} data { code： 设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const getDeviceSystemParam = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/getDeviceSystemParam',
+        method: 'post',
+        data,
+        loadText
+    })
+}

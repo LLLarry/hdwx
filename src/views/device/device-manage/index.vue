@@ -4,8 +4,7 @@
       <div class="header-box d-flex flex-column align-items-center">
           <div class="header-device-code text-size-default margin-bottom-2">{{code}}</div>
           <div class="d-flex align-items-center">
-            <span class="margin-right-1">测试小区</span>
-            <van-icon name="edit" size="18px"/>
+            <span class="margin-right-1" v-if="result.devicename">{{result.devicename}}</span>
           </div>
       </div>
     </div>
@@ -23,7 +22,7 @@
     <!-- 设备二维码 -->
     <hd-overlay :show="deviceQRcode" title="设备二维码" @close="deviceQRcode = false">
       <div>
-        <hd-qrcode :qrcode="qrcode" v-if="deviceQRcode" />
+        <hd-qrcode :qrcode="qrcode" v-if="showDeviceQRcode" />
         <p class="text-center text-size-sm text-666">长按识别或保存二维码</p>
       </div>
     </hd-overlay>
@@ -42,7 +41,7 @@
         <li class="margin-bottom-1"><p>3、拆掉老模块、装上新模块</p></li>
         <li class="margin-bottom-1"><p>4、设备通电</p></li>
       </ul>
-      <van-button type="info"  size="small" class="w-100 margin-top-2">
+      <van-button type="info"  size="small" class="w-100 margin-top-2" @click="changeModelFn">
         <van-icon name="scan" size="16px"/>
         <span class="position-relative margin-left-1" style="top: -3px;">扫码更换</span>
       </van-button>
@@ -61,7 +60,7 @@
       <div class="text-size-sm margin-top-2 font-weight-bold">
         当设备满足上面任意一种情况时，需要商户手动点击“断开重连”按钮，更新设备的最新状态；
       </div>
-      <van-button type="info"  size="small" class="w-100 margin-top-2">
+      <van-button type="info"  size="small" class="w-100 margin-top-2" @click="disconnectFn">
         断开重连
       </van-button>
     </hd-overlay>
@@ -72,6 +71,11 @@
 import hdOverlay from '@/components/hd-overlay'
 import hdQrcode from '@/components/hd-qrcode'
 import { mapState } from 'vuex'
+import { inquireDeviceMmanageInfo, merTranspositionImei, removeClient } from '@/require/device'
+import { getInfoByHdVersion } from '@/utils/util'
+import { scanQRCode } from '@/utils/wechat-util'
+import parseURL from '@/utils/parse-url'
+const { PROXY_BASE_URL } = window.HDWX
 export default {
   data () {
     return {
@@ -82,17 +86,20 @@ export default {
         { title: '收费模板', icon: require('../../../assets/images/home_07.png') },
         { title: '系统参数', icon: require('../../../assets/images/device-system.png') },
         { title: '更换模块', icon: require('../../../assets/images/home_01.png') },
-        { title: '断开重连', icon: require('../../../assets/images/home_09.png') }
+        { title: '断开重连', icon: require('../../../assets/images/delete_icon.png') },
+        { title: '设备详情', icon: require('../../../assets/images/home_09.png') }
       ],
       changeModel: false, // 更换模块
       disconnect: false,
-      deviceQRcode: false, // 设备二维码
+      deviceQRcode: false, // 设备二维码弹框
+      showDeviceQRcode: false, // 显示设备二维码
       qrcode: {
-        value: '9965465465sadsaswwwaad',
+        value: '',
         key: 1,
         size: 220, // 二维码大小
-        title: '设备： 000130'
-      }
+        title: `设备：${this.$route.params.code}`
+      },
+      result: {} // 设备信息
     }
   },
   components: {
@@ -102,19 +109,40 @@ export default {
   computed: {
     ...mapState(['global'])
   },
-  methods: {
-    handleClick (title) {
-      console.log(this.global)
-      switch (title) {
-        case '设备二维码':
-          this.qrcode = {
-          value: '9965465465sadsaswwwaad',
-          key: 1,
-          size: this.global.clientWidth * 0.6, // 二维码大小
-          title: '设备： 000130'
+  watch: {
+    // 监听设备二维码关闭的时候,延迟移除二维码
+    deviceQRcode: {
+      handler (flag) {
+        if (flag) {
+          this.showDeviceQRcode = true
+        } else {
+          setTimeout(() => {
+            this.showDeviceQRcode = false
+          }, 300)
         }
-          this.deviceQRcode = true
-          break
+      },
+      immediate: true
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  methods: {
+    async init () {
+      try {
+        const { code, message, ...result } = await inquireDeviceMmanageInfo({ code: this.code })
+        if (code === 200) {
+          this.result = result
+        } else {
+          this.$toast(message)
+        }
+      } catch (error) {
+        this.$toast('异常错误')
+      }
+    },
+    handleClick (title) {
+      switch (title) {
+        case '设备二维码': this.createDeviceQRcode(); break
         case '端口二维码':
           this.$router.push({ path: '/device/portqrcode/' + this.code })
         break
@@ -130,7 +158,76 @@ export default {
         case '断开重连':
           this.disconnect = true
           break
+        case '设备详情':
+          this.$router.push({ path: '/device/info/' + this.code })
+          break
       }
+    },
+    // 创建端口二维码
+    createDeviceQRcode () {
+      if (this.result.deviceType === 1) { // 联网设备
+        const { path, key } = getInfoByHdVersion(this.result.deviceversion)
+        this.qrcode = {
+          value: `${PROXY_BASE_URL}${path}?${key}=${this.code}`,
+          key: new Date().getTime(),
+          size: this.global.clientWidth * 0.6, // 二维码大小
+          title: `设备：${this.code}`
+        }
+        this.deviceQRcode = true
+      } else { // 蓝牙设备
+        this.qrcode = {
+          value: `https://www.tengfuchong.cn/applet/${this.code}`,
+          key: new Date().getTime(),
+          size: this.global.clientWidth * 0.6, // 二维码大小
+          title: `设备：${this.code}`
+        }
+        this.deviceQRcode = true
+      }
+    },
+    // 更换IMEI号
+    changeModelFn () {
+      scanQRCode()
+      .then(res => {
+          const { status, message, ...result } = parseURL(res)
+          if (status !== 200) return this.$toast(message)
+          if (!result.code) return this.$toast('请扫描设备的二维码')
+          merTranspositionImei({
+            code1: this.code,
+            code2: result.code
+          })
+          .then(res => {
+            if (res.code === 200) {
+              this.$toast('IMEI号更换成功')
+            } else {
+              this.$toast(res.message)
+            }
+          })
+          .catch(() => {
+            this.$toast('异常错误')
+          })
+      })
+    },
+    // 断开重连
+    disconnectFn () {
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确定断开重连吗？'
+      })
+      .then(() => {
+          removeClient({
+            code: this.code
+          })
+          .then(res => {
+            if (res.code === 200) {
+              this.$toast('设备已断开，稍后会自动进行重连')
+            } else {
+              this.$toast(res.message)
+            }
+          })
+          .catch(() => {
+            this.$toast('异常错误')
+          })
+      })
     }
   }
 }

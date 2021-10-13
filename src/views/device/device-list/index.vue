@@ -29,10 +29,12 @@
                         :index="0"
                     >
                         <div class="padding-top-3">
+                            <div v-no-data="source[0].list.length <= 0"></div>
                             <device-item v-for="item in source[0].list" :key="item.code" :value="item" class="margin-bottom-3"/>
                             <div
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[0].list.length !== 0}"
+                                v-if="source[0].list.length > 0"
                             >{{ source[0].status === 2 ? '暂无更多数据' : '正在加载更多' }}</div>
                              <div style="height: 30px;"></div>
                         </div>
@@ -45,10 +47,12 @@
                         :index="1"
                     >
                         <div class="padding-top-3">
+                            <div v-no-data="source[1].list.length <= 0"></div>
                             <device-item v-for="item in source[1].list" :key="item.code" :value="item" class="margin-bottom-3"/>
                             <div
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[1].list.length !== 0}"
+                                v-if="source[1].list.length > 0"
                             >{{ source[1].status === 2 ? '暂无更多数据' : '正在加载更多' }}</div>
                             <div style="height: 30px;"></div>
                         </div>
@@ -61,8 +65,10 @@
                         :index="2"
                     >
                         <div class="padding-top-3">
+                            <div v-no-data="source[2].list.length <= 0"></div>
                             <device-item v-for="item in source[2].list" :key="item.code" :value="item" class="margin-bottom-3"/>
                             <div
+                                v-if="source[2].list.length > 0"
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[2].list.length !== 0}"
                             >{{ source[2].status === 2 ? '暂无更多数据' : '正在加载更多' }}</div>

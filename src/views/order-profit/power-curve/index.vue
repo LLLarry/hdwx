@@ -9,7 +9,7 @@
     />
     <main>
         <div class="power-post padding-3">
-            <div class="d-flex justify-content-between border-1 rounded-md padding-3 text-666" style="border-color: #add9c0; background: rgba(255, 255, 255, .6);">
+            <div class="d-flex justify-content-between border-1 rounded-md padding-3 text-666" style="border-color: #add9c0; background: rgba(255, 255, 255, .5);">
                 <div class="flex-1 d-flex justify-content-between flex-column align-items-center">
                     <span class="margin-bottom-2">已充时长</span>
                     <span class="font-weight-bold text-size-default">{{useTime}}</span>
@@ -22,7 +22,7 @@
         </div>
 
         <div class="power-post padding-x-3">
-            <hd-card class="border-1 rounded-md padding-x-3 padding-y-2  text-999 text-size-sm" style="border-color: #add9c0; background: rgba(255, 255, 255, .6);">
+            <hd-card class="border-1 rounded-md padding-x-3 padding-y-2  text-999 text-size-sm" style="border-color: #add9c0; background: rgba(255, 255, 255, .5);">
                 <hd-card-item class="w-100">
                     <span class="text-333 font-weight-bold text-size-md">已用信息：</span>
                 </hd-card-item>
@@ -69,11 +69,13 @@
                 </hd-card-item>
                 <hd-card-item>
                     <span>开始时间：</span>
-                    <span class="text-333">{{ result.begintime | fmtDate }}</span>
+                    <span class="text-333" v-if="result.begintime">{{ result.begintime | fmtDate }}</span>
+                    <span class="text-333" v-else>— —</span>
                 </hd-card-item>
                 <hd-card-item>
                     <span>结束时间：</span>
-                    <span class="text-333">{{ result.endtime | fmtDate }}</span>
+                    <span class="text-333" v-if="result.endtime">{{ result.endtime | fmtDate }}</span>
+                    <span class="text-333" v-else>— —</span>
                 </hd-card-item>
 
             </hd-card>
@@ -94,7 +96,7 @@
                         <van-col span="6" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">实时功率(瓦)</van-col>
                     </van-row>
                 </van-sticky>
-                 <van-row class="d-flex post-border-row margin-x-3  text-666" v-for="item in powerTableList" :key="item.id">
+                 <van-row class="d-flex post-border-row margin-x-3 text-size-sm text-666" v-for="item in powerTableList" :key="item.id">
                     <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.createtime | fmtDate }}</van-col>
                     <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.chargetime}}</van-col>
                     <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.surpluselec / 100}}</van-col>
@@ -132,7 +134,13 @@ export default {
             result: {}
         }
     },
-    mounted () {
+    created () {
+
+    },
+    async mounted () {
+        const echarts = await import('echarts')
+        this.myChart = echarts.init(this.$refs.chart)
+        this.myChart.showLoading({ text: '加载中...' })
         // 订单id
         this.id = this.$route.params.id
         this.init()
@@ -187,9 +195,6 @@ export default {
         // 获取功率曲线图像数据
          async initDraw () {
             try {
-                const echarts = await import('echarts')
-                this.myChart = echarts.init(this.$refs.chart)
-                this.myChart.showLoading({ text: '加载中...' })
                 const { code, drawinglist, message } = await powerdrawing({ orderId: this.id })
                 if (code === 200) {
                     this.powerList = drawinglist
@@ -392,7 +397,7 @@ export default {
     main {
         padding-top: 46px;
         .chart {
-            height: 300px;
+            height: 260px;
         }
         .post-border-row {
             &.post-header {
