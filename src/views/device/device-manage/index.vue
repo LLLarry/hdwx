@@ -81,13 +81,16 @@ export default {
     return {
       code: this.$route.params.code,
       list: [
-        { title: '设备二维码', icon: require('../../../assets/images/home_05.png') },
-        { title: '端口二维码', icon: require('../../../assets/images/home_05.png') },
+        { title: '设备二维码', icon: require('../../../assets/images/home_05.png') }, // 蓝牙设备不显示
+        { title: '端口二维码', icon: require('../../../assets/images/home_05.png') }, // 蓝牙设备不显示
         { title: '收费模板', icon: require('../../../assets/images/home_07.png') },
-        { title: '系统参数', icon: require('../../../assets/images/device-system.png') },
+        { title: '系统参数', icon: require('../../../assets/images/device-system.png') }, // 蓝牙设备不显示
         { title: '更换模块', icon: require('../../../assets/images/home_01.png') },
         { title: '断开重连', icon: require('../../../assets/images/delete_icon.png') },
-        { title: '设备详情', icon: require('../../../assets/images/home_09.png') }
+        { title: '设备详情', icon: require('../../../assets/images/home_09.png') },
+        { title: '报警系统', icon: require('../../../assets/images/监控.png') },
+        { title: '信道操作', icon: require('../../../assets/images/信道.png') }
+        // 报警系统 08时显示
       ],
       changeModel: false, // 更换模块
       disconnect: false,
@@ -133,6 +136,13 @@ export default {
         const { code, message, ...result } = await inquireDeviceMmanageInfo({ code: this.code })
         if (code === 200) {
           this.result = result
+          if (result.deviceType === 2) {
+            this.list = this.list.filter(item => !['设备二维码', '端口二维码', '系统参数', '信道操作'].includes(item.title))
+          } else if (['00', '01', '02', '03', '04', '05', '06', '07'].includes(result.deviceversion)) {
+            this.list = this.list.filter(item => !['报警系统', '信道操作'].includes(item.title))
+          } else if (['08', '09', '10'].includes(result.deviceversion)) {
+            this.list = this.list.filter(item => ['信道操作'].includes(item.title))
+          }
         } else {
           this.$toast(message)
         }
@@ -150,7 +160,7 @@ export default {
           this.$router.push({ path: '/device/templatelist/' + this.code })
         break
         case '系统参数':
-          this.$router.push({ path: '/device/system/v2/' + this.code })
+          this.$router.push({ path: `/device/system/${this.result.deviceversion === '07' ? 'car' : 'v2'}/` + this.code })
         break
         case '更换模块':
           this.changeModel = true
@@ -160,6 +170,12 @@ export default {
           break
         case '设备详情':
           this.$router.push({ path: '/device/info/' + this.code })
+          break
+        case '报警系统':
+          this.$router.push({ path: '/device/alarm/' + this.code })
+          break
+         case '信道操作':
+          this.$router.push({ path: '/device/channelvale/' + this.code })
           break
       }
     },

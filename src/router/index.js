@@ -163,6 +163,30 @@ const routes = [
     }
   },
   {
+    path: '/device/system/car/:code',
+    name: 'device-system-car',
+    component: () => import(/* webpackChunkName: "device-system-car" */ '../views/device/device-system-params/car/index.vue'),
+    meta: {
+      title: '单路系统模板'
+    }
+  },
+  {
+    path: '/device/alarm/:code',
+    name: 'device-alarm',
+    component: () => import(/* webpackChunkName: "device-alarm" */ '../views/device/device-alarm/index.vue'),
+    meta: {
+      title: '设备报警系统'
+    }
+  },
+  {
+    path: '/device/channelvale/:code',
+    name: 'device-channelvale',
+    component: () => import(/* webpackChunkName: "device-channelvale" */ '../views/device/device-channelvale/index.vue'),
+    meta: {
+      title: '信道操作'
+    }
+  },
+  {
     path: '/device/portstatus/:code',
     name: 'device-port-status',
     component: () => import(/* webpackChunkName: "device-port-status" */ '../views/device/device-port-status/index.vue'),

@@ -18,6 +18,27 @@
   </div>
 </template>
 
+<script>
+export default {
+  watch: {
+    isShow: {
+      handler (value) {
+        // 隐藏之后将实例删除掉
+        if (!value) {
+          setTimeout(() => {
+            try {
+              this.$el.parentNode.removeChild(this.$el)
+            } catch (error) {
+              this.$el.remove()
+            }
+          }, 500)
+        }
+      }
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 .hd-loading-content {
     background: rgba(0, 0, 0, .7);

@@ -36,14 +36,14 @@ export const getDeviceInfoList = (data, loadText) => {
  * @param {*} loadText
  * @returns
  */
- export const searchDeviceData = (data, loadText) => {
-    return ajax({
-        url: '/equipment/searchDeviceData',
-        method: 'post',
-        data,
-        loadText
-    })
-}
+//  export const searchDeviceData = (data, loadText) => {
+//     return ajax({
+//         url: '/equipment/searchDeviceData',
+//         method: 'post',
+//         data,
+//         loadText
+//     })
+// }
 
 /** ==============
  * 保存系统参数
@@ -51,11 +51,11 @@ export const getDeviceInfoList = (data, loadText) => {
  * @param {*} loadText
  * @returns
  */
- export const setSysParam = (data, loadText) => {
+ export const setSysParam = (params, loadText) => {
     return ajax({
         url: '/equipment/setSysParam',
-        method: 'post',
-        data,
+        method: 'get',
+        params,
         loadText
     })
 }
@@ -341,6 +341,126 @@ export const getDeviceSystemParam = (data, loadText) => {
         url: '/mobileMerchant/getDeviceSystemParam',
         method: 'post',
         data,
+        loadText
+    })
+}
+
+/*
+* 获取商户名下同类型设备
+* @param {*} data { hwVerson：硬件版本号 }
+* @param {*} loadText
+* @returns
+*/
+export const searchDeviceData = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/searchDeviceData',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 汽车桩获取系统参数
+* @param {*} data { hwVerson：硬件版本号 }
+* @param {*} loadText
+* @returns
+*/
+export const wolfreadsys = (params, loadText) => {
+    return ajax({
+        url: '/wolfreadsys',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 汽车桩设置系统参数
+* @param {*} data { hwVerson：硬件版本号 }
+* @param {*} loadText
+* @returns
+*/
+export const wolfsetsys = (params, loadText) => {
+    return ajax({
+        url: '/wolfsetsys',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 获取报警系统阈值
+* @param {*} data { code：设备号， type: 1 温度 2 烟感 3 总功率 }
+* @param {*} loadText
+* @returns
+*/
+export const getDeviceSetArgument = (params, loadText) => {
+    return ajax({
+        url: '/getDeviceSetArgument',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 设置报警系统阈值
+* @param {*} data { code：设备号， type: 1 温度 2 烟感 3 总功率, value：设置的值 }
+* @param {*} loadText
+* @returns
+*/
+export const setDeviceArgument = (params, loadText) => {
+    return ajax({
+        url: '/setDeviceArgument',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 获取最新的信道值
+* @param {*} data { code：设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireChannelinfo = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/inquireChannelinfo',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 设置信道值
+* @param {*} data { code：设备号， channelnum： 设置的信道值  如432 }
+* @param {*} loadText
+* @returns
+*/
+export const setChannelinfo = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/setChannelinfo',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 初始化加载上次设置的信道值
+* @param {*} data { code：设备号， channelnum： 设置的信道值  如432 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireChannelvaleLogData = (params, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireChannelvaleLogData',
+        method: 'get',
+        params,
         loadText
     })
 }

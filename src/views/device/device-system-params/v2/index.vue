@@ -199,13 +199,72 @@
 <script>
 import hdNav from '@/components/hd-nav'
 import hdSelect from '@/components/hd-select'
-import { readsysteminfo, searchDeviceData } from '@/require/device'
+import { getDeviceSystemParam, setSysParam, searchDeviceData } from '@/require/device'
+// 参数阈值map对照表
+const thresholdMap = {
+    coinMin: {
+        title: '投币充电时间',
+        range: [0, 999]
+    }, // 投币充电时间
+    cardMin: {
+        title: '单次投币最大用电量',
+        range: [0, 999]
+    }, // 刷卡充电时间
+    coinElec: {
+        title: '单次投币最大用电量',
+        range: [0.1, 15]
+    }, // 单次投币最大用电量
+    cardElec: {
+        title: '单次刷卡最大用电量',
+        range: [0.1, 15]
+    }, // 单次刷卡最大用电量
+    cst: {
+        title: '刷卡扣费金额',
+        range: [0.1, 15]
+    }, // 刷卡扣费金额
+    powerMax1: {
+        title: '一档最大充电功率',
+        range: [0, 3500]
+    }, // 一档最大充电功率
+    powerMax2: {
+        title: '二档最大充电功率',
+        range: [0, 3500]
+    }, // 二档最大充电功率
+    powerMax3: {
+        title: '三档最大充电功率',
+        range: [0, 3500]
+    }, // 三档最大充电功率
+    powerMax4: {
+        title: '四档最大充电功率',
+        range: [0, 3500]
+    }, // 四档最大充电功率
+    powerTim2: {
+        title: '二档充电时间百分比',
+        range: [0, 100]
+    }, // 二档充电时间百分比
+    powerTim3: {
+        title: '三档充电时间百分比',
+        range: [0, 100]
+    }, // 三档充电时间百分比
+    powerTim4: {
+        title: '四档充电时间百分比',
+        range: [0, 100]
+    }, // 四档充电时间百分比
+    fullPowerMin: {
+        title: '最大浮充功率',
+        range: [0, 200]
+    }, // 最大浮充功率
+    fullChargeTime: {
+        title: '浮充时间',
+        range: [30, 240]
+    } // 浮充时间
+}
 export default {
     data () {
         return {
-            code: '302864',
-            checked: true,
+            code: this.$route.params.code,
             activeNames: ['1'],
+            hardversion: '',
             navList: [
                 { text: '获取参数', icon: 'replay', onClick: this.handleGet },
                 { text: '复用参数', icon: 'idcard', onClick: this.handleGetDeviceList },
@@ -231,11 +290,12 @@ export default {
                 fullChargeTime: 180 // 浮充时间
             },
             list: [
-                { code: '000130', remark: '回忆小区-南栋01', areaname: '回忆小区', aid: 1 },
-                { code: '000132', remark: '回忆小区-南栋02', areaname: '回忆小区', aid: 1, selected: true, disabled: true },
-                { code: '000133', remark: '回忆小区-南栋03', areaname: null, aid: 0 },
-                { code: '000134', remark: '回忆小区-南栋04', areaname: '明港路花园565456487812', aid: 2 }
+                // { code: '000130', remark: '回忆小区-南栋01', areaname: '回忆小区', aid: 1 },
+                // { code: '000132', remark: '回忆小区-南栋02', areaname: '回忆小区', aid: 1, selected: true, disabled: true },
+                // { code: '000133', remark: '回忆小区-南栋03', areaname: null, aid: 0 },
+                // { code: '000134', remark: '回忆小区-南栋04', areaname: '明港路花园565456487812', aid: 2 }
             ],
+            selectList: [], // 选中的list
             isShow: false
         }
     },
@@ -243,38 +303,117 @@ export default {
         hdNav,
         hdSelect
     },
+    watch: {
+        model: {
+            handler (model) {
+                this.checkedFn(model)
+            },
+            deep: true
+        }
+    },
+    mounted () {
+        this.handleGet()
+    },
     methods: {
         handleGet () {
-            this.getSystemParmas({ code: '000138' })
+            this.getSystemParmas({ code: this.code })
         },
         handleSave () {
+            this.setSysParamFn(this.code)
+        },
+        async setSysParamFn (code) {
+            if (!this.checkedFn(this.model)) return false
             const data = {
                 ...this.model,
                 spRecMon: this.model.spRecMon ? 1 : 2,
                 spFullEmpty: this.model.spFullEmpty ? 1 : 2,
-                elecTimeFirst: this.model.elecTimeFirst ? 1 : 2
+                elecTimeFirst: this.model.elecTimeFirst ? 1 : 2,
+                code
             }
-            console.log(data)
+            delete data.updateTime
+            return await this.setSystemParmas(data)
         },
         async handleGetDeviceList () {
-            const info = await searchDeviceData({
-                code: '000012',
-                merid: 5039,
-                hwVerson: '08'
+            const { code, message, devicelist } = await searchDeviceData({
+                code: this.code,
+                hwVerson: this.hardversion
             })
-            console.log(info)
-           this.isShow = true
+            if (code === 200) {
+                this.list = devicelist.map(item => {
+                    return {
+                        ...item,
+                        remark: item.devicename,
+                        selected: item.code === this.code,
+                        disabled: item.code === this.code
+                    }
+                })
+                this.isShow = true
+            } else {
+                this.$toast(message)
+            }
         },
-        handleSelectSubmit () {
-
+        async handleSelectSubmit (value) {
+            if (Array.isArray(value)) {
+                this.selectList = value.filter(item => item !== this.code)
+                const code = this.selectList[0]
+                if (code) {
+                    this.repeat(code, 0)
+                }
+            }
+            this.isShow = false
         },
+        repeat (code, index) {
+            this.setSysParamFn(code).then(() => {
+                const ind = index++
+                if (this.selectList[ind]) {
+                    repeat(list[ind], ind)
+                }
+            })
+        },
+        // 获取系统参数
         async getSystemParmas (data) {
             try {
-                const info = await readsysteminfo(data)
-                console.log(info)
+                const { code, message, sysparam: params, hardversion } = await getDeviceSystemParam(data)
+                const sysparam = params || {}
+                if (code === 200) {
+                    this.model = Object.assign({}, {
+                        ...sysparam,
+                        spRecMon: sysparam.spRecMon === 1, // 是否余额回收
+                        spFullEmpty: sysparam.spFullEmpty === 1 // 是否断电自停
+                    })
+                    this.hardversion = hardversion
+                } else {
+                    this.$toast(message)
+                }
             } catch (e) {
-                console.log(e)
+                this.$toast('异常错误')
             }
+        },
+        // 设置系统参数
+        async setSystemParmas (data) {
+            try {
+                const { message } = await setSysParam(data)
+                this.$dialog.alert({
+                    title: '提示',
+                    message: message
+                })
+                return true
+            } catch (e) {
+                this.$toast('异常错误')
+                return false
+            }
+        },
+        // 校验参数
+        checkedFn (model) {
+            for (const [key, { title, range }] of Object.entries(thresholdMap)) {
+                const [minVal, maxVal] = range
+                const value = Number(model[key])
+                if (value < minVal || value > maxVal) {
+                    this.$toast(`${title}的值范围为：${minVal}~${maxVal}`)
+                    return false
+                }
+            }
+           return true
         }
     }
 }

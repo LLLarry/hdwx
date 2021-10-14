@@ -107,6 +107,18 @@ export const isiOS = () => {
 }
 
 /**
+ * 获取随机数
+ * @returns String
+ */
+ export const getRamdom = () => {
+    const r = Math.round(Math.random() * 255)
+    const g = Math.round(Math.random() * 255)
+    const b = Math.round(Math.random() * 255)
+    const color = r << 16 | g << 8 | b
+    return color.toString(16)
+}
+
+/**
  * 通过硬件版本号获取设备的“端口数量”和“扫码路径”以及“参数键名”
  * @returns Boolean
  */

@@ -56,7 +56,7 @@
                 <div class="d-flex align-items-center justify-content-between padding-x-3 padding-y-1">
                     <span class="text-666">硬件版本</span>
                     <span class="d-inline-flex align-items-center">{{info.deviceversion}} {{ info.hvName }}
-                        <van-button type="primary" size="mini" class="margin-left-1" @click="showPicker = true">修改硬件版本</van-button>
+                        <van-button type="primary" size="mini" class="margin-left-1" @click="showPicker = true" v-if="columns.length > 0">修改硬件版本</van-button>
                     </span>
                 </div>
               </li>
@@ -168,7 +168,7 @@ export default {
                         hvName: getDeviceVersionName(info.deviceversion)
                     }
                     this.changeForm = { ...info }
-                    this.columns = initMap[info.deviceversion].map(hv => `${hv} ${getDeviceVersionName(hv)}`)
+                    this.columns = (initMap[info.deviceversion] || []).map(hv => `${hv} ${getDeviceVersionName(hv)}`)
                 } else {
                     this.$toast(message)
                 }

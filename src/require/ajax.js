@@ -3,6 +3,7 @@ import Qs from 'qs'
 import Vue from 'vue'
 import { Dialog } from 'vant'
 import store from '@/store'
+import { getRamdom } from '@/utils/util'
 
 const api = process.env.NODE_ENV === 'production' ? '' : '/api'
 const baseURL = process.env.NODE_ENV === 'production' ? 'http://www.tengfuchong.com.cn' : ''
@@ -47,17 +48,21 @@ server.interceptors.response.use(response => {
 })
 
 export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '正在加载中' } = {}) => {
+    const random = getRamdom()
     if (method === 'get') {
         return new Promise((resolve, reject) => {
             if (loadText !== false) {
                 Vue.prototype.$showLoading({
-                    title: loadText
+                    title: loadText,
+                    key: random
                 })
             }
             server.get(url, { params })
-            .then(({ status, data }) => {
+            .then(({ status, data } = {}) => {
                 if (status === 200) {
                     resolve(data)
+                } else {
+                    reject(new Error('请求异常'))
                 }
             })
             .catch(reason => {
@@ -65,7 +70,7 @@ export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '
             })
             .finally(() => {
                 if (loadText !== false) {
-                    Vue.prototype.$cancelLoading()
+                    Vue.prototype.$cancelLoading(random)
                 }
             })
         })
@@ -73,13 +78,16 @@ export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '
         return new Promise((resolve, reject) => {
             if (loadText !== false) {
                 Vue.prototype.$showLoading({
-                    title: loadText
+                    title: loadText,
+                    key: random
                 })
             }
             server.post(url, Qs.stringify(data))
-            .then(({ status, data }) => {
+            .then(({ status, data } = {}) => {
                 if (status === 200) {
                     resolve(data)
+                } else {
+                    reject(new Error('请求异常'))
                 }
             })
             .catch(reason => {
@@ -87,7 +95,7 @@ export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '
             })
             .finally(() => {
                 if (loadText !== false) {
-                    Vue.prototype.$cancelLoading()
+                    Vue.prototype.$cancelLoading(random)
                 }
             })
         })
