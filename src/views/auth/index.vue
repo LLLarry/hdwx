@@ -44,8 +44,7 @@ export default {
                this.setUser({ ...dealuser, openid })
             //    this.$router.replace({ path: '/' })
                 // window.history.go(-(window.history.length - 1))
-                // this.$router.replace({ path: '/' })
-                window.location.replace('/merwx')
+                this.$router.replace({ path: '/' })
            } else {
                 this.$dialog.alert({
                     title: '验证失败',

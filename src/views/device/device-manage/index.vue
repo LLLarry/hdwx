@@ -141,7 +141,7 @@ export default {
           } else if (['00', '01', '02', '03', '04', '05', '06', '07'].includes(result.deviceversion)) {
             this.list = this.list.filter(item => !['报警系统', '信道操作'].includes(item.title))
           } else if (['08', '09', '10'].includes(result.deviceversion)) {
-            this.list = this.list.filter(item => ['信道操作'].includes(item.title))
+            this.list = this.list.filter(item => !['信道操作'].includes(item.title))
           }
         } else {
           this.$toast(message)

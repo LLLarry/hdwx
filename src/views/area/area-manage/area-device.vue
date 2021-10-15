@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end align-items-center w-100 margin-top-2">
-                        <van-button type="primary" plain size="mini" class="margin-right-2 padding-x-3">管理</van-button>
+                        <van-button type="primary" plain size="mini" class="margin-right-2 padding-x-3" :to="`/device/manage/${item.code}`">管理</van-button>
                         <van-button type="danger" plain size="mini" class="padding-x-3" @click="handleDelete(item)">解绑</van-button>
                     </div>
                 </hd-card>

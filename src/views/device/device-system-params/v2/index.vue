@@ -224,19 +224,19 @@ const thresholdMap = {
     }, // 刷卡扣费金额
     powerMax1: {
         title: '一档最大充电功率',
-        range: [0, 3500]
+        range: [0, 8000]
     }, // 一档最大充电功率
     powerMax2: {
         title: '二档最大充电功率',
-        range: [0, 3500]
+        range: [0, 8000]
     }, // 二档最大充电功率
     powerMax3: {
         title: '三档最大充电功率',
-        range: [0, 3500]
+        range: [0, 8000]
     }, // 三档最大充电功率
     powerMax4: {
         title: '四档最大充电功率',
-        range: [0, 3500]
+        range: [0, 8000]
     }, // 四档最大充电功率
     powerTim2: {
         title: '二档充电时间百分比',

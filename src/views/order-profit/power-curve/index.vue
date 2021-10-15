@@ -89,18 +89,18 @@
             <div>
                 <van-sticky offset-top="1.2266666666666666rem">
                     <van-row class="d-flex post-border-row post-header margin-x-3 text-size-sm font-weight-bold">
-                        <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">记录时间</van-col>
-                        <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余时间(分钟)</van-col>
-                        <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余电量(千瓦·时)</van-col>
-                         <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center" v-if="showAV">实时电压/电流</van-col>
-                        <van-col span="6" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">实时功率(瓦)</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">记录时间</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余时间(分钟)</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余电量(千瓦·时)</van-col>
+                         <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center" v-if="showAV">实时电压/电流</van-col>
+                        <van-col :span="spanNum" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">实时功率(瓦)</van-col>
                     </van-row>
                 </van-sticky>
                  <van-row class="d-flex post-border-row margin-x-3 text-size-sm text-666" v-for="item in powerTableList" :key="item.id">
-                    <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.createtime | fmtDate }}</van-col>
-                    <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.chargetime}}</van-col>
-                    <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.surpluselec / 100}}</van-col>
-                    <van-col span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center"  v-if="showAV">
+                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.createtime | fmtDate }}</van-col>
+                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.chargetime}}</van-col>
+                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.surpluselec / 100}}</van-col>
+                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center"  v-if="showAV">
                         <div>
                             {{item.portV == -1 ? '— —' : `${item.portV}V`}}
                         </div>
@@ -108,7 +108,7 @@
                             {{item.portA == -1 ? '— —' : `${item.portA}A`}}
                         </div>
                     </van-col>
-                    <van-col span="6" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.power }}</van-col>
+                    <van-col :span="spanNum" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.power }}</van-col>
                 </van-row>
             </div>
         </div>
@@ -155,6 +155,13 @@ export default {
                 return item.portV !== -1 && item.portA !== -1
             }
             return false
+        },
+        spanNum () {
+            let num = 3
+            if (this.showAV) {
+                num++
+            }
+            return 24 / num
         },
         // 使用时间
         useTime () {

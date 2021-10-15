@@ -1,25 +1,25 @@
 <template>
-  <div class="device-item text-size-md text-666 shadow margin-x-2 rounded-md overflow-hidden" :class="{ active: !deviceBindOwn }">
+  <div class="device-item text-size-sm text-666 shadow margin-x-2 rounded-md overflow-hidden" :class="{ active: !deviceBindOwn }">
     <hd-card class="padding-2">
          <hd-card-item>
-            <span class="device-item-title text-333">设备号：</span>
-            <span class="device-item-content text-666">{{value.code}}</span>
+            <span class="device-item-title text-666">设备号：</span>
+            <span class="device-item-content text-999">{{value.code}}</span>
         </hd-card-item>
         <hd-card-item>
-            <span class="device-item-title text-333">线上收益：</span>
-            <span class="device-item-content text-666">{{value.totalOnlineEarn}}元</span>
+            <span class="device-item-title text-666">线上收益：</span>
+            <span class="device-item-content text-999">{{value.totalOnlineEarn}}元</span>
         </hd-card-item>
         <hd-card-item v-if="showIncoins">
-            <span class="device-item-title text-333">投币收益：</span>
-            <span class="device-item-content text-666">{{value.totalCoinsEarn}}元</span>
+            <span class="device-item-title text-666">投币收益：</span>
+            <span class="device-item-content text-999">{{value.totalCoinsEarn}}元</span>
         </hd-card-item>
         <hd-card-item>
-            <span class="device-item-title text-333">设备名称：</span>
-            <span class="device-item-content text-666">{{value.remark}}</span>
+            <span class="device-item-title text-666">设备名称：</span>
+            <span class="device-item-content text-999">{{value.remark}}</span>
         </hd-card-item>
         <hd-card-item>
-            <span class="device-item-title text-333">所属小区：</span>
-            <span class="device-item-content text-666">{{value.name}}</span>
+            <span class="device-item-title text-666">所属小区：</span>
+            <span class="device-item-content text-999">{{value.name}}</span>
         </hd-card-item>
         <hd-card-item
             v-if="!['03', '04'].includes(value.hardversion) && value.state === 1"
@@ -53,6 +53,7 @@
                 type="primary"
                 size="small"
                 v-if="deviceBindOwn && value.state === 1 && value.device_type !== 2 && value.hardversion !== '11'"
+                :to="`/remote/charge/${value.code}`"
             >远程</van-button>
             <van-button
                 :type="value.state === 1 ? 'primary' : 'danger'" size="small"

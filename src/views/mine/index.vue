@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <van-icon name="setting-o" class="header-seticon" size=".7rem" color="rgba(255, 255, 255, 0.8)" @click="userInfoShow = true" />
+            <van-icon name="setting-o" class="header-seticon" size=".7rem" color="rgba(255, 255, 255, 0.8)" @click="handleChangeUserInfo" />
         </div>
         <main>
             <!-- 提现管理 -->
@@ -100,7 +100,7 @@
 
 <script>
 import { skipPersonCenter, updateAccountData } from '@/require/mine'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import WithdrawManager from '@/components/mine/withdraw-manager'
 import Setting from '@/components/mine/setting'
 import { fmtDate } from '@/utils/util'
@@ -116,22 +116,18 @@ export default {
             merincome: 0, // 账户余额
             servephone: '', // 服务手机号
             authority: {}, // 设置的信息
-            userInfoShow: false // 用户信息展示
+            userInfoShow: false, // 用户信息展示
+            copyUser: {}
         }
     },
     computed: {
-        ...mapState(['user']),
-        copyUser () {
-            return {
-                ...this.user,
-                createTime: fmtDate(this.user.createTime)
-            }
-        }
+        ...mapState(['user'])
     },
     mounted () {
         this.getInitData()
     },
     methods: {
+        ...mapMutations(['setUser']),
         async getInitData (exect = {}) {
             try {
                 const { code, message, merincome, servephone, authority } = await skipPersonCenter(exect)
@@ -153,6 +149,13 @@ export default {
         reloadData () {
             this.getInitData({ type: 1 })
         },
+        handleChangeUserInfo () {
+            this.copyUser = {
+                ...this.user,
+                createTime: fmtDate(this.user.createTime)
+            }
+            this.userInfoShow = true
+        },
         // 修改商户的真实姓名
         onSubmit ({ realname }) {
             this.$dialog.confirm({
@@ -163,7 +166,14 @@ export default {
                 try {
                     const { code, message } = await updateAccountData({ uid: this.user.id, username: realname, type: 2 })
                     if (code === 200) {
-                        this.$toast('修改成功')
+                        // 修改缓存中的用户真实姓名
+                        this.setUser({ ...this.user, realname })
+                        this.$dialog.alert({
+                            title: '提示',
+                            message: '真实姓名修改成功'
+                        }).then(() => {
+                             this.reloadData()
+                        })
                     } else {
                         this.$toast(message)
                     }

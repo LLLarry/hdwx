@@ -38,7 +38,7 @@
                         <template #right-icon>
                             <div class="d-flex">
                                 <div class="d-flex flex-column justify-content-around" >
-                                    <van-button type="primary" size="mini" icon="replay" @click="getDeviceAlarmSattus(item.type)">更新</van-button>
+                                    <van-button type="primary" size="mini" icon="replay" @click="handleUpdate(item.type)">更新</van-button>
                                     <van-button type="info" size="mini" style="margin: 0;" icon="setting-o" @click="handleSet(item)">设置</van-button>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { getDeviceNowArgument, getDeviceSetArgument, setDeviceArgument } from '@/require/device'
+import { getDeviceNowArgument, getDeviceSetArgument, setDeviceArgument, inquireWarnHot } from '@/require/device'
 export default {
     data () {
         return {
@@ -88,22 +88,32 @@ export default {
         }
     },
     mounted () {
-        Promise.all([
-            this.getDeviceAlarmSattus(1),
-            this.getDeviceAlarmSattus(2),
-            this.getDeviceAlarmSattus(3),
-            this.getDeviceAlarmThreshold(1),
-            this.getDeviceAlarmThreshold(2),
-            this.getDeviceAlarmThreshold(3)
-        ])
+        this.init()
     },
     methods: {
+        async init () {
+            try {
+                const { code, message, ...result } = await inquireWarnHot({ code: this.code })
+                if (code === 200) {
+                    this.list = [
+                        { title: '温度监控', type: 1, threshold: result.hotDoorsill, value: result.hotDoorsillData, icon: require('@/assets/images/温度报警.png') },
+                        { title: '烟感监控', type: 2, threshold: result.smokeDoorsill, value: result.smokeDoorsillData, icon: require('@/assets/images/烟雾告警.png') },
+                        { title: '总功率监控', type: 3, threshold: result.powerTotal, value: result.powerTotalData, icon: require('@/assets/images/过载报警.png') }
+                    ]
+                } else {
+                    this.$toast(message)
+                }
+            } catch (error) {
+                this.$toast('异常错误')
+            }
+        },
         // 获取报警系统
         async getDeviceAlarmSattus (type) {
             try {
                 const { returncode, message, value } = await getDeviceNowArgument({ code: this.code, type })
+                // eslint-disable-next-line eqeqeq
+                if (returncode == 200) {
                     this.list[type - 1].value = value
-                if (returncode === 200) {
                 } else {
                     this.$toast(message)
                 }
@@ -116,7 +126,9 @@ export default {
             try {
                 const { returncode, message, value } = await getDeviceSetArgument({ code: this.code, type })
                     this.list[type - 1].threshold = value
-                if (returncode === 200) {
+                // eslint-disable-next-line eqeqeq
+                if (returncode == 200) {
+                    this.list[type - 1].threshold = value
                 } else {
                     this.$toast(message)
                 }
@@ -128,7 +140,7 @@ export default {
         handleSet (row) {
             this.editInfo = {
                 type: row.type,
-                value: row.handleSet
+                value: row.threshold
             }
             this.editShow = true
         },
@@ -136,11 +148,23 @@ export default {
             try {
                 this.editShow = false
                 const { returncode, message } = await setDeviceArgument({ code: this.code, ...this.editInfo })
-                if (returncode === 200) {
+                // eslint-disable-next-line eqeqeq
+                if (returncode == 200) {
                     this.$toast(`${this.editInfo.type === 1 ? '温度' : this.editInfo.type === 2 ? '烟感' : '总功率'}阈值设置成功`)
+                    this.list[this.editInfo.type - 1].threshold = this.editInfo.value
                 } else {
                     this.$toast(message)
                 }
+            } catch (error) {
+                this.$toast('异常错误')
+            }
+        },
+        async handleUpdate (type) {
+            try {
+                Promise.all([
+                    this.getDeviceAlarmSattus(type),
+                    this.getDeviceAlarmThreshold(type)
+                ])
             } catch (error) {
                 this.$toast('异常错误')
             }

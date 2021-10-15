@@ -11,13 +11,13 @@
             <hd-line height="1.6rem"/>
             <!-- <hd-title exec>小区合伙人</hd-title> -->
             <van-tabs v-model="active">
-                <van-tab title="合伙人管理">
-                    <hd-title class="bg-white" exec>合伙人管理</hd-title>
-                    <area-partner :noData="noData" :partlist="partlist" @reflesh="reflesh" />
-                </van-tab>
                 <van-tab title="设备管理">
                     <hd-title class="bg-white" exec>设备管理</hd-title>
                     <areaAdevice :existdevice="existdevice" :noexistdevice="noexistdevice" @reflesh="reflesh" />
+                </van-tab>
+                <van-tab title="合伙人管理">
+                    <hd-title class="bg-white" exec>合伙人管理</hd-title>
+                    <area-partner :noData="noData" :partlist="partlist" @reflesh="reflesh" />
                 </van-tab>
                 <van-tab title="钱包模板">
                     <!-- 钱包充值模板 -->

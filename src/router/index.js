@@ -314,6 +314,22 @@ const routes = [
     meta: {
       title: '设备信息'
     }
+  },
+  {
+    path: '/area/statis/:id',
+    name: 'area-statis',
+    component: () => import(/* webpackChunkName: "area-statis" */ '../views/area/area-statis/index.vue'),
+    meta: {
+      title: '小区统计'
+    }
+  },
+  {
+    path: '/remote/charge/:code',
+    name: 'remote-charge',
+    component: () => import(/* webpackChunkName: "remote-charge" */ '../views/device/remote-charge/index.vue'),
+    meta: {
+      title: '远程充电'
+    }
   }
 ]
 // process.env.BASE_URL

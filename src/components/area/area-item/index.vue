@@ -1,43 +1,33 @@
 <template>
-  <div class="area-item text-size-md text-666 shadow margin-x-2 rounded-md overflow-hidden">
+  <div class="area-item text-size-sm text-666 shadow margin-x-2 rounded-md overflow-hidden">
     <hd-card class="padding-2">
-        <!--
-         <hd-card-item>
-            <span class="area-item-title text-333">小区名称：</span>
-            <span class="area-item-content text-666">{{value.code}}</span>
-        </hd-card-item>
-        <hd-card-item>
-            <span class="area-item-title text-333">小区地址：</span>
-            <span class="area-item-content text-666">{{value.totalOnlineEarn}}元</span>
-        </hd-card-item>
-        -->
         <hd-card-item class="w-100 title">
             <h3 class="text-000">{{value.name}}</h3>
             <p class="text-size-sm padding-y-1" v-if="value.address">{{value.addresspath+value.address}}</p>
         </hd-card-item>
         <hd-card-item>
-            <span class="area-item-title text-333">设备数量：</span>
-            <span class="area-item-content text-666">{{value.equcount}}</span>
+            <span class="area-item-title text-666">设备数量：</span>
+            <span class="area-item-content text-999">{{value.equcount}}</span>
         </hd-card-item>
         <hd-card-item>
-            <span class="area-item-title text-333">昨日设备使用率：</span>
-            <span class="area-item-content text-666">{{value.usagerate | fmtMoney}}%</span>
+            <span class="area-item-title text-666">昨日设备使用率：</span>
+            <span class="area-item-content text-999">{{value.usagerate | fmtMoney}}%</span>
         </hd-card-item>
         <hd-card-item>
-            <span class="area-item-title text-333">总在线收益：</span>
-            <span class="area-item-content text-666">{{value.total_online_earn | fmtMoney}}元</span>
+            <span class="area-item-title text-666">总在线收益：</span>
+            <span class="area-item-content text-999">{{value.total_online_earn | fmtMoney}}元</span>
         </hd-card-item>
          <hd-card-item>
-            <span class="area-item-title text-333">今日在线收益：</span>
-            <span class="area-item-content text-666">{{value.totalOnlineEarn | fmtMoney}}元</span>
+            <span class="area-item-title text-666">今日在线收益：</span>
+            <span class="area-item-content text-999">{{value.totalOnlineEarn | fmtMoney}}元</span>
         </hd-card-item>
         <hd-card-item>
-            <span class="area-item-title text-333">总消费金额：</span>
-            <span class="area-item-content text-666">{{value.totalconsumemoney | fmtMoney}}元</span>
+            <span class="area-item-title text-666">总消费金额：</span>
+            <span class="area-item-content text-999">{{value.totalconsumemoney | fmtMoney}}元</span>
         </hd-card-item>
          <hd-card-item>
-            <span class="area-item-title text-333">今日消费金额：</span>
-            <span class="area-item-content text-666">{{value.consumemoney | fmtMoney}}元</span>
+            <span class="area-item-title text-666">今日消费金额：</span>
+            <span class="area-item-content text-999">{{value.consumemoney | fmtMoney}}元</span>
         </hd-card-item>
         <hd-card-item>
            <span>端口状态：</span>
@@ -48,8 +38,8 @@
            </span>
         </hd-card-item>
         <div class="area-contral d-flex justify-content-end w-100 margin-top-1">
-            <van-button type="primary" size="small" @click="$router.push(`/area/manage/${value.id}`)">管理</van-button>
-            <van-button type="primary" size="small">统计</van-button>
+            <van-button type="primary" size="small" :to="`/area/manage/${value.id}`">管理</van-button>
+            <van-button type="primary" size="small" :to="`/area/statis/${value.id}`">统计</van-button>
         </div>
     </hd-card>
   </div>

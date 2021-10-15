@@ -4,7 +4,8 @@ export const initState = {
     global: {
         clientWidth: 375, // 全局屏幕宽度
         clientHeight: 812 // 全局屏幕高
-    }
+    },
+    cancelTokenList: [] // 取消接口list
 }
 // 从缓存中获取state信息
 const storageState = JSON.parse(sessionStorage.getItem('__hdwx_state__'))

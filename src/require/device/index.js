@@ -464,3 +464,63 @@ export const inquireChannelvaleLogData = (params, loadText) => {
         loadText
     })
 }
+
+/*
+* 查询设备统计信息
+* @param {*} data { code：设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireDeviceIncomeInfo = (params, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireDeviceIncomeInfo',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 获取报警页面数据库中的数据
+* @param {*} data { code：设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireWarnHot = (params, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireWarnHot',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 设备获取下发远程充电
+* @param {*} data { code：设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const remotechargechoose = (params, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/remotechargechoose',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 设备下发远程充电
+* @param {*} data { code 是 设备号 portchoose 是 选择的端口号 tempsonid 是 子模版id addr  丛机号 }
+* @param {*} loadText
+* @returns
+*/
+export const remotechargeaccess = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/remotechargeaccess',
+        method: 'post',
+        data,
+        loadText
+    })
+}

@@ -43,7 +43,9 @@
                 </div>
             </hd-scroll>
         </main>
-
+        <!-- <footer class="padding-x-3 padding-y-2 shadow-y-md">
+            <van-button type="primary" block size="small">默认按钮</van-button>
+        </footer> -->
          <van-action-sheet
             v-model="actionIsShow"
             :actions="actions"

@@ -16,7 +16,7 @@
                     <slot name="title"></slot>
                     <div class="flex-1 text-center">选择</div>
                 </div>
-                <div class="popup-box-wrapper">
+                <div class="popup-box-wrapper" v-if="list.length > 0">
                     <van-checkbox-group
                         v-model="result"
                         v-if="!radio"
@@ -49,6 +49,7 @@
                         </div>
                     </van-radio-group>
                 </div>
+                <div class="text-center padding-y-3 text-999" v-else >暂无数据</div>
                 <div class="d-flex padding-3">
                     <van-button type="default" class="flex-1" @click="close">取消</van-button>
                     <van-button type="primary" class="flex-2 margin-left-2" @click="submit">确定</van-button>

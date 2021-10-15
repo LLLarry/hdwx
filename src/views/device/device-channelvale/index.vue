@@ -1,7 +1,7 @@
 <template>
   <div class="device-channelvale bg-gray">
     <van-nav-bar
-        title="报警系统"
+        title="信道操作"
         left-text="返回"
         class="shadow position-fixed w-100"
         left-arrow

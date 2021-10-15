@@ -16,5 +16,22 @@ export default {
     resetState (state) {
         state = initState
         sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    },
+    pushToken (state, payload) {
+        state.cancelTokenList.push(payload)
+    },
+    clearToken (state) { // 取消token数组里的请求，并清空数组
+        try {
+            if (Array.isArray(state.cancelTokenList)) {
+                state.cancelTokenList.forEach(item => {
+                    if (item.cancelToken) {
+                        item.cancelToken('路由跳转取消请求')
+                    }
+                })
+            }
+        } catch (err) {
+            console.log('clearToken', err)
+        }
+        state.cancelTokenList = []
     }
 }

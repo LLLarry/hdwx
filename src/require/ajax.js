@@ -4,7 +4,6 @@ import Vue from 'vue'
 import { Dialog } from 'vant'
 import store from '@/store'
 import { getRamdom } from '@/utils/util'
-
 const api = process.env.NODE_ENV === 'production' ? '' : '/api'
 const baseURL = process.env.NODE_ENV === 'production' ? 'http://www.tengfuchong.com.cn' : ''
 const isMock = (url) => url.includes('fastmock')
@@ -19,6 +18,9 @@ const server = axios.create({
 })
 
 server.interceptors.request.use(config => {
+    config.cancelToken = new axios.CancelToken((cancel) => {
+        store.commit('pushToken', { cancelToken: cancel, url: config.url })
+    })
     return {
         ...config,
         url: isMock(config.url) ? config.url : api + config.url
@@ -66,7 +68,10 @@ export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '
                 }
             })
             .catch(reason => {
-                reject(reason)
+                if (reason && reason.message === '路由跳转取消请求') {
+                } else {
+                    reject(reason)
+                }
             })
             .finally(() => {
                 if (loadText !== false) {
@@ -83,7 +88,7 @@ export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '
                 })
             }
             server.post(url, Qs.stringify(data))
-            .then(({ status, data } = {}) => {
+            .then(({ status, data, ...result } = {}) => {
                 if (status === 200) {
                     resolve(data)
                 } else {
@@ -91,7 +96,10 @@ export default ({ method = 'get', url = '', params = {}, data = {}, loadText = '
                 }
             })
             .catch(reason => {
-                reject(reason)
+                if (reason && reason.message === '路由跳转取消请求') {
+                } else {
+                    reject(reason)
+                }
             })
             .finally(() => {
                 if (loadText !== false) {

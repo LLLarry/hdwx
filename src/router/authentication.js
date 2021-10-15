@@ -4,7 +4,7 @@ const { BASE_URL, WX_APPID, WECHAT_BROWSER_ENV, ENV } = HDWX
 console.log('WECHAT_BROWSER_ENV', WECHAT_BROWSER_ENV)
 export default (router) => {
     router.beforeEach(async (to, from, next) => {
-        console.log('to', to, from)
+        store.commit('clearToken')
         if (['/auth', '/register'].includes(to.path)) {
             next()
         } else if (getType(store.state.user.id) === 'undefined') {

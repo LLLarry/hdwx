@@ -128,3 +128,16 @@ export const inquireAreaInfor = (data) => {
         data
     })
 }
+
+/**
+ * 查询小区统计
+ * @param {*} data { code: String }
+ * @returns
+ */
+ export const inquireAreaEarnRecord = (data) => {
+    return ajax({
+        url: '/mobileMerchant/inquireAreaEarnRecord',
+        method: 'post',
+        data
+    })
+}
