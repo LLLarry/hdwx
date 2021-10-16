@@ -90,7 +90,7 @@
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
                             <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
                                 <div class="">
-                                    <div class="font-weight-bold text-000 text-size-default card-num">A56EB912</div>
+                                    <div class="font-weight-bold text-000 text-size-default card-num">{{item.cardID}}</div>
                                 </div>
                                 <van-tag v-if="[3, 6, 10].includes(item.type)" type="primary">
                                     {{  item.type === 3 ? '微信充值' : item.type === 6 ? '支付宝充值' : item.type === 10 ? '支付宝小程序': '未知' }}
@@ -107,14 +107,19 @@
                                 <span class="card-item-content text-666">{{item.ordernum}}</span>
                             </hd-card-item>
                             <hd-card-item>
-                                <span class="card-item-title text-333">
+                                <span class="card-item-title text-333" v-if="relevawalt === 2">
                                 {{
                                     item.status === 1 ? '充值到账' :
                                     item.status === 2 ? '回收到账' :
                                     item.status === 3 ? '消费金额' :
-                                    item.status === 4 ? '充值到账' : ''
+                                    item.status === 4 ? '充值到账' : '金额'
                                 }}：</span>
-                                <span class="card-item-content text-666">{{item.opermoney}}元</span>
+                                <span class="card-item-title text-333" v-else>
+                                {{
+                                    item.consumetype === 1 ? '充值' :
+                                    item.consumetype === 2 ? '消费' : '金额'
+                                }}：</span>
+                                <span class="card-item-content text-666">{{item.opermoney | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">所属用户：</span>
@@ -122,11 +127,11 @@
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">充值金额：</span>
-                                <span class="card-item-content text-666">{{item.topupbalance}}元</span>
+                                <span class="card-item-content text-666">{{item.topupbalance | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">赠送金额：</span>
-                                <span class="card-item-content text-666">{{item.sendbalance}}元</span>
+                                <span class="card-item-content text-666">{{item.sendbalance | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">创建时间：</span>
@@ -179,7 +184,8 @@ export default {
             },
             list: [],
             status: 1, // 0 正在加载中 1 空闲状态 2 暂无更多数据
-            searchForm: {} // 搜索form
+            searchForm: {}, // 搜索form
+            relevawalt: 2 // 1 ic卡与钱包进行关联 2 ic卡与钱包不关联
         }
     },
     mounted () {
@@ -231,7 +237,7 @@ export default {
             }
             try {
                 this.status = 0
-                const { code, recordInfo: list, message } = await inquireOnlineCardRecord({
+                const { code, recordInfo: list, message, relevawalt } = await inquireOnlineCardRecord({
                     ...data,
                     currentPage: this.currentPage,
                     cardID: this.cardID
@@ -240,6 +246,7 @@ export default {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
                     if (init) {
                         this.list = list
+                        this.relevawalt = relevawalt
                     } else {
                         this.list = [...this.list, ...list]
                     }

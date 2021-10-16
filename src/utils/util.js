@@ -1,4 +1,5 @@
 import * as dayjs from 'dayjs'
+import { Dialog } from 'vant'
 /**
  * 获取元素的类型： number、string、array、regexp ...
  * @param {*} e 元素
@@ -177,4 +178,11 @@ export const getDeviceVersionName = (hv) => {
         11: '1拖2'
     }
     return map[hv]
+}
+
+export const noOpen = () => {
+    Dialog.alert({
+        title: '提示',
+        message: '对不起，此功能暂未开放！'
+    })
 }

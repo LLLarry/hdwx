@@ -39,22 +39,24 @@ export default {
 }
 </script>
 
-<style lang="scss">
- .wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    .hd-overlay-close {
-        left: 50%;
-        bottom: -10px;
-        transform: translate(-50%, 100%)
+<style lang="scss" scoped>
+.hd-overlay {
+     .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        .hd-overlay-close {
+            left: 50%;
+            bottom: -10px;
+            transform: translate(-50%, 100%)
+        }
     }
-  }
 
-  .block {
-    padding: 20px;
-    width: 60vw;
-    background-color: #fff;
-  }
+    .block {
+        padding: 20px;
+        width: 60vw;
+        background-color: #fff;
+    }
+}
 </style>

@@ -90,7 +90,7 @@
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
                             <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
                                 <div class="">
-                                    <div class="font-weight-bold text-000 text-size-default card-num">00023656</div>
+                                    <div class="font-weight-bold text-000 text-size-default card-num">{{ item.uid.toString().padStart(8, 0) }}</div>
                                 </div>
                                 <van-tag v-if="item.paysource === 1" type="primary">充值订单</van-tag>
                                 <van-tag v-else-if="item.paysource === 2 || item.paysource === 3" type="danger">消费订单</van-tag>
@@ -118,7 +118,7 @@
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">所属用户：</span>
-                                <span class="card-item-content text-666">{{item.username}}</span>
+                                <span class="card-item-content text-666">{{item.nickname}}</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">充值余额：</span>

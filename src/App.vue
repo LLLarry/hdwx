@@ -21,7 +21,7 @@
 
       <van-tabbar v-model="active" v-if="showTabBar">
           <van-tabbar-item icon="home-o" replace to="/">首页</van-tabbar-item>
-          <van-tabbar-item icon="search" replace to="/about">导航</van-tabbar-item>
+          <van-tabbar-item icon="search" replace to="/navigation">导航</van-tabbar-item>
           <van-tabbar-item icon="setting-o" replace to="/mine">我的</van-tabbar-item>
       </van-tabbar>
   </div>
@@ -32,19 +32,16 @@
     export default {
         data () {
             return {
-                active: 1,
+                active: 0,
                 showTabBar: false
             }
         },
-        // created () {
-        //   getNetworkType().then(newWork => {
-        //     console.log('newWork', newWork)
-        //   })
-        // },
         watch: {
           $route: {
             handler (route) {
               this.showTabBar = route.meta.showTabBar
+              const { path } = this.$route
+              this.active = path === '/' ? 0 : path === '/navigation' ? 1 : 2
             }
           }
         }

@@ -72,7 +72,7 @@ import hdOverlay from '@/components/hd-overlay'
 import hdQrcode from '@/components/hd-qrcode'
 import { mapState } from 'vuex'
 import { inquireDeviceMmanageInfo, merTranspositionImei, removeClient } from '@/require/device'
-import { getInfoByHdVersion } from '@/utils/util'
+import { getInfoByHdVersion, noOpen } from '@/utils/util'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
 const { PROXY_BASE_URL } = window.HDWX
@@ -157,7 +157,8 @@ export default {
           this.$router.push({ path: '/device/portqrcode/' + this.code })
         break
         case '收费模板':
-          this.$router.push({ path: '/device/templatelist/' + this.code })
+          // this.$router.push({ path: '/device/templatelist/' + this.code })
+          noOpen()
         break
         case '系统参数':
           this.$router.push({ path: `/device/system/${this.result.deviceversion === '07' ? 'car' : 'v2'}/` + this.code })

@@ -63,6 +63,7 @@ export default {
                 mouseWheel: true, // 支持鼠标滚动
                 scrollbar: true, // 出现滚动条
                 HWCompositing: false, // 关闭硬件加速，取消translateZ(1px)
+                useTransition: false,
                 pullUpLoad: {
                     // 当上拉距离超过30px时触发 pullingUp 事件
                     threshold: 40

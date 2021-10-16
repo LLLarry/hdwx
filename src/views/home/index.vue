@@ -20,8 +20,8 @@
             </div>
             <van-grid
                 :border="false"
-                :column-num="isShowIcon ? 3 : 2"
-                class="text-size-sm"
+                :column-num="3"
+                class="text-size-md"
                 :class="{isShowIcon: isShowIcon}"
             >
                 <van-grid-item v-for="one in list" :key="one.title">
@@ -88,7 +88,7 @@
 <script>
     // import { Notify } from 'vant'
     import { getDealHomePageData, bindingDevice } from '@/require/home'
-    import { fmtMoney } from '@/utils/util'
+    import { fmtMoney, noOpen } from '@/utils/util'
     import { scanQRCode } from '@/utils/wechat-util'
     import parseURL from '@/utils/parse-url'
     export default {
@@ -99,9 +99,9 @@
                 list: [
                     { title: '线上收益', value: 0 },
                     { title: '未提现', value: 0 },
-                    { title: '昨日收益', value: 0 },
-                    { title: '投币收益', value: 0 },
-                    { title: '进入投币', value: 0 },
+                    // { title: '昨日收益', value: 0 },
+                    // { title: '投币收益', value: 0 },
+                    // { title: '今日投币', value: 0 },
                     { title: '昨日投币', value: 0 },
                     { title: '总耗电量', value: 0 },
                     { title: '今日耗电', value: 0 },
@@ -116,7 +116,7 @@
                     { title: '历史收益', url: '/history/profit' },
                     { title: '订单统计', url: '/order/profit' },
                     { title: '充值管理' },
-                    { title: '缴费管理', url: '/register' }
+                    { title: '缴费管理', url: '' }
                 ],
                 todayMoney: 0, // 今日收益
                 updateTime: '', // 更新时间
@@ -135,15 +135,6 @@
             this.getInitData({}, '正在加载中')
         },
         methods: {
-            check () {
-                getNetworkType()
-                .then((res) => {
-                    console.log('res123', res)
-                })
-                .catch((err) => {
-                    console.log('err123', err)
-                })
-            },
             async getInitData (data, isShowLoading) {
                 try {
                     if (isShowLoading === false) {
@@ -187,7 +178,7 @@
                         { title: '历史收益', url: '/history/profit' },
                         { title: '订单统计', url: '/order/profit' },
                         { title: '充值管理' },
-                        { title: '缴费管理', url: '/register' }
+                        { title: '缴费管理' }
                     ]
                     this.updateTime = result.renewalTime
                     // 当上次更新时间大于2小时，则发送请求重新获取最新数据
@@ -206,9 +197,9 @@
             // 更新数据
             handleUpdate () {
                 this.getInitData({ type: 1 }, false)
-                this.check()
             },
             handleClick ({ title }) {
+                if (title === '缴费管理' || title === '充值管理') return noOpen()
                 if (title !== '设备绑定') return false
                 // 调取扫一扫，获取扫码信息
                 scanQRCode()
@@ -240,7 +231,7 @@
         padding-bottom: 1.8rem;
         .data-content {
             width: 100%;
-            min-height: 40vh;
+            // min-height: 40vh;
             background-image: -webkit-linear-gradient(-45deg, #2cb34b, #48b7ec);
             // &::after {
             //     content: '';
