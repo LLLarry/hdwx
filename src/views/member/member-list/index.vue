@@ -30,10 +30,11 @@
                 @pullingUpFn = "pullingUpFn"
                 @getScroll="getScroll"
             >
+            <!-- :key="`${member.uid}-${member.aid}-${member.walletid}`" -->
                 <div class="padding-top-3">
                     <member-list-card
-                        v-for="member in list"
-                        :key="`${member.uid}-${member.aid}`"
+                        v-for="(member, index) in list"
+                        :key="(currentPage - 1) * 10 + index"
                         :value="member"
                         @changeArea="changeArea"
                     />
@@ -112,11 +113,11 @@ export default {
     watch: {
         $route: {
             handler (newRoute, oldRoute) {
-                console.log('newRoute', newRoute)
-                console.log('oldRoute', oldRoute)
                 if (oldRoute.name === 'member-list-manage') {
                     this.asyAjaxMemberCentre(true)
                 }
+                // 页面回退时刷新滚动实例
+                this.scroll && this.scroll.refresh()
             }
         }
     },

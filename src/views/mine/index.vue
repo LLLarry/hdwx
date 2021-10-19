@@ -4,7 +4,7 @@
             <div class="header-box">
                 <div class="userinfo d-flex padding-x-3">
                     <div class="avatar rounded-circle overflow-hidden">
-                        <img :src="user.headimgurl" alt="">
+                        <img :src="user.headimgurl | fmtAvatar" alt="">
                     </div>
                     <div class="padding-left-3 text-size-default d-flex flex-column justify-content-around">
                         <p>
@@ -15,15 +15,15 @@
                     </div>
                 </div>
                 <div class="account margin-top-4 padding-bottom-2 d-flex justify-content-around">
-                    <div class="d-flex flex-column align-items-center justify-content-center">
+                    <div class="d-flex flex-column align-items-center justify-content-center flex-1">
                         <div class="btn-box" @click="$router.push({ path: '/income' })">余额明细</div>
                     </div>
-                    <div class="d-flex flex-column align-items-center justify-content-center">
+                    <div class="d-flex flex-column align-items-center justify-content-center flex-1">
                         <div class="title margin-bottom-1">账户余额</div>
                         <div class="math-num money">&yen; {{merincome | fmtMoney}}</div>
                     </div>
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <div class="btn-box" @click="$router.push({ path: '/withdraw/page/3' })">提现到微信</div>
+                    <div class="d-flex flex-column align-items-center justify-content-center flex-1">
+                        <div class="btn-box" @click="$router.push({ path: '/withdraw/page/3' })" v-if="!user.agent" >提现到微信</div>
                     </div>
                 </div>
             </div>
@@ -31,8 +31,8 @@
         </div>
         <main>
             <!-- 提现管理 -->
-            <withdraw-manager />
-            <hd-line />
+            <withdraw-manager v-if="!user.agent" />
+            <hd-line v-if="!user.agent" />
             <!-- 子账号管理 -->
             <hd-title class="bg-white">子账号管理</hd-title>
             <van-cell-group>
@@ -193,7 +193,7 @@ export default {
 <style lang="scss">
 .mine {
     min-height: 100vh;
-    padding-bottom: 60px;
+    padding-bottom: 80px;
   .header {
     background-color: #07c160;
     background-image: url('../../assets/images/bottom_wave.png');

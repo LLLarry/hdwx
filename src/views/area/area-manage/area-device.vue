@@ -2,7 +2,7 @@
     <div>
         <div class="padding-bottom-3 bg-white">
             <div v-if="existdevice.length > 0">
-                <hd-card class="area-box-2 padding-x-3 padding-y-3 position-relative margin-x-3 margin-bottom-3  margin-top-1 rounded shadow-md"  v-for="item in existdevice" :key="item.id">
+                <hd-card class="area-box-2 padding-x-3 padding-y-3 position-relative margin-x-3 margin-bottom-3  margin-top-1 rounded"  v-for="item in existdevice" :key="item.id">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <div class="">
                             <div class="font-weight-bold text-000 text-size-default card-num">{{item.code}}{{ item.remark && `（${item.remark}）` }}</div>
@@ -26,8 +26,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end align-items-center w-100 margin-top-2">
-                        <van-button type="primary" plain size="mini" class="margin-right-2 padding-x-3" :to="`/device/manage/${item.code}`">管理</van-button>
-                        <van-button type="danger" plain size="mini" class="padding-x-3" @click="handleDelete(item)">解绑</van-button>
+                        <van-button type="primary" size="mini" class="margin-right-2 padding-x-3" :to="`/device/manage/${item.code}`">管理</van-button>
+                        <van-button type="danger" size="mini" class="padding-x-3" @click="handleDelete(item)">解绑</van-button>
                     </div>
                 </hd-card>
             </div>

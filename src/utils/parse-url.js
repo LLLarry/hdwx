@@ -1,14 +1,27 @@
 import Qs from 'qs'
-const { proxy } = require('../../hdwx.config')
-let { BASE_URL } = HDWX
-// eslint-disable-next-line no-unused-expressions
-BASE_URL = proxy.open ? proxy.target : BASE_URL
+let { PROXY_BASE_URL } = HDWX
+
 export default function parseURL (url) {
-    if (!url.includes(BASE_URL)) {
-      return ({
-        code: 203,
-        message: '地址错误'
-      })
+    console.log('url', url)
+    console.log('PROXY_BASE_URL', PROXY_BASE_URL)
+    if (PROXY_BASE_URL.includes('http://www.he360')) {
+      PROXY_BASE_URL = ['http://www.he360.cn', 'http://www.he360.com.cn']
+    }
+    console.log('PROXY_BASE_URL2', PROXY_BASE_URL)
+    if (Array.isArray(PROXY_BASE_URL)) { // 正式环境
+        if (!url.includes(PROXY_BASE_URL[0]) && !url.includes(PROXY_BASE_URL[1])) {
+            return ({
+                code: 204,
+                message: '路径错误1'
+            })
+        }
+    } else {
+        if (!url.includes(PROXY_BASE_URL)) {
+            return ({
+                code: 204,
+                message: '地址错误2'
+            })
+        }
     }
     const urlList = url.split('?')
     const baseURL = urlList[0] // 基础路径
@@ -36,8 +49,15 @@ export default function parseURL (url) {
         }
     ]
     for (const { path, regexp, key } of checkState) {
-      const cURL = BASE_URL + path
-      if (baseURL === cURL) {
+      let cURL1
+      let cURL2
+      if (Array.isArray(PROXY_BASE_URL)) { // 正式环境
+        cURL1 = PROXY_BASE_URL[0] + path
+        cURL2 = PROXY_BASE_URL[1] + path
+      } else {
+        cURL1 = PROXY_BASE_URL + path
+      }
+      if (baseURL === cURL1 || (baseURL === cURL2 && !!cURL2)) {
         const param = paramMAP[key]
         const check = regexp.test(param)
         return {

@@ -22,7 +22,7 @@
                 <div class="padding-y-3">
                     <van-row class="d-flex post-border-row margin-x-3 text-size-sm text-666" v-for="item in list" :key="item.createTime">
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{ item.createTime | fmtDate('YYYY-MM-DD') }}</van-col>
-                        <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{item.incomemoney | fmtMoney}}</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{item.onlineEarn | fmtMoney}}</van-col>
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center" v-if="showincoins !== 2">{{item.incomemoney | fmtMoney(0)}}</van-col>
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{item.consumemoney | fmtMoney}}</van-col>
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{item.usagerate | fmtMoney}}%</van-col>

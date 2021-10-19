@@ -92,13 +92,31 @@
                                 <div class="">
                                     <div class="font-weight-bold text-000 text-size-default card-num">{{item.cardID}}</div>
                                 </div>
-                                <van-tag v-if="[3, 6, 10].includes(item.type)" type="primary">
-                                    {{  item.type === 3 ? '微信充值' : item.type === 6 ? '支付宝充值' : item.type === 10 ? '支付宝小程序': '未知' }}
-                                </van-tag>
-                                <van-tag v-else-if="item.status === 2" type="success">余额回收订单</van-tag>
-                                <van-tag v-else-if="item.status === 1" type="danger">消费订单</van-tag>
-                                <van-tag v-else-if="item.status === 8" type="warning">虚拟充值订单</van-tag>
-                                <van-tag v-else-if="[5, 7].includes(item.type)" type="success">{{  item.type === 5 ? '微信' : item.type === 7 ? '支付宝' : '' }}退款订单</van-tag>
+                                <div v-if="item.relevawalt === 1">
+                                    <!-- 钱包关联 -->
+                                    <van-tag type="success" v-if="item.paysource === 1">充值订单</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 2">消费订单</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 3">钱包（在线卡模拟投币</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 4">钱包（在线卡）充值离线卡</van-tag>
+                                    <van-tag type="success" v-else-if="item.paysource === 5">退款到钱包（在线卡）</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 6">钱包（在线卡）退款</van-tag>
+                                    <van-tag type="success" v-else-if="item.paysource === 7">虚拟充值</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 8">虚拟退款</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 9">消费订单</van-tag>
+                                </div>
+                                <div v-else>
+                                    <!-- 不与钱包关联 -->
+                                    <van-tag type="danger" v-if="item.type === 1">消费订单</van-tag>
+                                    <van-tag type="success" v-else-if="item.type === 2">余额回收</van-tag>
+                                    <van-tag type="success" v-else-if="item.type === 3">微信充值</van-tag>
+                                    <van-tag type="warning" v-else-if="item.type === 4">卡操作</van-tag>
+                                    <van-tag type="danger" v-else-if="item.type === 5">微信退款</van-tag>
+                                    <van-tag type="success" v-else-if="item.type === 6">支付宝充值</van-tag>
+                                    <van-tag type="danger" v-else-if="item.type === 7">支付宝退费</van-tag>
+                                    <van-tag type="success" v-else-if="item.paysource === 8">虚拟充值</van-tag>
+                                    <van-tag type="danger" v-else-if="item.paysource === 9">虚拟退款</van-tag>
+                                    <van-tag type="success" v-else-if="item.paysource === 10">支付宝小程序</van-tag>
+                                </div>
                             </div>
                         </div>
                         <hd-card class="padding-2 text-size-sm">

@@ -31,7 +31,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "navigation" */ '../views/navigation/index.vue'),
     meta: {
       showTabBar: true,
-      title: '关于页'
+      title: '导航'
     }
   },
   {

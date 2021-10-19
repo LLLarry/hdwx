@@ -39,9 +39,9 @@ export default {
     methods: {
         ...mapMutations(['setUser']),
        async asySendCodeAndgetUserInfo (code) {
-           const { code: status, message, dealuser, openid } = await sendCodeAndgetUserInfo({ code })
+           const { code: status, message, dealuser, openid, agent, showincoins } = await sendCodeAndgetUserInfo({ code })
            if (status === 200) {
-               this.setUser({ ...dealuser, openid })
+               this.setUser({ ...dealuser, openid, agent, showincoins })
             //    this.$router.replace({ path: '/' })
                 // window.history.go(-(window.history.length - 1))
                 this.$router.replace({ path: '/' })

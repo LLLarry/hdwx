@@ -1,5 +1,5 @@
 <template>
-  <van-overlay :show="show" @click="handleClose(1)">
+  <van-overlay class="hd-overlay" :show="show" @click="handleClose(1)">
     <div class="wrapper">
         <div class="block rounded-md position-relative text-333" @click.stop>
             <h3 class="text-center margin-bottom-3 text-size-default" v-if="!!title">{{title}}</h3>

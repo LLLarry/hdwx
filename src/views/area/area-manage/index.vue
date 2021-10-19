@@ -8,7 +8,7 @@
             @click-left="$router.go(-1)"
         />
         <main>
-            <hd-line height="1.6rem"/>
+            <hd-line height="1.5rem"/>
             <!-- <hd-title exec>小区合伙人</hd-title> -->
             <van-tabs v-model="active">
                 <van-tab title="设备管理">
@@ -164,7 +164,8 @@ export default {
         left: 0;
     }
     .area-box-1 {
-        background-image: -webkit-linear-gradient(-45deg, rgba(23, 162, 184, .26), transparent);
+        // background-image: -webkit-linear-gradient(-45deg, rgba(23, 162, 184, .26), transparent);
+        background-image: -webkit-linear-gradient(-45deg, rgba(7, 193, 96, .53), rgba(7, 190, 193, .21));
     }
     .add-partner {
         height: 35px;
@@ -175,7 +176,7 @@ export default {
         }
     }
     .area-box-2 {
-        background-image: -webkit-linear-gradient(-45deg, rgba(23, 162, 184, .26), transparent);
+        background-image: -webkit-linear-gradient(-45deg, rgba(7, 193, 96, .53), rgba(7, 190, 193, .21));
     }
     footer {
         position: fixed;

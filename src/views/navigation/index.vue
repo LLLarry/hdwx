@@ -59,6 +59,7 @@ import { mapState } from 'vuex'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
 import { bindingDevice } from '@/require/home'
+import { checkAndGo } from '@/views/withdraw/helper'
 const map = [
   {
     title: '设备',
@@ -96,6 +97,40 @@ const map = [
     ]
   }
 ]
+
+const map2 = [
+  {
+    title: '设备',
+    list: [
+      { name: '设备管理', url: '/device/list', icon: require('@/assets/images/home_01.png') },
+      { name: '设备绑定', url: '', icon: require('@/assets/images/home_05.png') }
+    ]
+  },
+  {
+    title: '管理',
+    list: [
+      { name: 'IC卡管理', url: '/ic/list', icon: require('@/assets/images/home_02.png') },
+      { name: '会员管理', url: '/member/list', icon: require('@/assets/images/home_03.png') },
+      { name: '小区管理', url: '/area/list', icon: require('@/assets/images/home_04.png') },
+      { name: '子账号管理', url: '/subAccount', icon: require('@/assets/images/mine/账号信息.png'), class: 'sm-img' },
+      { name: '缴费管理', url: '', icon: require('@/assets/images/home_08.png') }
+    ]
+  },
+  {
+    title: '统计',
+    list: [
+      { name: '订单统计', url: '/order/profit', icon: require('@/assets/images/home_07.png') },
+      { name: '历史收益', url: '/history/profit', icon: require('@/assets/images/home_06.png') },
+      { name: '余额明细', url: '/income', icon: require('@/assets/images/银行类app图标_08.png') }
+    ]
+  },
+  {
+    title: '提现',
+    list: [
+      { name: '提现记录', url: '/withdraw/record', icon: require('@/assets/images/mine/订单 (1).png'), class: 'sm-img' }
+    ]
+  }
+]
 export default {
   data () {
     return {
@@ -117,7 +152,7 @@ export default {
       this.bindEvent()
   },
   computed: {
-    ...mapState(['global'])
+    ...mapState(['global', 'user'])
   },
   watch: {
     global: {
@@ -128,6 +163,12 @@ export default {
     },
     searchValue (value) {
       this.fmtSearch(value)
+    },
+    'user.agent': {
+        handler (value) {
+          this.map = value ? map2 : map
+        },
+        immediate: true
     }
   },
   methods: {
@@ -165,7 +206,7 @@ export default {
           this.filterList = []
           return false
         }
-        const list = this.getChildList(map)
+        const list = this.getChildList(this.map)
         const fmtFirstList = this.map.filter(({ title }) => title.includes(value))
         const fmtSecondList1 = this.getChildList(fmtFirstList)
         const fmtSecondList2 = list.filter(({ name }) => name.includes(value))
@@ -185,9 +226,11 @@ export default {
         }, [])
       },
       handleRouter ({ name, url }) {
-        if (name !== '设备绑定') {
-          this.$router.push({ path: url })
-        } else {
+        if (name === '提现到银行卡') {
+          checkAndGo(1)
+        } else if (name === '提现到对公') {
+          checkAndGo(2)
+        } else if (name === '设备绑定') {
           // 调取扫一扫，获取扫码信息
           scanQRCode()
           .then(res => {
@@ -207,6 +250,8 @@ export default {
           .catch(err => {
               console.log('errerr', err)
           })
+        } else {
+          this.$router.push({ path: url })
         }
       }
   }

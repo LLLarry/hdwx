@@ -3,7 +3,7 @@
       <hd-line height=".4rem" />
       <hd-order :list="list">
           <template #title>
-              付款金额 <span class="text-size-lg">&yen; {{partrecord.money | fmtMoney}}</span>
+              金额 <span class="text-size-lg">&yen; {{partrecord.money | fmtMoney}}</span>
           </template>
           <template #desc>
               <div class="padding-y-2"></div>
@@ -30,9 +30,9 @@
       <hd-nav :list="[{}]">
           <div class="w-100 d-flex justify-content-end align-items-center">
                 <van-button type="primary" size="small" :to="`/order/powercurve/${order.id}`" v-if="paysource === 1">功率曲线</van-button>
-                <van-button  type="info"  size="small" class="margin-x-3" v-if="cashAble.show" :disabled="!cashAble.cash" @click="cashFn()">
+                <van-button  :type="cashAble.show === '退款' ? 'info' : 'warning'"  size="small" class="margin-x-3" v-if="cashAble.show" :disabled="!cashAble.cash" @click="cashFn()">
                    <span v-if="cashAble.show === '退款'">&nbsp;&nbsp;退&nbsp;&nbsp;&nbsp;&nbsp;款&nbsp;&nbsp;</span>
-                   <span v-if="cashAble.show === '撤回'">&nbsp;&nbsp;退&nbsp;&nbsp;&nbsp;&nbsp;款&nbsp;&nbsp;</span>
+                   <span v-if="cashAble.show === '撤回'">&nbsp;&nbsp;撤&nbsp;&nbsp;&nbsp;&nbsp;回&nbsp;&nbsp;</span>
                 </van-button>
           </div>
       </hd-nav>

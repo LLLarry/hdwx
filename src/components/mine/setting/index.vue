@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mine-setting">
         <hd-title class="bg-white">设置</hd-title>
         <van-collapse v-model="activeNames">
             <van-collapse-item name="3">
@@ -36,17 +36,21 @@
                        <strong class="text-success">“模板电话”</strong> > <strong class="text-success">“客服电话”</strong> > <strong class="text-success">“商户注册电话”</strong>
                     </p>
                     <van-form>
-                        <van-field
-                            v-model="phone"
-                            name="phone"
-                            label="客服电话"
-                            placeholder="请输入客服电话"
-                            clearable
-                            :readonly="!editting"
-                        />
+                       <div class="d-flex align-items-center">
+                            <van-field
+                                v-model="phone"
+                                name="phone"
+                                label="客服电话"
+                                placeholder="请输入客服电话"
+                                clearable
+                                :readonly="!editting"
+                                :inputclass="editting"
+                            />
+                            <van-icon name="edit" size="0.6rem" class="padding-2 text-success" @click="editting = true" />
+                       </div>
                     </van-form>
                     <div style="margin: 16px;" class="d-flex">
-                        <van-button
+                        <!-- <van-button
                             :disabled="editting"
                             round
                             block
@@ -56,9 +60,10 @@
                             native-type="submit"
                             icon="edit"
                             @click="editting = true"
-                        >编辑</van-button>
+                        >编辑</van-button> -->
                          <van-button
                             :disabled="!editting"
+                            v-if="editting"
                             round
                             block
                             size="small"
@@ -182,3 +187,12 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.mine-setting {
+    input[inputclass] {
+        border: 1px solid #ccc;
+        padding: 0 5px;
+    }
+}
+</style>

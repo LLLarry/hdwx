@@ -18,8 +18,8 @@ export default (router) => {
             //         next('/register')
             //     }
             // }
-
-            const result = await store.dispatch('verifyCookieIsExpire')
+            console.log(to, from)
+            const result = await store.dispatch('verifyCookieIsExpire', { merid: to.query.merid })
             if (result === 200) {
                 next()
             } else {

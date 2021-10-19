@@ -141,3 +141,20 @@ export const inquireAreaInfor = (data) => {
         data
     })
 }
+
+/**
+ * 修改小区
+ * @param {*} data { aid: String， name： 小区名字， province： province 省份编码
+    city 市编码
+    county 县编码
+    street 街道地址
+ }
+ * @returns
+ */
+ export const editAreaBaseInfo = (data) => {
+    return ajax({
+        url: '/mobileMerchant/editAreaBaseInfo',
+        method: 'post',
+        data
+    })
+}

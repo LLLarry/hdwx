@@ -1,6 +1,7 @@
 import { getType } from '@/utils/util'
 import { Dialog, Toast } from 'vant'
 import { merBankCardData } from '@/require/withdraw'
+import router from '@/router'
 
 /**
  * 格式化银行卡号的辅助函数
@@ -39,5 +40,30 @@ export const getBankList = async () => {
             message: '异常错误'
         })
         return Promise.reject(error)
+    }
+}
+
+/**
+ * 检验并且跳转
+ * @param {*} type
+ */
+export const checkAndGo = async (type) => {
+    try {
+        const obj = {}
+        const { bankCardList = [], companyBnkCardList = [] } = await getBankList()
+        obj.bankCardList = bankCardList
+        obj.companyBnkCardList = companyBnkCardList
+        const one = obj[type === 1 ? 'bankCardList' : 'companyBnkCardList'][0]
+        if (one) {
+            router.push({ path: `/withdraw/page/${type}`, query: { id: one.id } })
+        } else {
+            Dialog.alert({
+                title: '提示',
+                message: type === 1 ? '对不起，您暂时未添加银行卡，请先添加银行卡！' : '对不起，您暂时未添加对公账户，请先添加对公账户！'
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        Toast(error)
     }
 }

@@ -114,7 +114,7 @@
                                     item.paysource === 7 ? '虚拟充值' :
                                     item.paysource === 8 ? '虚拟退款' : ''
                                 }}：</span>
-                                <span class="card-item-content text-666">{{item.accountmoney | fmtMoney}}元</span>
+                                <span class="card-item-content text-666">{{item.opermoney | fmtMoney}}元</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">所属用户：</span>

@@ -1,6 +1,6 @@
 <template>
     <div class="device-list position-relative d-flex flex-column">
-        <div class="section shadow padding-bottom-2" :style="sectionTransZ">
+        <div class="section shadow padding-bottom-2">
             <van-tabs v-model="active" class="device-tab font-weight-bold">
                 <van-tab :title="`在线 ${ source[0].total }`"></van-tab>
                 <van-tab :title="`离线 ${ source[1].total }`"></van-tab>
@@ -140,15 +140,15 @@ export default {
         hdScroll,
         deviceItem
     },
-    computed: {
-        sectionTransZ () {
-            const value = this.dropMenuStatus === 1 ? 'none' : 'translateZ(2px)'
-            return {
-                transform: value,
-                webkitTransform: value
-            }
-        }
-    },
+    // computed: {
+    //     sectionTransZ () {
+    //         const value = this.dropMenuStatus === 1 ? 'none' : 'translateZ(2px)'
+    //         return {
+    //             transform: value,
+    //             webkitTransform: value
+    //         }
+    //     }
+    // },
     methods: {
         async pullingUpFn ({ scroll, index }) {
             if (this.source[index].status !== 2) {
@@ -253,7 +253,8 @@ export default {
     height: 100vh;
     .section {
         position:  relative;
-        transform: translateZ(2px);
+        // transform: translateZ(2px);
+        z-index: 1;
         &::after {
             content: '';
             position: absolute;

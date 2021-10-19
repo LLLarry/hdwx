@@ -38,6 +38,7 @@
            </span>
         </hd-card-item>
         <div class="area-contral d-flex justify-content-end w-100 margin-top-1">
+            <van-button type="primary" size="small" @click="handleEdit(value)">编辑</van-button>
             <van-button type="primary" size="small" :to="`/area/manage/${value.id}`">管理</van-button>
             <van-button type="primary" size="small" :to="`/area/statis/${value.id}`">统计</van-button>
         </div>
@@ -87,6 +88,11 @@ export default {
             }
 
             return baseUrl + icon
+        }
+    },
+    methods: {
+        handleEdit (row) {
+            this.$emit('getChildData', { key: 'editAreaRow', value: row })
         }
     }
 }

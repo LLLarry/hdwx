@@ -25,13 +25,13 @@
                 </van-col>
             </van-row>
             <div class="d-flex margin-top-4 padding-top-1">
-                <van-button plain type="info" size="small" class="flex-1 margin-right-2" @click="handleVirtual(20, 0)">20元</van-button>
-                <van-button plain type="info" size="small" class="flex-1 margin-right-2" @click="handleVirtual(50, 0)">50元</van-button>
-                <van-button plain type="info" size="small" class="flex-1 margin-right-2" @click="handleVirtual(100, 0)">100元</van-button>
+                <van-button plain type="primary" size="small" class="flex-1 margin-right-2" @click="handleVirtual(20, 0)">20元</van-button>
+                <van-button plain type="primary" size="small" class="flex-1 margin-right-2" @click="handleVirtual(50, 0)">50元</van-button>
+                <van-button plain type="primary" size="small" class="flex-1 margin-right-2" @click="handleVirtual(100, 0)">100元</van-button>
                 <van-button plain type="danger" size="small" class="flex-1" @click="handleVirtual(-card.money, -card.sendmoney)">清零</van-button>
             </div>
             <div class="d-flex margin-top-4 padding-top-1">
-                <van-button type="info" size="normal" class="flex-1 begin-set" @click="handleCharge">立即充值</van-button>
+                <van-button type="primary" size="normal" class="flex-1 begin-set" @click="handleCharge">立即充值</van-button>
             </div>
         </div>
 
@@ -301,7 +301,7 @@ export default {
             right: 0;
             top: 0;
             bottom: 0;
-            background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
+            background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.51), rgba(182, 193, 7, 0.28));
         }
     }
     .post-search {
@@ -309,7 +309,7 @@ export default {
         border: 1px solid #efefef;
     }
     .begin-set {
-        background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
+        background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.51), rgba(182, 193, 7, 0.28));
         height: 1rem;
     }
     .delete-content {

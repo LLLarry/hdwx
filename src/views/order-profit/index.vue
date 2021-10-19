@@ -155,7 +155,7 @@ import { inquireTraOrderData } from '@/require/order-profit'
 const LIMIT = 10
 export default {
     data () {
-        const range = dateRange(new Date(), 30, 'YYYY/MM/DD')
+        const range = dateRange(new Date(), 5, 'YYYY/MM/DD')
         return {
             scroll: null,
             currentPage: 1,
@@ -220,11 +220,13 @@ export default {
             const startTime = fmtDate(startDate, 'YYYY/MM/DD')
             const endTime = fmtDate(endDate, 'YYYY/MM/DD')
             this.showCalendar = false
-            this.searchForm = {
-                ...this.searchTime,
-                ...this.searchForm,
+            this.searchTime = {
                 startTime,
                 endTime
+            }
+            this.searchForm = {
+                 ...this.searchForm,
+                ...this.searchTime
             }
             this.gatOrder(this.searchForm, true)
         },

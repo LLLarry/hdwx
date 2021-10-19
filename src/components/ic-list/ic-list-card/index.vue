@@ -8,45 +8,62 @@
             />
             <div class="flex-1 margin-left-2 d-flex justify-content-between align-items-center">
                 <div class="">
-                    <div class="font-weight-bold text-000 text-size-default card-num">{{value.cardID}}</div>
+                    <div class="">{{value.cardID}}</div>
                     <van-tag type="success" :plain="from === 1" v-if="value.relevawalt === 1">关联钱包</van-tag>
                     <van-tag type="primary" :plain="from === 1" v-else>未关联钱包</van-tag>
                 </div>
                 <van-tag type="warning" v-if="value.status === 0">未绑定</van-tag>
-                <van-tag type="primary" v-if="value.status === 1">正常</van-tag>
+                <van-tag type="success" v-if="value.status === 1">正常</van-tag>
                 <van-tag type="danger" v-if="value.status === 2">挂失</van-tag>
             </div>
         </div>
-        <hd-card class="padding-2 text-size-md" :class="{ reSizeColor: from === 2}">
+        <hd-card class="padding-2 text-size-sm" :class="{ reSizeColor: from === 2}">
             <hd-card-item>
                 <span class="card-item-title text-333">充值金额：</span>
-                <span class="card-item-content text-666">{{value.money}}元</span>
+                <span class="card-item-content text-999">{{ value.money | fmtMoney }}元</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">赠送金额：</span>
-                <span class="card-item-content text-666">{{value.sendmoney}}元</span>
+                <span class="card-item-content text-999">{{ value.sendmoney | fmtMoney }}元</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">绑定人：</span>
-                <span class="card-item-content text-666">{{value.touristnick}}</span>
+                <span class="card-item-content text-999">{{value.touristnick}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">电话：</span>
-                <span class="card-item-content text-666">{{value.touristphone}}</span>
+                <span class="card-item-content text-999">{{value.touristphone}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">归属小区：</span>
-                <span class="card-item-content text-666">{{value.areaname}}</span>
+                <span class="card-item-content text-999">{{value.areaname}}</span>
             </hd-card-item>
             <hd-card-item>
                 <span class="card-item-title text-333">备注：</span>
-                <span class="card-item-content text-666">{{value.remark}}</span>
+                <span class="card-item-content text-999">{{value.remark}}</span>
             </hd-card-item>
         </hd-card>
         <div class="bottom padding-x-2 padding-bottom-2 d-flex justify-content-end" v-if="from === 1">
-            <van-button type="primary" size="mini" class="margin-right-1" plain round :to="`/ic/manage/${value.id}`">管理此卡</van-button>
-            <van-button type="info" size="mini" class="margin-right-1" :to="`/ic/record/${value.cardID}`" plain round >消费记录</van-button>
-            <van-button type="warning" size="mini" plain round @click="$emit('changeStatus', value)">更改状态</van-button>
+            <van-button
+                type="primary"
+                size="mini"
+                class="margin-right-1"
+                plain
+                :to="`/ic/manage/${value.id}`"
+            >管理此卡</van-button>
+            <van-button
+                type="info"
+                size="mini"
+                class="margin-right-1"
+                :to="`/ic/record/${value.cardID}`"
+                plain
+            >消费记录</van-button>
+            <van-button
+                type="warning"
+                size="mini"
+                plain
+                @click="$emit('changeStatus', value)"
+            >更改状态</van-button>
         </div>
     </div>
 </template>

@@ -26,7 +26,7 @@
 <script>
 import HandleCompanyBank from '@/components/withdraw/handle-company-bank'
 import HandleBank from '@/components/withdraw/handle-bank'
-import { inquireBankCardInfo, editBankCardInfo, deleteUserBankcardByid } from '@/require/withdraw'
+import { inquireBankCardInfo, editBankCardInfo, deleteBankcardByid } from '@/require/withdraw'
 export default {
     components: {
         HandleCompanyBank,
@@ -92,7 +92,7 @@ export default {
             })
             .then(async () => {
                 try {
-                    const { code, message } = await deleteUserBankcardByid({
+                    const { code, message } = await deleteBankcardByid({
                        id: this.id
                     })
                     if (code === 200) {

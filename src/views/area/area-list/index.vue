@@ -26,7 +26,13 @@
                         :index="0"
                     >
                         <div class="padding-top-3">
-                            <area-item v-for="item in source[0].list" :key="item.code" :value="item" class="margin-bottom-3"/>
+                            <area-item
+                                v-for="item in source[0].list"
+                                :key="item.code"
+                                :value="item"
+                                class="margin-bottom-3"
+                                @getChildData="getChildData"
+                            />
                             <div
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[0].list.length !== 0}"
@@ -42,7 +48,13 @@
                         :index="1"
                     >
                         <div class="padding-top-3">
-                            <area-item v-for="item in source[1].list" :key="item.code" :value="item" class="margin-bottom-3"/>
+                            <area-item
+                                v-for="item in source[1].list"
+                                :key="item.code"
+                                :value="item"
+                                class="margin-bottom-3"
+                                @getChildData="getChildData"
+                            />
                             <div
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[1].list.length !== 0}"
@@ -60,7 +72,14 @@
         <!-- 新增小区 -->
         <add-area
             :addAreaIsShow="addAreaIsShow"
-            @confirm="addAreaConfirm"
+            @confirm="areaConfirm"
+        />
+        <!-- 编辑小区 -->
+        <edit-area
+            :editAreaIsShow="!!editAreaRow"
+            :value="editAreaRow"
+            @confirm="areaConfirm"
+            @getChildData="getChildData"
         />
     </div>
 </template>
@@ -68,7 +87,8 @@
 import hdScroll from '@/components/hd-scroll'
 import areaItem from '@/components/area/area-item'
 import addArea from '@/components/area/add-area'
-import { inquireAreaInfor, insertAreaData } from '@/require/area'
+import editArea from '@/components/area/edit-area'
+import { inquireAreaInfor, insertAreaData, editAreaBaseInfo } from '@/require/area'
 const LIMIT = 4
 export default {
     data () {
@@ -94,7 +114,8 @@ export default {
                     leaveScrollY: 0 // 离开时滚动的距离
                 }
             ],
-            addAreaIsShow: false
+            addAreaIsShow: false,
+            editAreaRow: null
         }
     },
     mounted () {
@@ -104,7 +125,8 @@ export default {
     components: {
         hdScroll,
         areaItem,
-        addArea
+        addArea,
+        editArea
     },
     watch: {
         // 监听路由的变化，当前路由调回来的时候将存储的位置信息重新赋值回来
@@ -205,8 +227,15 @@ export default {
             this.source[index].scroll = scroll
         },
         // 获取新增小区信息
-        async addAreaConfirm ({ name, address: street, selectAreaObj }) {
-            try {
+        async areaConfirm ({ name, address: street, selectAreaObj, type, id }) {
+            if (type === 'add') {
+                this.addArea(name, street, selectAreaObj)
+            } else {
+                this.editArea(id, name, street, selectAreaObj)
+            }
+        },
+        async addArea (name, street, selectAreaObj) {
+             try {
                 const { city, county, province } = selectAreaObj
                 const { code, message } = await insertAreaData({
                     name, // 小区名字
@@ -227,6 +256,33 @@ export default {
                 this.$toast('异常错误')
             }
             this.addAreaIsShow = false
+        },
+        async editArea (aid, name, street, selectAreaObj) {
+             try {
+                const { city, county, province } = selectAreaObj
+                const { code, message } = await editAreaBaseInfo({
+                    aid,
+                    name, // 小区名字
+                    province: province.code, // 省份编码
+                    city: city.code, // 市编码
+                    county: county.code, // 县编码
+                    street, // 街道地址
+                    usage: 2 // 默认 2  区分来源于手机端还是电脑端 1:电脑端  2:手机端
+                })
+                if (code === 200) {
+                    this.$toast('小区修改成功')
+                    this.asyGetDeviceList(0, true)
+                    this.asyGetDeviceList(1, true)
+                } else {
+                    this.$toast(message)
+                }
+            } catch (e) {
+                this.$toast('异常错误')
+            }
+            this.editAreaRow = null
+        },
+        getChildData ({ key, value }) {
+            this[key] = value
         }
     }
 }

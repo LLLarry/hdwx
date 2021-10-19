@@ -379,7 +379,8 @@ export default {
                     this.model = Object.assign({}, {
                         ...sysparam,
                         spRecMon: sysparam.spRecMon === 1, // 是否余额回收
-                        spFullEmpty: sysparam.spFullEmpty === 1 // 是否断电自停
+                        spFullEmpty: sysparam.spFullEmpty === 1, // 是否断电自停
+                        elecTimeFirst: sysparam.elecTimeFirst === 1 // 是否初始显示电量
                     })
                     this.hardversion = hardversion
                 } else {

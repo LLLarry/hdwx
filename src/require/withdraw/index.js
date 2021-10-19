@@ -60,9 +60,9 @@ export const merBankCardData = (data, loadText) => {
  * @param {*} data
  * @returns
  */
- export const deleteUserBankcardByid = (data, loadText) => {
+ export const deleteBankcardByid = (data, loadText) => {
     return ajax({
-        url: '/mobileMerchant/deleteUserBankcardByid',
+        url: '/mobileMerchant/deleteBankcardByid',
         method: 'post',
         data,
         loadText

@@ -91,6 +91,7 @@
     import { fmtMoney, noOpen } from '@/utils/util'
     import { scanQRCode } from '@/utils/wechat-util'
     import parseURL from '@/utils/parse-url'
+    import { mapState, mapMutations } from 'vuex'
     export default {
         data () {
             return {
@@ -120,7 +121,7 @@
                 ],
                 todayMoney: 0, // 今日收益
                 updateTime: '', // 更新时间
-                isShowIcon: true, // 是否显示投币收益
+                showincoins: '', // 是否显示投币收益
                 loading: false, // 是否正在更新数据
                 isHide: false // 是否开启隐藏模式
             }
@@ -134,7 +135,50 @@
             // }, 2000)
             this.getInitData({}, '正在加载中')
         },
+        computed: {
+            ...mapState(['user']),
+            isShowIcon () {
+                if (this.showincoins === '') {
+                    return this.user.showincoins === 1
+                } else {
+                    if (this.showincoins !== this.user.showincoins) {
+                        this.setUser({ ...this.user, showincoins: this.showincoins })
+                    }
+                    return this.showincoins === 1
+                }
+            }
+        },
+        watch: {
+            isShowIcon: {
+                handler (value) {
+                    if (value) {
+                        this.list = [
+                            { title: '线上收益', value: 0 },
+                            { title: '未提现', value: 0 },
+                            { title: '昨日收益', value: 0 },
+                            { title: '投币收益', value: 0 },
+                            { title: '今日投币', value: 0 },
+                            { title: '昨日投币', value: 0 },
+                            { title: '总耗电量', value: 0 },
+                            { title: '今日耗电', value: 0 },
+                            { title: '昨日耗电', value: 0 }
+                        ]
+                    } else {
+                        this.list = [
+                            { title: '线上收益', value: 0 },
+                            { title: '未提现', value: 0 },
+                            { title: '昨日收益', value: 0 },
+                            { title: '总耗电量', value: 0 },
+                            { title: '今日耗电', value: 0 },
+                            { title: '昨日耗电', value: 0 }
+                        ]
+                    }
+                },
+                immediate: true
+            }
+        },
         methods: {
+            ...mapMutations(['setUser']),
             async getInitData (data, isShowLoading) {
                 try {
                     if (isShowLoading === false) {
@@ -145,25 +189,25 @@
                     if (hasdata === 1) {
                         this.getInitData({ type: 1 }, '数据更新中')
                     }
-                    this.todayMoney = result.nowMoney
-                    this.isShowIcon = result.showincoins === 1
+                    this.todayMoney = result.nowincomemoney
+                    this.showincoins = result.showincoins
                     if (this.isShowIcon) {
                         this.list = [
-                            { title: '线上收益', value: fmtMoney(result.allMoney) },
+                            { title: '线上收益', value: fmtMoney(result.totalincomemoney) },
                             { title: '未提现', value: fmtMoney(result.earnings) },
-                            { title: '昨日收益', value: fmtMoney(result.yestMoney) },
+                            { title: '昨日收益', value: fmtMoney(result.yestincomemoney) },
                             { title: '投币收益', value: result.totalcoins },
-                            { title: '今日投币', value: result.codenowcoins },
-                            { title: '昨日投币', value: result.codeyestcoins },
+                            { title: '今日投币', value: result.nowcoins },
+                            { title: '昨日投币', value: result.yestcoins },
                             { title: '总耗电量', value: fmtMoney(result.totalConsume) },
                             { title: '今日耗电', value: fmtMoney(result.todayConsume) },
                             { title: '昨日耗电', value: fmtMoney(result.yesterdayConsume) }
                         ]
                     } else {
                         this.list = [
-                            { title: '线上收益', value: fmtMoney(result.allMoney) },
+                            { title: '线上收益', value: fmtMoney(result.totalincomemoney) },
                             { title: '未提现', value: fmtMoney(result.earnings) },
-                            { title: '昨日收益', value: fmtMoney(result.yestMoney) },
+                            { title: '昨日收益', value: fmtMoney(result.yestincomemoney) },
                             { title: '总耗电量', value: fmtMoney(result.totalConsume) },
                             { title: '今日耗电', value: fmtMoney(result.todayConsume) },
                             { title: '昨日耗电', value: fmtMoney(result.yesterdayConsume) }

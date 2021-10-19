@@ -213,7 +213,7 @@
 import hdCard from '@/components/hd-card'
 import hdCardItem from '@/components/hd-card-item'
 import { mapState } from 'vuex'
-import { getDeviceVersionName } from '@/utils/util'
+import { getDeviceVersionName, getInfoByHdVersion } from '@/utils/util'
 import { inquireDeviceStatus, querystate, queryPortStatus, stopRechargeByPort, stopCharge, testpaytoport, startCharge, getDeviceNowArgument } from '@/require/device'
 export default {
     components: {
@@ -262,6 +262,7 @@ export default {
                         ...result,
                         hvName: getDeviceVersionName(result.deviceversion)
                     }
+                    this.columns = new Array(getInfoByHdVersion(result.deviceversion).portNum).fill(1).map((item, index) => (index + 1))
                 } else {
                     this.$toast(message)
                 }

@@ -23,7 +23,7 @@
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{ item.countTimes }}</van-col>
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">{{item.incomemoney | fmtMoney}}</van-col>
                         <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center" v-if="showincoins !== 2">{{item.incomemoney | fmtMoney(0)}}</van-col>
-                        <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center" v-if="hardversion !== '03' && hardversion !== '04'">{{item.usagerate}}</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center" v-if="hardversion !== '03' && hardversion !== '04'">{{item.usagerate}}%</van-col>
                     </van-row>
                     <hd-bottom :status="status" class="bottom-style" />
                 </div>

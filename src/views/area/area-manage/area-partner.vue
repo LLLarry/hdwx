@@ -3,12 +3,14 @@
         <div class="bg-white overflow-hidden margin-bottom-3 padding-bottom-3">
             <!-- v-no-data:[noDataText1]="noData" -->
             <div v-if="partlist.length > 0">
-                <div v-show="!noData" class="area-box-1 padding-x-3 padding-y-3 position-relative margin-x-3 margin-bottom-3  margin-top-1 rounded shadow-md" v-for="item in partlist" :key="item.id">
+                <div v-show="!noData" class="area-box-1 padding-x-3 padding-y-3 position-relative margin-x-3 margin-bottom-3  margin-top-1 rounded" v-for="item in partlist" :key="item.id">
                     <div class="top d-flex align-items-center">
                             <van-image
                                 width="45"
                                 height="45"
-                                :src="item.headimgurl || cardUrl"
+                                :src="item.headimgurl | fmtAvatar"
+                                fit="fill"
+                                round
                             />
                         <div class="flex-1 margin-left-2 d-flex justify-content-between align-items-center">
                             <div class="">
@@ -21,8 +23,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
-                        <van-button type="primary" plain size="mini" class="margin-right-2 padding-x-3" @click="editPartner(item)">编辑</van-button>
-                        <van-button type="danger" plain size="mini" class="padding-x-3" @click="deletePartner(item)">删除</van-button>
+                        <van-button type="primary" size="mini" class="margin-right-2 padding-x-3" @click="editPartner(item)">编辑</van-button>
+                        <van-button type="danger" size="mini" class="padding-x-3" @click="deletePartner(item)">删除</van-button>
                     </div>
                 </div>
             </div>

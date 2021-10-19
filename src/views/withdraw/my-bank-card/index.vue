@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <hd-title exec>个人银行卡</hd-title>
-        <div>
+        <div class="padding-bottom-3">
             <div v-no-data="bankCardList.length <= 0"></div>
             <bank-card
                 class="margin-bottom-3 margin-x-3"
@@ -15,7 +15,7 @@
         </div>
         <hd-line height=".6rem" />
         <hd-title exec>对公银行卡</hd-title>
-        <div>
+        <div class="padding-bottom-3">
             <div v-no-data="companyBnkCardList.length <= 0"></div>
             <bank-card
                 class="margin-bottom-3 margin-x-3"

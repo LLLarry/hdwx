@@ -5,7 +5,8 @@ import { Dialog } from 'vant'
 import store from '@/store'
 import { getRamdom } from '@/utils/util'
 const api = process.env.NODE_ENV === 'production' ? '' : '/api'
-const baseURL = process.env.NODE_ENV === 'production' ? 'http://www.tengfuchong.com.cn' : ''
+const { PROXY_BASE_URL } = HDWX
+const baseURL = process.env.NODE_ENV === 'production' ? PROXY_BASE_URL : ''
 const isMock = (url) => url.includes('fastmock')
 const server = axios.create({
     timeout: 120000, // 请求超时时间

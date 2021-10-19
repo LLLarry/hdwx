@@ -51,10 +51,12 @@
         <main>
             <hd-scroll @pullingUpFn = "pullingUpFn" @getScroll="({ scroll }) => this.scroll = scroll">
                 <div class="padding-y-3">
+                    <!-- :to="`/income/record/${item.id}`" -->
                     <router-link
                         class="record-card position-relativetext-size-md text-666 shadow margin-x-2 rounded-md overflow-hidden margin-bottom-3 bg-white"
-                        v-for="item in list" :key="item.id"
-                        :to="`/income/record/${item.id}`"
+                        v-for="item in list"
+                        :key="item.id"
+                        to=""
                         tag="div"
                     >
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">

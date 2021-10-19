@@ -55,34 +55,35 @@
 </template>
 
 <script>
-import { getBankList } from '@/views/withdraw/helper'
+import { checkAndGo } from '@/views/withdraw/helper'
 export default {
     data () {
         return {
-            activeNames: [],
-            bankCardList: [], // 个人银行卡
-            companyBnkCardList: [] // 对公账户银行卡
+            activeNames: []
+            // bankCardList: [], // 个人银行卡
+            // companyBnkCardList: [] // 对公账户银行卡
         }
     },
     methods: {
         // 跳转到 提现到银行卡 / 对公账户
-        async handleGoWithdraw (type) {
-            try {
-                const { bankCardList = [], companyBnkCardList = [] } = await getBankList()
-                this.bankCardList = bankCardList
-                this.companyBnkCardList = companyBnkCardList
-                const one = this[type === 1 ? 'bankCardList' : 'companyBnkCardList'][0]
-                if (one) {
-                    this.$router.push({ path: `/withdraw/page/${type}`, query: { id: one.id } })
-                } else {
-                    this.$dialog.alert({
-                        title: '提示',
-                        message: type === 1 ? '对不起，您暂时未添加银行卡，请先添加银行卡！' : '对不起，您暂时未添加对公账户，请先添加对公账户！'
-                    })
-                }
-            } catch (error) {
-                this.$toast(error)
-            }
+        handleGoWithdraw (type) {
+            checkAndGo(type)
+            // try {
+            //     const { bankCardList = [], companyBnkCardList = [] } = await getBankList()
+            //     this.bankCardList = bankCardList
+            //     this.companyBnkCardList = companyBnkCardList
+            //     const one = this[type === 1 ? 'bankCardList' : 'companyBnkCardList'][0]
+            //     if (one) {
+            //         this.$router.push({ path: `/withdraw/page/${type}`, query: { id: one.id } })
+            //     } else {
+            //         this.$dialog.alert({
+            //             title: '提示',
+            //             message: type === 1 ? '对不起，您暂时未添加银行卡，请先添加银行卡！' : '对不起，您暂时未添加对公账户，请先添加对公账户！'
+            //         })
+            //     }
+            // } catch (error) {
+            //     this.$toast(error)
+            // }
         }
     }
 }

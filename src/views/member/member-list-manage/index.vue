@@ -179,7 +179,7 @@ export default {
             top: 0;
             bottom: 0;
             // background-image: linear-gradient(-45deg, rgba(11, 156, 255, 0.5), rgba(107, 152, 234, 0.81));
-            background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.5), rgba(7, 193, 96, 0.8));
+            background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.51), rgba(182, 193, 7, 0.28));
         }
     }
     .post-search {
@@ -188,7 +188,7 @@ export default {
     }
     .begin-set {
         // background-image: linear-gradient(-45deg, rgba(11, 156, 255, .5), rgba(107, 152, 234, .81));
-        background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.5), rgba(7, 193, 96, 0.8));
+        background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.51), rgba(182, 193, 7, 0.28));
         height: 1rem;
     }
     .delete-content {
