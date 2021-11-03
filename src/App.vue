@@ -29,12 +29,16 @@
 
 <script>
     // import { getNetworkType } from '@/utils/wechat-util'
+    import accessRecord from '@/assets/js/access-record'
     export default {
         data () {
             return {
                 active: 0,
                 showTabBar: false
             }
+        },
+        mounted () {
+          accessRecord()
         },
         watch: {
           $route: {

@@ -330,6 +330,30 @@ const routes = [
     meta: {
       title: '远程充电'
     }
+  },
+  {
+    path: '/device/addr/:code',
+    name: 'device-addr',
+    component: () => import(/* webpackChunkName: "device-addr" */ '../views/device/device-addr/index.vue'),
+    meta: {
+      title: '从机列表'
+    }
+  },
+  {
+    path: '/paymanage',
+    name: 'pay-manage',
+    component: () => import(/* webpackChunkName: "pay-manage" */ '../views/pay-manage/index.vue'),
+    meta: {
+      title: '缴费管理'
+    }
+  },
+  {
+    path: '/paymanage/areadevice',
+    name: 'pay-manage-areadevice',
+    component: () => import(/* webpackChunkName: "pay-manage-areadevice" */ '../views/pay-manage/area-device/index.vue'),
+    meta: {
+      title: '缴费管理'
+    }
   }
 ]
 // process.env.BASE_URL

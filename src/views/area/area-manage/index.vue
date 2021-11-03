@@ -1,7 +1,7 @@
 <template>
     <div class="area-manage position-relative d-flex flex-column bg-gray h-100">
         <van-nav-bar
-            title="管理【回忆小区】"
+            :title="`管理【${arealist.name}】`"
             left-text="返回"
             left-arrow
             class="header-fixed"
@@ -19,8 +19,8 @@
                     <hd-title class="bg-white" exec>合伙人管理</hd-title>
                     <area-partner :noData="noData" :partlist="partlist" @reflesh="reflesh" />
                 </van-tab>
-                <van-tab title="钱包模板">
-                    <!-- 钱包充值模板 -->
+                <!-- 钱包充值模板 -->
+                <!-- <van-tab title="钱包模板">
                     <div class="bg-white">
                         <hd-title exec>
                             钱包充值模板
@@ -40,11 +40,10 @@
                             </li>
                         </ul>
                     </div>
-                </van-tab>
-                <van-tab title="在线卡模板">
-                    <!-- 在线卡充值模板 -->
+                </van-tab> -->
+                <!-- 在线卡充值模板 -->
+                <!-- <van-tab title="在线卡模板">
                     <div class="bg-white">
-                        <!-- <hd-line height="20px" /> -->
                         <hd-title exec>
                             在线卡充值模板
                             <template #desc>
@@ -61,7 +60,7 @@
                             </li>
                         </ul>
                     </div>
-                </van-tab>
+                </van-tab> -->
             </van-tabs>
             <hd-nav :list="[{ text: '删除小区' }]">
                 <van-button type="danger" size="small"  class="w-50" @click="handleDelete">删除小区</van-button>
@@ -89,7 +88,8 @@ export default {
             noexistdevice: [], // 未绑定的设备
             oncardTemplate: {}, // 在线卡模板
             walletTemplate: {}, // 钱包模板
-            list: []
+            list: [],
+            arealist: {} // 小区列表
         }
     },
     mounted () {
@@ -104,7 +104,7 @@ export default {
     methods: {
         async init () {
             try {
-                const { code, message, partlist, existdevice, noexistdevice, oncardTemplate, walletTemplate } = await inquireAreaDataById({
+                const { code, message, partlist, existdevice, noexistdevice, oncardTemplate, walletTemplate, arealist } = await inquireAreaDataById({
                     id: this.id
                 })
                 if (code === 200) {
@@ -113,6 +113,7 @@ export default {
                     this.noexistdevice = noexistdevice
                     this.oncardTemplate = oncardTemplate
                     this.walletTemplate = walletTemplate
+                    this.arealist = arealist
                 } else {
                     this.$toast(message)
                 }
@@ -165,7 +166,8 @@ export default {
     }
     .area-box-1 {
         // background-image: -webkit-linear-gradient(-45deg, rgba(23, 162, 184, .26), transparent);
-        background-image: -webkit-linear-gradient(-45deg, rgba(7, 193, 96, .53), rgba(7, 190, 193, .21));
+        // background-image: -webkit-linear-gradient(-45deg, rgba(7, 193, 96, .53), rgba(7, 190, 193, .21));
+        background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.51), rgba(182, 193, 7, 0.28));
     }
     .add-partner {
         height: 35px;
@@ -176,7 +178,8 @@ export default {
         }
     }
     .area-box-2 {
-        background-image: -webkit-linear-gradient(-45deg, rgba(7, 193, 96, .53), rgba(7, 190, 193, .21));
+        // background-image: -webkit-linear-gradient(-45deg, rgba(7, 193, 96, .53), rgba(7, 190, 193, .21));
+        background-image: linear-gradient(-45deg, rgba(7, 193, 96, 0.51), rgba(182, 193, 7, 0.28));
     }
     footer {
         position: fixed;

@@ -3,7 +3,7 @@
     <li class="template-header-item">
         <div class="header-content">
             <van-field
-                v-model="data.name"
+                v-model="data.tempname"
                 name="name"
                 label="模板名称："
                 placeholder="请输入模板名称"
@@ -15,7 +15,7 @@
     <li class="template-header-item">
         <div class="header-content">
             <van-field
-                v-model="data.remark"
+                v-model="data.brand"
                 name="remark"
                 label="品牌名称："
                 placeholder="请输入品牌名称"
@@ -26,7 +26,7 @@
     <li class="template-header-item">
         <div class="header-content">
             <van-field
-                v-model="data.common1"
+                v-model="data.telephone"
                 name="common2"
                 label="联系电话："
                 placeholder="请输入联系电话"
@@ -43,13 +43,11 @@ export default {
         data: {
             type: Object,
             default: () => {}
+        },
+        isSystemTem: {
+            type: Boolean,
+            default: false
         }
-    },
-    computed: {
-      // 是否是系统模板
-      isSystemTem () {
-        return this.data.merchantid === 0
-      }
     }
 }
 </script>

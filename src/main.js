@@ -16,6 +16,7 @@ import qrcode from 'vue-qrcode2'
 import '@/filter'
 import '@/directive'
 import wx from 'weixin-js-sdk'
+import VueCompositionApi from '@vue/composition-api'
 // import { isiOS } from '@/utils/util'
 // import ECharts from 'vue-echarts'
 // import { use } from 'echarts/core'
@@ -25,12 +26,13 @@ import wx from 'weixin-js-sdk'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
-RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover
+RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover, ImagePreview
 } from 'vant'
 
 // 解决 vue当页面应用在ios微信中，使用wxsdk, wx.config报错
 window.sessionStorage.setItem('__init_url__', window.location.href)
 
+Vue.use(VueCompositionApi)
 Vue.use(loadingIndex)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
@@ -76,6 +78,7 @@ Vue.use(Cell)
 Vue.use(CellGroup)
 Vue.use(Picker)
 Vue.use(Popover)
+Vue.use(ImagePreview)
 
 Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })

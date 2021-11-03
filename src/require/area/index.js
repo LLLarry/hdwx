@@ -78,7 +78,7 @@ export const inquireAreaInfor = (data) => {
 }
 
 /**
- * 删除小区中指定的设备
+ * 绑定小区合伙人
  * @param {*} data { code: String }
  * @returns
  */

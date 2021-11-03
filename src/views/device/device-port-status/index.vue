@@ -102,7 +102,7 @@
                     </div>
                 </div>
             </van-tab>
-            <van-tab title="报警状态">
+            <!-- <van-tab title="报警状态">
                 <div class="padding-x-3 tabContent bg-gray" ref="tabContent" :style="{height: maxHeight+'px'}">
                     <hd-card class="card rounded padding-2 margin-top-3 bg-white">
                         <hd-card-item class="w-100 card-title margin-bottom-1 d-flex justify-content-between">
@@ -194,7 +194,7 @@
                         </hd-card-item>
                     </hd-card>
                 </div>
-            </van-tab>
+            </van-tab> -->
         </van-tabs>
 
         <van-popup v-model="showPicker" round position="bottom">

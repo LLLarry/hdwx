@@ -524,3 +524,48 @@ export const remotechargeaccess = (data, loadText) => {
         loadText
     })
 }
+
+/*
+* 设备管理丛机列表
+* @param {*} data { code 是 设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireDeviceAddr = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireDeviceAddr',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 丛机—添加或删除丛机号
+* @param {*} data { code 是 设备号 type 是 类型  addr  丛机号 }
+* @param {*} loadText
+* @returns
+*/
+export const addOrRemoveAddr = (params, loadText) => {
+    return ajax({
+        url: '/addOrRemoveAddr',
+        method: 'get',
+        params,
+        loadText
+    })
+}
+
+/*
+* 更新（查询）丛机号
+* @param {*} data { code 是 设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const queryAllAddr = (data, loadText) => {
+    return ajax({
+        url: '/queryAllAddr',
+        method: 'post',
+        data,
+        loadText
+    })
+}

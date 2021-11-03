@@ -28,6 +28,7 @@
                         size="mini"
                         class="padding-x-2"
                         plain round
+                        @click="$router.push({ path: '/template/v3/000130' })"
                     >
                     编辑
                     </van-button>

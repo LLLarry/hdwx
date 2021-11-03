@@ -74,3 +74,18 @@ export const inquireOnlineData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 商户绑定IC卡
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const dealerBindingOnlineCard = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/dealerBindingOnlineCard',
+        method: 'post',
+        data,
+        loadText
+    })
+}

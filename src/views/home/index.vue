@@ -186,8 +186,10 @@
                         this.loading = true
                     }
                     const { code, message, hasdata, ...result } = await getDealHomePageData(data, isShowLoading)
-                    if (hasdata === 1) {
-                        this.getInitData({ type: 1 }, '数据更新中')
+                    this.loading = false
+                    if (hasdata === 1 || hasdata === 3) {
+                        this.getInitData({ type: 1 }, '更新数据中')
+                        return false
                     }
                     this.todayMoney = result.nowincomemoney
                     this.showincoins = result.showincoins
@@ -226,11 +228,17 @@
                     ]
                     this.updateTime = result.renewalTime
                     // 当上次更新时间大于2小时，则发送请求重新获取最新数据
-                    if ((new Date()).getTime() - (new Date(result.renewalTime)).getTime() > 2 * 60 * 60 * 1000) {
-                        this.getInitData({ type: 1 }, false)
-                    }
+                    // if ((new Date()).getTime() - (new Date(result.renewalTime)).getTime() > 2 * 60 * 60 * 1000) {
+                    //     this.getInitData({ type: 1 }, false)
+                    // }
+                    /** hasdata
+                     *  1:不存在数据
+                     *   2:存在数据；且数据是当天数据
+                     *  3:存在数据；但数据不为当天数据
+                     *  4:获取的为当前查询的数据
+                     */
                 } catch (e) {
-                    console.log(message)
+                    console.log(e)
                 } finally {
                     if (isShowLoading === false) {
                         this.loading = false

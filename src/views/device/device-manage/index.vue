@@ -158,7 +158,10 @@ export default {
         break
         case '收费模板':
           // this.$router.push({ path: '/device/templatelist/' + this.code })
-          noOpen()
+          if (HDWX.ENV === 'production') {
+             return noOpen()
+          }
+          this.$router.push({ path: '/device/templatelist/' + this.code })
         break
         case '系统参数':
           this.$router.push({ path: `/device/system/${this.result.deviceversion === '07' ? 'car' : 'v2'}/` + this.code })

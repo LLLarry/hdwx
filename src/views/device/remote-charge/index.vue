@@ -33,7 +33,7 @@ export default {
     data () {
         return {
             code: this.$route.params.code,
-            addr: '',
+            addr: this.$route.query.addr,
             list: [],
             selectPort: -1, // 选中的端口号
             templateTimelist: [],

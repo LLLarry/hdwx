@@ -36,6 +36,7 @@
                 type="primary"
                 size="small"
                 v-if="value.hardversion === '11'"
+                :to="`/device/addr/${value.code}`"
             >从机</van-button>
             <van-button
                 type="primary"

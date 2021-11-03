@@ -43,9 +43,8 @@
                 </div>
             </hd-scroll>
         </main>
-        <!-- <footer class="padding-x-3 padding-y-2 shadow-y-md">
-            <van-button type="primary" block size="small">默认按钮</van-button>
-        </footer> -->
+        <bind-ic-card :arealist="arealist" />
+        <!-- 修改卡状态 -->
          <van-action-sheet
             v-model="actionIsShow"
             :actions="actions"
@@ -60,7 +59,8 @@
 </template>
 <script>
 import hdScroll from '@/components/hd-scroll'
-import icListCard from '@/components/ic-list/ic-list-card'
+import IcListCard from '@/components/ic-list/ic-list-card'
+import BindIcCard from '@/components/ic-list/bind-ic-card'
 import { inquireOnlineData, changeOnlineCardStatus } from '@/require/ic'
 const REQUIRE_LENGTH = 35 // 请求返回值数量
 export default {
@@ -103,7 +103,8 @@ export default {
                 { name: '挂失', id: 2 },
                 { name: '未绑定', id: 0 }
             ],
-            actionRow: {} // 更改在显卡状态
+            actionRow: {}, // 更改在显卡状态
+            arealist: [] // 小区列表
         }
     },
     mounted () {
@@ -111,7 +112,8 @@ export default {
     },
     components: {
         hdScroll,
-        icListCard
+        IcListCard,
+        BindIcCard
     },
     computed: {
         descMessage () {
@@ -169,10 +171,11 @@ export default {
                         this.datasize = datasize // 在线卡数量
                         this.datatopupmoney = datatopupmoney // 在线卡充值金额
                         this.datasendmoney = datasendmoney // 在线卡赠送金额
-                        this.option2 = areaData.reduce((acc, item) => {
+                        this.arealist = areaData.reduce((acc, item) => {
                             acc.push({ text: item.name, value: item.id })
                             return acc
-                        }, [{ text: '所有小区', value: '' }])
+                        }, [])
+                        this.option2 = [{ text: '所有小区', value: '' }, ...this.arealist]
                     } else {
                         this.list = [...this.list, ...datalist]
                     }
