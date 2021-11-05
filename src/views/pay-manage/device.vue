@@ -1,24 +1,23 @@
 <template>
   <div class="pay-manage-device d-flex flex-column justify-content-between">
         <List />
-        <Footer />
+        <Footer @reload="reload" />
   </div>
 </template>
 
 <script>
 import Footer from '@/components/pay-manage/footer'
 import List from '@/components/pay-manage/list'
-import { useInitDeviceList } from './helper'
 export default {
+    props: {
+        reload: {
+            type: Function,
+            default: () => {}
+        }
+    },
     components: {
         Footer,
         List
-    },
-    setup () {
-        const initList = useInitDeviceList()
-        return {
-            initList
-        }
     }
 }
 </script>

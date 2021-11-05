@@ -14,7 +14,7 @@
     </div>
     <main class="flex-1 overflow-hidden">
        <div v-if="selectIndex === 1" class="h-100">
-            <Device />
+            <Device :reload="reload" />
        </div>
        <div v-if="selectIndex === 2" class="h-100">
             <area-list />
@@ -27,7 +27,7 @@
 import { inject, ref } from '@vue/composition-api'
 import Device from './device'
 import AreaList from './area-list'
-import { useInitDeviceList } from './helper'
+import { useInitDeviceList, useInitProvide } from './helper'
 export default {
     components: {
         Device,
@@ -35,11 +35,13 @@ export default {
     },
     setup () {
         const selectIndex = ref(1)
-        useInitDeviceList()
+        const refWrapper = useInitProvide()
+        const reload = useInitDeviceList(refWrapper)
         const initList = inject('initList')
         return {
             selectIndex,
-            initList
+            initList,
+            reload
         }
     }
 }

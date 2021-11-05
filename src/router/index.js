@@ -348,7 +348,7 @@ const routes = [
     }
   },
   {
-    path: '/paymanage/areadevice',
+    path: '/paymanage/areadevice/:aid',
     name: 'pay-manage-areadevice',
     component: () => import(/* webpackChunkName: "pay-manage-areadevice" */ '../views/pay-manage/area-device/index.vue'),
     meta: {

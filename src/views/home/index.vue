@@ -117,7 +117,7 @@
                     { title: '历史收益', url: '/history/profit' },
                     { title: '订单统计', url: '/order/profit' },
                     { title: '充值管理' },
-                    { title: '缴费管理', url: '' }
+                    { title: '缴费管理', url: '/paymanage' }
                 ],
                 todayMoney: 0, // 今日收益
                 updateTime: '', // 更新时间
@@ -224,7 +224,7 @@
                         { title: '历史收益', url: '/history/profit' },
                         { title: '订单统计', url: '/order/profit' },
                         { title: '充值管理' },
-                        { title: '缴费管理' }
+                        { title: '缴费管理', url: '/paymanage' }
                     ]
                     this.updateTime = result.renewalTime
                     // 当上次更新时间大于2小时，则发送请求重新获取最新数据
@@ -251,7 +251,7 @@
                 this.getInitData({ type: 1 }, false)
             },
             handleClick ({ title }) {
-                if (title === '缴费管理' || title === '充值管理') return noOpen()
+                if (title === '充值管理') return noOpen()
                 if (title !== '设备绑定') return false
                 // 调取扫一扫，获取扫码信息
                 scanQRCode()
