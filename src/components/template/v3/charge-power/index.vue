@@ -7,17 +7,23 @@
             <template-input
               title="每小时："
               title-style="width: 1.7rem;"
-              input-style="width: calc(100% - 2.2rem);"
-              v-model="ctemp.paymoney"
-              :disabled="isSystemTem"
-            ></template-input>
+            >
+              <template #input>
+                <input
+                    v-model="ctemp.paymoney"
+                    :disabled="isSystemTem"
+                    class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
+                    style="width: calc(100% - 2.2rem);"
+                  />
+              </template>
+            </template-input>
           </div>
           <div style="width: 55%;" class="margin-right-2">
             <template-input title="功率区间：" title-style="width: 2rem;">
               <template #input>
                 <input
                   v-model="ctemp.startpower"
-                  :disabled="true"
+                  :disabled="isSystemTem"
                   class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
                   style="width: calc(50% - 1.5rem)"
                 />
@@ -36,7 +42,7 @@
           </van-button>
       </div>
       <div class="d-flex justify-content-center margin-y-2">
-        <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem('tempower')">添加一行</van-button>
+        <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem('temmoney')">添加一行</van-button>
       </div>
       <p class="text-p margin-bottom-1 padding-x-2">注意：设备能承受的最大功率由机器决定</p>
     </div>
@@ -60,7 +66,7 @@ export default {
     },
     computed: {
         hdMask2 () { // 按功率计费遮罩层是否显示
-            return this.tempData.common2 === 3
+            return this.tempData.morm === 3
         },
         // 当系统模板时，颜色变为半透明
         deleteIconStyle () {

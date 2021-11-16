@@ -6,10 +6,16 @@
           <template-input
             title="每度电收费："
             unit="元"
-            input-style="width: 1.5rem;"
-            v-model="tempData.elecnorm"
-            :disabled="isSystemTem"
-          ></template-input>
+          >
+            <template #input>
+                <input
+                    style="width: 1.5rem;"
+                    class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
+                    v-model="tempData.elecnorm"
+                    :disabled="isSystemTem"
+                >
+            </template>
+          </template-input>
       </div>
     </div>
 </template>
@@ -32,7 +38,7 @@ export default {
     },
     computed: {
         hdMask1 () { // 按电量计费遮罩层是否显示
-            return this.tempData.common2 !== 3
+            return this.tempData.morm !== 3 && this.tempData.morm !== 4
         }
     },
     data () {

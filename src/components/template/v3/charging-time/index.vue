@@ -5,27 +5,40 @@
       <div class="post-session d-flex justify-content-between padding-x-2 padding-y-1" v-for="ctemp in tempData.temtime" :key="ctemp.id">
           <div style="width: 45%;" class="margin-right-4">
             <template-input
-              v-model="ctemp.sonname"
-              :disabled="isSystemTem"
               title="显示名称："
               title-style="width: 2rem;"
-              input-style="width: calc(100% - 2.5rem);"
-            ></template-input>
+            >
+              <template #input>
+                <input
+                  class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
+                  v-model="ctemp.sonname"
+                  :disabled="isSystemTem"
+                  style="width: calc(100% - 2.5rem);"
+                />
+              </template>
+            </template-input>
           </div>
           <div style="width: 45%;" class="margin-right-2">
-            <template-input
-              v-model="ctemp.chargeTime"
-              :disabled="isSystemTem" title="充电时间："
-              title-style="width: 2rem;"
-              input-style="width: calc(100% - 2.5rem);"
-            ></template-input>
+              <template-input
+                title="充电时间："
+                title-style="width: 2rem;"
+              >
+                <template #input>
+                  <input
+                    class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
+                    v-model="ctemp.chargeTime"
+                    :disabled="isSystemTem"
+                    style="width: calc(100% - 2.5rem);"
+                  />
+                </template>
+              </template-input>
           </div>
-          <van-button :disabled="isSystemTem" class="border-0 d-flex align-items-center justify-content-center padding-x-1" @click="handRemoveCtem('gather2', ctemp)">
+          <van-button :disabled="isSystemTem" class="border-0 d-flex align-items-center justify-content-center padding-x-1" @click="handleRemoveChild(ctemp.id)">
             <i class="iconfont icon-shanchu1 text-size-lg text-danger" :style="deleteIconStyle"></i>
           </van-button>
       </div>
       <div class="d-flex justify-content-center margin-y-2">
-        <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem('gather2')">添加一行</van-button>
+        <van-button type="primary" class="w-50" size="small" icon="plus" :disabled="isSystemTem" @click="handAddCtem">添加一行</van-button>
       </div>
     </div>
 </template>
@@ -56,6 +69,14 @@ export default {
         return {
 
         }
+    },
+    methods: {
+      handAddCtem () {
+        this.$emit('addChild', { from: 'temtime' })
+      },
+      handleRemoveChild (id) {
+        this.$emit('removeChild', { from: 'temtime', id })
+      }
     }
 }
 </script>

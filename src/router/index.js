@@ -139,7 +139,15 @@ const routes = [
     }
   },
   {
-    path: '/template/v3/:code',
+    path: '/template/addv3/:version',
+    name: 'template-v3',
+    component: () => import(/* webpackChunkName: "template-v3" */ '../views/template/v3Template/index.vue'),
+    meta: {
+      title: '新增v3收费模板'
+    }
+  },
+  {
+    path: '/template/v3/:id',
     name: 'template-v3',
     component: () => import(/* webpackChunkName: "template-v3" */ '../views/template/v3Template/index.vue'),
     meta: {

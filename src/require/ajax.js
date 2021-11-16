@@ -4,9 +4,11 @@ import Vue from 'vue'
 import { Dialog } from 'vant'
 import store from '@/store'
 import { getRamdom } from '@/utils/util'
-const api = process.env.NODE_ENV === 'production' ? '' : '/api'
+const { proxy } = require('../../hdwx.config')
+console.log(proxy)
+const api = process.env.NODE_ENV === 'production' ? '' : proxy.open ? '/api' : ''
 const { PROXY_BASE_URL } = HDWX
-const baseURL = process.env.NODE_ENV === 'production' ? PROXY_BASE_URL : ''
+const baseURL = process.env.NODE_ENV === 'production' ? PROXY_BASE_URL : proxy.open ? '' : 'http://localhost'
 const isMock = (url) => url.includes('fastmock')
 const server = axios.create({
     timeout: 120000, // 请求超时时间
