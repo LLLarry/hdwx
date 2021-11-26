@@ -5,15 +5,19 @@
       <div class="post-session padding-x-2">
           <template-input
             title="每度电收费："
-            unit="元"
+            :titleStyle="{color: '#666', fontSize: '0.32rem'}"
+            class="d-flex justify-content-center"
           >
             <template #input>
                 <input
-                    style="width: 1.5rem;"
+                    style="width: 1.5rem; font-size: 0.32rem"
                     class="padding-x-1 padding-y-1 border-1 border-ccc outline-none"
                     v-model="tempData.elecnorm"
                     :disabled="isSystemTem"
                 >
+            </template>
+            <template #exec>
+                <span class="text-p text-size-sm margin-left-1">元</span>
             </template>
           </template-input>
       </div>

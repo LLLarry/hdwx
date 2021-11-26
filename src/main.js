@@ -2,6 +2,7 @@ import '@/utils/global'
 import 'amfe-flexible'
 import '@/utils/resizeFontSize'
 // import '@/assets/js/stop-drop'
+// 封装vant的辅助函数
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -17,6 +18,7 @@ import '@/filter'
 import '@/directive'
 import wx from 'weixin-js-sdk'
 import VueCompositionApi from '@vue/composition-api'
+import '@/assets/js/vant-helper'
 // import { isiOS } from '@/utils/util'
 // import ECharts from 'vue-echarts'
 // import { use } from 'echarts/core'
@@ -26,7 +28,7 @@ import VueCompositionApi from '@vue/composition-api'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
-RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover, ImagePreview
+RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover, ImagePreview, NoticeBar
 } from 'vant'
 
 // 解决 vue当页面应用在ios微信中，使用wxsdk, wx.config报错
@@ -78,6 +80,7 @@ Vue.use(Cell)
 Vue.use(CellGroup)
 Vue.use(Picker)
 Vue.use(Popover)
+Vue.use(NoticeBar)
 Vue.use(ImagePreview)
 
 Vue.config.productionTip = false

@@ -159,7 +159,11 @@ export default {
         case '收费模板':
           // this.$router.push({ path: '/device/templatelist/' + this.code })
           if (HDWX.ENV === 'production') {
-             return noOpen()
+            if (['08', '09', '10', '11'].includes(this.result.deviceversion)) {
+              return this.$router.push({ path: '/device/templatelist/' + this.code })
+            } else {
+               return noOpen()
+            }
           }
           this.$router.push({ path: '/device/templatelist/' + this.code })
         break

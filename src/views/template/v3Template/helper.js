@@ -1,30 +1,45 @@
 import { Toast, Dialog } from 'vant'
 import { ref, watch } from '@vue/composition-api'
-import { insertSonTempV3, inquireTemplateV3, deleteSonTemp, amendTempV3, inquireDeviceTemlata } from '@/require/template'
+import { insertSonTempV3, inquireTemplateV3, deleteSonTemp, amendTempV3, inquireDeviceTemlata, insertTempV3 } from '@/require/template'
 import { createChildTemp } from '../helper'
 
 // 通过子模板的键货值对应的type
 const getType = (key) => key === 'tempower' ? 1 : key === 'temtime' ? 2 : key === 'temmoney' ? 3 : ''
-// 判断是否是异步： 当主模板id大于或等于0时, 异步添加/删除子模板; 当主模板id小于0时, 同步添加/删除子模板;
-const async = (tempDataRef) => tempDataRef.value.id >= 0
 
 // 通过模板id获取模板详情
 export function getTempInitData (tempid, version) {
     const tempData = ref({})
     const copyTempData = ref({})
-    const isSystemTemp = ref(true) // 是否是系统模板
+    const isSystemTem = ref(true) // 是否是系统模板
+    const type = ref(1) // 1 编辑 2 新增
     ;(async () => {
         try {
-            const { code, message, resultdata } = await (tempid ? inquireTemplateV3({ tempid }) : inquireDeviceTemlata({ version }))
+            type.value = typeof tempid !== 'undefined' ? 1 : 2
+            const { code, message, resultdata } = await (type.value === 1 ? inquireTemplateV3({ tempid }) : inquireDeviceTemlata({ version }))
             if (code === 200) {
-                tempData.value = {
-                    ...resultdata,
-                    walletpay: resultdata.ifwalletpay === 1, // 是否临时充电
-                    permit: resultdata.ifpermit === 1, // 是否退费
-                    grade: resultdata.defaultstype === 1, // 1:按金额付费    2 :按时间付费
-                    alipay: resultdata.ifalipay === 1 // 是否支持支付宝充电
+                if (type.value === 1) {
+                    tempData.value = {
+                        ...resultdata,
+                        walletpay: resultdata.ifwalletpay === 1, // 是否临时充电
+                        permit: resultdata.ifpermit === 1, // 是否退费
+                        grade: resultdata.defaultstype === 1, // 1:按金额付费    2 :按时间付费
+                        alipay: resultdata.ifalipay === 1 // 是否支持支付宝充电
+                    }
+                    isSystemTem.value = type.value === 1 && resultdata.merid === 0
+                } else {
+                    tempData.value = {
+                        ...resultdata,
+                        walletpay: resultdata.ifwalletpay === 1, // 是否临时充电
+                        permit: resultdata.ifpermit === 1, // 是否退费
+                        grade: resultdata.defaultstype === 1, // 1:按金额付费    2 :按时间付费
+                        alipay: resultdata.ifalipay === 1, // 是否支持支付宝充电
+                        tempname: '',
+                        brand: '',
+                        telephone: '',
+                        merid: undefined
+                    }
+                    isSystemTem.value = false
                 }
-                isSystemTemp.value = resultdata.merid === 0
                 copyTempData.value = JSON.parse(JSON.stringify(tempData.value))
             } else {
                 Toast.fail(message)
@@ -35,7 +50,9 @@ export function getTempInitData (tempid, version) {
     })()
     return {
         tempData,
-        copyTempData
+        copyTempData,
+        isSystemTem,
+        type
     }
 }
 
@@ -58,7 +75,7 @@ const createTempowerChildTemp = (tempDataRef) => {
         const nextCommon1 = stoppower
         const nextCommon2 = stoppower + range
         const rate = paymoney / stoppower // 每功率收费多少钱
-        const nextMoney = rate * range + lastItem.paymoney
+        const nextMoney = Number.parseFloat((rate * range + paymoney).toFixed(2))
         return { paymoney: nextMoney, startpower: nextCommon1, stoppower: nextCommon2, id: new Date().getTime(), type: 1 }
     })
 }
@@ -74,12 +91,12 @@ const createTemtimeChildTemp = (tempDataRef) => {
         if (typeof lastItem === 'undefined') {
             return { sonname: '1小时', chargeTime: 60, paymoney: 1, id: new Date().getTime(), type: 2 }
         }
-        let { paymoney } = lastItem
-        paymoney = Number.parseFloat(paymoney)
-        const nextCommon3 = paymoney + 1
-        const nextChargeTime = nextCommon3 * 60
-        const nextName = `${nextCommon3}小时`
-        return { sonname: nextName, chargeTime: nextChargeTime, paymoney: nextCommon3, id: new Date().getTime(), type: 2 }
+        let { chargeTime } = lastItem
+        chargeTime = Number.parseFloat(chargeTime)
+        const nextChargeTime = chargeTime + 60
+        const name = Number.parseFloat((nextChargeTime / 60).toFixed(1))
+        const nextName = `${name}小时`
+        return { sonname: nextName, chargeTime: nextChargeTime, id: new Date().getTime(), type: 2 }
     })
 }
 
@@ -148,6 +165,7 @@ const addChildTempHadler = ({
             if (code === 200) {
                 gather.push({ ...data, id })
                 copyGather.push({ ...data, id })
+                Toast('子模板添加成功')
             } else {
                 Toast(message)
             }
@@ -166,7 +184,7 @@ const addChildTempHadler = ({
  * @param {*} tempDataRef 主模板ref
  * @returns Function 添加主模板函数
  */
-export const addChildTemp = (tempDataRef, copyTempDataRef) => ({ from }) => addChildTempHadler({ tempDataRef, copyTempDataRef, from, async: async(tempDataRef) })
+export const addChildTemp = (tempDataRef, copyTempDataRef, type) => ({ from }) => addChildTempHadler({ tempDataRef, copyTempDataRef, from, async: type.value === 1 })
 /**
  * createAddChildTemp
  * @param {*} from 新增那个子模板 parentid 主模板id
@@ -175,6 +193,7 @@ export const addChildTemp = (tempDataRef, copyTempDataRef) => ({ from }) => addC
 
 // 删除子模板
 export function handRemoveChildTem ({ tempDataRef, copyTempDataRef, deleteid, from, async }) {
+    const tempid = tempDataRef.value.id // 主模板id
     const copyGather = copyTempDataRef.value[from]
     const gather = tempDataRef.value[from]
     const index = gather.findIndex(item => item.id === deleteid)
@@ -200,11 +219,12 @@ export function handRemoveChildTem ({ tempDataRef, copyTempDataRef, deleteid, fr
     })
     .then(() => {
         if (async) {
-            deleteSonTemp({ id: deleteid, ...params })
+            deleteSonTemp({ tempid, id: deleteid, ...params })
             .then(({ code, message }) => {
                 if (code === 200) {
                     gather.splice(index, 1)
                     copyGather.splice(index, 1)
+                    Toast('子模板删除成功')
                 } else {
                     Toast(message)
                 }
@@ -220,7 +240,7 @@ export function handRemoveChildTem ({ tempDataRef, copyTempDataRef, deleteid, fr
 }
 
 // 添加子模板
-export const deleteChildTemp = (tempDataRef, copyTempDataRef) => ({ from, id }) => handRemoveChildTem({ tempDataRef, copyTempDataRef, deleteid: id, from, async: async(tempDataRef) })
+export const deleteChildTemp = (tempDataRef, copyTempDataRef, type) => ({ from, id }) => handRemoveChildTem({ tempDataRef, copyTempDataRef, deleteid: id, from, async: type.value === 1 })
 
 // 创建充电信息 / 充电说明
 export const createChargeInfo = (tempDataRef) => {
@@ -305,11 +325,45 @@ export const useChargeType = (tempDataRef) => {
 }
 
 // 保存编辑的主模板
-const useEditTemp = (tempDataRef) => {
+const useEditTemp = (tempDataRef, copyTempDataRef) => {
     return () => {
-        amendTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 4) })
+        amendTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 2) })
         .then(res => {
-            console.log(res)
+            if (res.code === 200) {
+                Dialog.alert({
+                    title: '提示',
+                    message: '保存成功'
+                })
+                .then(() => {
+                    copyTempDataRef.value = JSON.parse(JSON.stringify(tempDataRef.value))
+                })
+            } else {
+                Dialog.alert({
+                    title: '提示',
+                    message: res.message
+                })
+            }
+        })
+        .catch(() => {
+            Toast.fail('异常错误')
+        })
+    }
+}
+
+// 新增主模板
+const useAddTemp = (tempDataRef) => {
+    return (router) => {
+        insertTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 4) })
+        .then(res => {
+            Dialog.alert({
+                title: '提示',
+                message: res.code === 200 ? '添加成功' : res.message
+            })
+            .then(() => {
+                if (res.code === 200) {
+                    router && router.replace({ path: `/template/v3/${res.tempid}` })
+                }
+            })
         })
         .catch(() => {
             Toast.fail('异常错误')
@@ -318,12 +372,17 @@ const useEditTemp = (tempDataRef) => {
 }
 
 // 返回上一步
-const useGoBack = (tempDataRef, copyTempDataRef) => {
+const useGoBack = (tempDataRef, copyTempDataRef, type) => {
     return (router) => {
+        if (type.value === 2) { // type为新增时，可以直接回退
+            return true
+        }
         const tempData = tempDataRef.value
         // 校验数据是否发生了改变
         const result = Object.entries(copyTempDataRef.value).every(([key, value]) => {
             if (['tempname', 'telephone', 'hintMessage', 'ifpermit', 'ifalipay', 'slotcardtime', 'morm', 'temptype', 'ifmonth', 'defaultstype', 'ifwalletpay', 'brand', 'elecnorm'].includes(key)) {
+                value = value === null ? '' : value
+                tempData[key] = tempData[key] === null ? '' : tempData[key]
                 return value.toString() === tempData[key].toString()
             } else if (key === 'tempower') {
                 return (value || []).every(({ paymoney, startpower, stoppower }, index) => {
@@ -354,27 +413,84 @@ const useGoBack = (tempDataRef, copyTempDataRef) => {
     }
 }
 
+const useSortList = (tempDataRef) => {
+    return ({ from, list }) => {
+        console.log(from, list)
+        const tempData = tempDataRef.value
+        tempData[from] = list
+    }
+}
+
+export const createNavList = ({
+    typeRef,
+    goBack,
+    addTemp,
+    editTemp,
+    router,
+    code,
+    tempid,
+    isSystemTem
+}) => {
+    const navList = ref([
+        { text: '返回', icon: 'share-o', onClick: () => goBack(router) }
+    ])
+    watch([() => isSystemTem.value, () => typeRef.value], ([flag, type]) => {
+        console.log(flag, type)
+       if (type === 1) {
+           if (flag) {
+                navList.value = [
+                    { text: '返回', icon: 'share-o', onClick: () => goBack(router) },
+                    { text: '预览', icon: 'eye-o', onClick: () => router.push({ path: '/preview/v3', query: { code, tempid } }) }
+                ]
+           } else {
+                navList.value = [
+                    { text: '返回', icon: 'share-o', onClick: () => goBack(router) },
+                    { text: '预览', icon: 'eye-o', onClick: () => router.push({ path: '/preview/v3', query: { code, tempid } }) },
+                    { text: '保存', icon: 'pending-payment', onClick: editTemp, type: 'info' }
+                ]
+           }
+        } else {
+            navList.value = [
+                { text: '返回', icon: 'share-o', onClick: () => goBack(router) },
+                { text: '预览', icon: 'eye-o', onClick: () => router.push({ path: '/preview/v3', query: { code, tempid } }) },
+                { text: '新增', icon: 'pending-payment', onClick: () => addTemp(router), type: 'info' }
+            ]
+        }
+    }, { immediate: true })
+    return navList
+}
+
 export const useInitTemp = (tempid, version) => {
     // 获取模板信息，通过主模板id
     const {
         tempData: tempDataRef,
-        copyTempData: copyTempDataRef
+        copyTempData: copyTempDataRef,
+        isSystemTem,
+        type
     } = getTempInitData(tempid, version)
-    const addChild = addChildTemp(tempDataRef, copyTempDataRef)
-    const deleteChild = deleteChildTemp(tempDataRef, copyTempDataRef)
+    const addChild = addChildTemp(tempDataRef, copyTempDataRef, type)
+    const deleteChild = deleteChildTemp(tempDataRef, copyTempDataRef, type)
     useSwitchForTemp(tempDataRef)
     const forbidPermitOrStype = createChargeInfo(tempDataRef)
     // 获取编辑主模板函数
-    const editTemp = useEditTemp(tempDataRef)
+    const editTemp = useEditTemp(tempDataRef, copyTempDataRef)
+    // 获取新增主模板函数
+    const addTemp = useAddTemp(tempDataRef)
     // 返回上一步函数
-    const goBack = useGoBack(tempDataRef, copyTempDataRef)
+    const goBack = useGoBack(tempDataRef, copyTempDataRef, type)
+    // 排序子模板
+    const sortList = useSortList(tempDataRef)
     return {
         tempDataRef, // 主模板数据
+        isSystemTem, // 是否是系统模板
+        type, // 1 编辑 2 新增
         addChild, // 添加子模板
         deleteChild, // 删除子模板
         forbidPermitOrStype, // 是否禁止退费和默认金额充电点击
         editTemp, // 编辑主模板
-        goBack // 返回上一步
+        addTemp, // 添加主模板
+        goBack, // 返回上一步
+        sortList
     }
 }
 

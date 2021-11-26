@@ -1,24 +1,31 @@
 <template>
-  <div clas="register">
-    <van-contact-edit
-        is-edit
-        show-set-default
-        @save="onSave"
-        :contact-info="{ name: '123456', tel: '15093219054' }"
-    />
-    环境： {{ WECHAT_BROWSER_ENV }}
-    <!-- <button @click="download">下载</button> -->
+  <div class="register">
+    <hd-scroll @getScroll="getScroll">
+        <div>
+            <van-contact-edit
+                is-edit
+                show-set-default
+                @save="onSave"
+                :contact-info="{ name: '123456', tel: '15093219054' }"
+            />
+            环境： {{ WECHAT_BROWSER_ENV }}
+            <!-- <button @click="download">下载</button> -->
 
-    <div  v-for="(one, index) in list"  :key="index" style="padding: 15px;  display: inline-block;" :data-title="one.title">
-        <hd-qrcode :qrcode="one" />
-    </div>
-
+                <div  v-for="(one, index) in list"  :key="index" style="padding: 15px;  display: inline-block;" :data-title="one.title">
+                    <hd-qrcode :qrcode="one" />
+                </div>
+                <button @click="scrollTo">滚动到指定位置</button>
+                <div style="height: 10vh; background: pink;" v-for="item in num" :key="item">{{item}}</div>
+                <button @click="finishScroll">完成滚动</button>
+            </div>
+    </hd-scroll>
   </div>
 </template>
 
 <script>
 import ajax from '@/require/ajax'
 import HdQrcode from '@/components/hd-qrcode'
+import HdScroll from '@/components/hd-scroll/scroll'
 // const baseUrl = process.env.NODE_ENV === 'production' ? '' : '/api'
 const initData = `863488055282175  000193
 863488055281979  000194
@@ -64,7 +71,9 @@ export default {
     data () {
         return {
             WECHAT_BROWSER_ENV: window.HDWX.WECHAT_BROWSER_ENV,
-            list: []
+            list: [],
+            scroll: null,
+            num: 30
         }
     },
     methods: {
@@ -113,10 +122,26 @@ export default {
                     a.dispatchEvent(event)
                 }, (index + 1) * 1000)
             })
+        },
+        getScroll ({ scroll }) {
+            this.scroll = scroll
+            this.scroll.on('pullingUp', this.pullingUp)
+        },
+        pullingUp () {
+            console.log(1235555)
+        },
+        finishScroll () {
+            this.scroll && this.scroll.finishPullUp()
+        },
+        scrollTo () {
+            this.num = 60
+            this.scroll && this.scroll.refresh()
+            // this.scroll && this.scroll.scrollTo(1000, 0)
         }
     },
     components: {
-        HdQrcode
+        HdQrcode,
+        HdScroll
     },
     mounted () {
         // this.createdQrCode()
@@ -125,5 +150,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+.register {
+    height: 70vh;
+}
 </style>

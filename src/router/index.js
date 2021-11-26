@@ -140,7 +140,7 @@ const routes = [
   },
   {
     path: '/template/addv3/:version',
-    name: 'template-v3',
+    name: 'template-v3-add',
     component: () => import(/* webpackChunkName: "template-v3" */ '../views/template/v3Template/index.vue'),
     meta: {
       title: '新增v3收费模板'
@@ -148,10 +148,58 @@ const routes = [
   },
   {
     path: '/template/v3/:id',
-    name: 'template-v3',
+    name: 'template-v3-edit',
     component: () => import(/* webpackChunkName: "template-v3" */ '../views/template/v3Template/index.vue'),
     meta: {
       title: 'v3收费模板'
+    }
+  },
+  {
+    path: '/template/addv2/:version',
+    name: 'template-v2-add',
+    component: () => import(/* webpackChunkName: "template-v2" */ '../views/template/v2Template/index.vue'),
+    meta: {
+      title: '新增v2收费模板'
+    }
+  },
+  {
+    path: '/template/v2/:id',
+    name: 'template-v2-edit',
+    component: () => import(/* webpackChunkName: "template-v2" */ '../views/template/v2Template/index.vue'),
+    meta: {
+      title: 'v2收费模板'
+    }
+  },
+  {
+    path: '/template/car/:id',
+    name: 'template-car-edit',
+    component: () => import(/* webpackChunkName: "template-car" */ '../views/template/carTemplate/index.vue'),
+    meta: {
+      title: '汽车桩收费模板'
+    }
+  },
+  {
+    path: '/template/addv2-car/:version',
+    name: 'template-car-add',
+    component: () => import(/* webpackChunkName: "template-car" */ '../views/template/carTemplate/index.vue'),
+    meta: {
+      title: '新增汽车桩收费模板'
+    }
+  },
+  {
+    path: '/template/addpulse/:version',
+    name: 'template-pulse-add',
+    component: () => import(/* webpackChunkName: "template-pulse" */ '../views/template/pulseTemplate/index.vue'),
+    meta: {
+      title: '新增脉冲收费模板'
+    }
+  },
+  {
+    path: '/template/pulse/:id',
+    name: 'template-pulse-edit',
+    component: () => import(/* webpackChunkName: "template-pulse" */ '../views/template/pulseTemplate/index.vue'),
+    meta: {
+      title: '脉冲收费模板'
     }
   },
   {
@@ -362,6 +410,30 @@ const routes = [
     meta: {
       title: '缴费管理'
     }
+  },
+  {
+    path: '/preview/v3',
+    name: 'preview-v3',
+    component: () => import(/* webpackChunkName: "preview-v3" */ '../views/template/preview/v3/index.vue'),
+    meta: {
+      title: '预览模板'
+    }
+  },
+  {
+    path: '/preview/v2',
+    name: 'preview-v2',
+    component: () => import(/* webpackChunkName: "preview-v2" */ '../views/template/preview/v2/index.vue'),
+    meta: {
+      title: '预览模板'
+    }
+  },
+  {
+    path: '/preview/pulse',
+    name: 'preview-pulse',
+    component: () => import(/* webpackChunkName: "preview-pulse" */ '../views/template/preview/pulse/index.vue'),
+    meta: {
+      title: '预览模板'
+    }
   }
 ]
 // process.env.BASE_URL
@@ -369,7 +441,7 @@ const router = new VueRouter({
   mode: 'history',
   base: '/merwx',
   routes,
-  scrollBehavior (to, from) {
+  scrollBehavior (to, from, ...args) {
     return { x: 0, y: 0 }
   }
 })

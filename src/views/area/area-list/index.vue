@@ -84,7 +84,8 @@
     </div>
 </template>
 <script>
-import hdScroll from '@/components/hd-scroll'
+// import hdScroll from '@/components/hd-scroll'
+import hdScroll from '@/components/hd-scroll/scroll'
 import areaItem from '@/components/area/area-item'
 import addArea from '@/components/area/add-area'
 import editArea from '@/components/area/edit-area'
@@ -134,11 +135,11 @@ export default {
             handler (value) {
                 if (this.source[0].scroll) {
                     this.source[0].scroll.refresh()
-                    this.source[0].scroll.scrollTo(0, this.source[0].leaveScrollY, 0, undefined, {})
+                    this.source[0].scroll.scrollTo(this.source[0].leaveScrollY, 0)
                 }
                 if (this.source[1].scroll) {
                     this.source[1].scroll.refresh()
-                    this.source[1].scroll.scrollTo(0, this.source[1].leaveScrollY, 0, undefined, {})
+                    this.source[1].scroll.scrollTo(this.source[1].leaveScrollY, 0)
                 }
             }
         }
@@ -146,10 +147,10 @@ export default {
     // 在页面跳出之前存储当前滚动实例滚动的位置
     beforeRouteLeave (to, from, next) {
         if (this.source[0].scroll) {
-            this.source[0].leaveScrollY = this.source[0].scroll.y
+            this.source[0].leaveScrollY = this.source[0].scroll.state.scrollTop
         }
         if (this.source[1].scroll) {
-            this.source[1].leaveScrollY = this.source[1].scroll.y
+            this.source[1].leaveScrollY = this.source[1].scroll.state.scrollTop
         }
         next()
     },

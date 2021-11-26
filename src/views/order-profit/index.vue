@@ -149,7 +149,8 @@
 import { fmtDate, dateRange } from '@/utils/util'
 import hdSelectBox from '@/components/hd-select-box'
 import hdSelectBoxItem from '@/components/hd-select-box-item'
-import hdScroll from '@/components/hd-scroll'
+// import hdScroll from '@/components/hd-scroll'
+import hdScroll from '@/components/hd-scroll/scroll'
 import hdBottom from '@/components/hd-bottom'
 import { inquireTraOrderData } from '@/require/order-profit'
 const LIMIT = 10
@@ -158,6 +159,7 @@ export default {
         const range = dateRange(new Date(), 5, 'YYYY/MM/DD')
         return {
             scroll: null,
+            leaveScrollY: 0,
             currentPage: 1,
             ordernum: '',
             code: '', // 搜索设备号
@@ -198,6 +200,22 @@ export default {
             ...this.searchTime
         }
         this.gatOrder(this.searchForm, true)
+    },
+    beforeRouteLeave (to, from, next) {
+        if (this.scroll) {
+            this.leaveScrollY = this.scroll.state.scrollTop
+        }
+        next()
+    },
+    watch: {
+        $route: {
+            handler () {
+                if (this.scroll) {
+                    this.scroll.scrollTo(this.leaveScrollY, 0)
+                    this.scroll.refresh()
+                }
+            }
+        }
     },
     components: {
         hdSelectBox,

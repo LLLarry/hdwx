@@ -58,7 +58,8 @@
     </div>
 </template>
 <script>
-import hdScroll from '@/components/hd-scroll'
+// import hdScroll from '@/components/hd-scroll'
+import hdScroll from '@/components/hd-scroll/scroll'
 import memberListCard from '@/components/member/member-list-card'
 import { getMemberInfo, changeMemberAreaInfo } from '@/require/member'
 import { getType } from '@/utils/util'
@@ -87,6 +88,7 @@ export default {
             // dropMenuStatus: 2, // 下拉菜单状态， 1 展开 2关闭
             status: 1, //  0 正在加载中 1 空闲状态 2 更多数据
             scroll: null, // 滚动实例
+            leaveScrollY: 0,
             list: [], // 列表数据
             currentPage: 1, // 当前页
             datasize: 0, // 在线卡数量
@@ -115,11 +117,19 @@ export default {
             handler (newRoute, oldRoute) {
                 if (oldRoute.name === 'member-list-manage') {
                     this.asyAjaxMemberCentre(true)
+                } else {
+                    this.scroll.scrollTo(this.scroll.leaveScrollY, 0)
                 }
                 // 页面回退时刷新滚动实例
                 this.scroll && this.scroll.refresh()
             }
         }
+    },
+    beforeRouteLeave (to, from, next) {
+        if (this.scroll) {
+            this.scroll.leaveScrollY = this.scroll.state.scrollTop
+        }
+        next()
     },
     methods: {
         // 点击搜索按钮

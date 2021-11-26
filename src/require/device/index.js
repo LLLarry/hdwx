@@ -569,3 +569,18 @@ export const queryAllAddr = (data, loadText) => {
         loadText
     })
 }
+
+/*
+* 查询同类型的设备列表
+* @param {*} data { code 是 设备号 }
+* @param {*} loadText
+* @returns
+*/
+export const inquireTheSameDeviceData = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireTheSameDeviceData',
+        method: 'post',
+        data,
+        loadText
+    })
+}

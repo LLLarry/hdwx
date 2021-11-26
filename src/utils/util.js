@@ -180,6 +180,31 @@ export const getDeviceVersionName = (hv) => {
     return map[hv]
 }
 
+/**
+ * 通过硬件版本号获取硬件版本
+ * @param {*} params 硬件版本号 / 类型名
+ * @returns String 类型名 / 硬件版本号list
+ */
+export const getVersion = (params) => {
+    const map = {
+        v2: ['00', '01', '02', '05', '06'], // v2版本
+        pulse: ['03'], // 脉冲版本
+        offline: ['04'], // 离线版本
+        'v2-car': ['07'], // v2汽车桩版本
+        v3: ['08', '09', '10'], // v3版本
+        'v3-addr': ['11'] // v3一拖二版本
+    }
+    if (/^\d{2}$/.test(params)) {
+        for (const [key, list] of Object.entries(map)) {
+            if (list.includes(params)) {
+                return key
+            }
+        }
+    } else {
+        return map[params]
+    }
+}
+
 export const noOpen = () => {
     Dialog.alert({
         title: '提示',

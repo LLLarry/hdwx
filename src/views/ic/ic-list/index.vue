@@ -58,7 +58,8 @@
     </div>
 </template>
 <script>
-import hdScroll from '@/components/hd-scroll'
+// import hdScroll from '@/components/hd-scroll'
+import hdScroll from '@/components/hd-scroll/scroll'
 import IcListCard from '@/components/ic-list/ic-list-card'
 import BindIcCard from '@/components/ic-list/bind-ic-card'
 import { inquireOnlineData, changeOnlineCardStatus } from '@/require/ic'
@@ -92,6 +93,7 @@ export default {
             dropMenuStatus: 2, // 下拉菜单状态， 1 展开 2关闭
             status: 1, //  0 正在加载中 1 空闲状态 2 更多数据
             scroll: null, // 滚动实例
+            leaveScrollY: 0,
             list: [], // 列表数据
             currentPage: 1, // 当前页
             datasize: 0, // 在线卡数量
@@ -122,6 +124,22 @@ export default {
                 return `更改${cardID}卡状态`
             }
             return ''
+        }
+    },
+    beforeRouteLeave (to, from, next) {
+        if (this.scroll) {
+            this.leaveScrollY = this.scroll.state.scrollTop
+        }
+        next()
+    },
+    watch: {
+        $route: {
+            handler () {
+                if (this.scroll) {
+                    this.scroll.scrollTo(this.leaveScrollY, 0)
+                    this.scroll.refresh()
+                }
+            }
         }
     },
     methods: {
