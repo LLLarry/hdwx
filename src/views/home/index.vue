@@ -88,7 +88,7 @@
 <script>
     // import { Notify } from 'vant'
     import { getDealHomePageData, bindingDevice } from '@/require/home'
-    import { fmtMoney, noOpen } from '@/utils/util'
+    import { fmtMoney } from '@/utils/util'
     import { scanQRCode } from '@/utils/wechat-util'
     import parseURL from '@/utils/parse-url'
     import { mapState, mapMutations } from 'vuex'
@@ -116,7 +116,7 @@
                     { title: '设备绑定' },
                     { title: '历史收益', url: '/history/profit' },
                     { title: '订单统计', url: '/order/profit' },
-                    { title: '充值管理' },
+                    { title: '充值管理', url: '/chargemanage' },
                     { title: '缴费管理', url: '/paymanage' }
                 ],
                 todayMoney: 0, // 今日收益
@@ -223,7 +223,7 @@
                         { title: '设备绑定' },
                         { title: '历史收益', url: '/history/profit' },
                         { title: '订单统计', url: '/order/profit' },
-                        { title: '充值管理' },
+                        { title: '充值管理', url: '/chargemanage' },
                         { title: '缴费管理', url: '/paymanage' }
                     ]
                     this.updateTime = result.renewalTime
@@ -251,7 +251,6 @@
                 this.getInitData({ type: 1 }, false)
             },
             handleClick ({ title }) {
-                if (title === '充值管理') return noOpen()
                 if (title !== '设备绑定') return false
                 // 调取扫一扫，获取扫码信息
                 scanQRCode()

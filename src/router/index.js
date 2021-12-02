@@ -195,11 +195,27 @@ const routes = [
     }
   },
   {
+    path: '/template/addoffline/:version',
+    name: 'template-offline-add',
+    component: () => import(/* webpackChunkName: "template-offline" */ '../views/template/offlineTemplate/index.vue'),
+    meta: {
+      title: '新增离线充值模板'
+    }
+  },
+  {
     path: '/template/pulse/:id',
     name: 'template-pulse-edit',
     component: () => import(/* webpackChunkName: "template-pulse" */ '../views/template/pulseTemplate/index.vue'),
     meta: {
       title: '脉冲收费模板'
+    }
+  },
+  {
+    path: '/template/offline/:id',
+    name: 'template-offline-edit',
+    component: () => import(/* webpackChunkName: "template-offline" */ '../views/template/offlineTemplate/index.vue'),
+    meta: {
+      title: '离线充值模板'
     }
   },
   {
@@ -433,6 +449,54 @@ const routes = [
     component: () => import(/* webpackChunkName: "preview-pulse" */ '../views/template/preview/pulse/index.vue'),
     meta: {
       title: '预览模板'
+    }
+  },
+  {
+    path: '/preview/offline',
+    name: 'preview-offline',
+    component: () => import(/* webpackChunkName: "preview-offline" */ '../views/template/preview/offline/index.vue'),
+    meta: {
+      title: '离线充值预览模板'
+    }
+  },
+  {
+    path: '/chargemanage',
+    name: 'charge-manage',
+    component: () => import(/* webpackChunkName: "charge-manage" */ '../views/charge-manage/index.vue'),
+    meta: {
+      title: '充值管理'
+    }
+  },
+  {
+    path: '/chargemanage/list',
+    name: 'charge-manage-list',
+    component: () => import(/* webpackChunkName: "wallet-online-list" */ '../views/charge-manage/wallet-online-list/index.vue'),
+    meta: {
+      title: '充值模板列表'
+    }
+  },
+  {
+    path: '/chargemanage/charge/:id',
+    name: 'charge-manage-charge',
+    component: () => import(/* webpackChunkName: "charge-manage-charge" */ '../views/charge-manage/chargeTemplate/index.vue'),
+    meta: {
+      title: '充值模板'
+    }
+  },
+  {
+    path: '/chargemanage/addcharge',
+    name: 'charge-manage-charge',
+    component: () => import(/* webpackChunkName: "charge-manage-charge" */ '../views/charge-manage/chargeTemplate/index.vue'),
+    meta: {
+      title: '新增充值模板'
+    }
+  },
+  {
+    path: '/chargemanage/month',
+    name: 'charge-manage-month',
+    component: () => import(/* webpackChunkName: "charge-manage-month" */ '../views/charge-manage/monthTemplate/index.vue'),
+    meta: {
+      title: '包月模板'
     }
   }
 ]

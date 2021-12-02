@@ -373,3 +373,108 @@ export const insertSonTempIncoins = (data, loadText) => {
         loadText
     })
 }
+
+/*
+* 添加离线充值机模板 offline
+* @param {*} data {  paratem: JSON数据 }
+* @param {*} loadText
+* @returns
+*/
+export const insertTempTopup = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/insertTempTopup',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 修改离线充值机模板 offline
+* @param {*} data {  paratem: JSON数据 }
+* @param {*} loadText
+* @returns
+*/
+export const amendTempTopup = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/amendTempTopup',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 添加离线充值机子模板 offline
+* @param {*} data {  sonname: 子模板名， parentid： 父类模板id, paymoney: 付款金额, toAccountMoney: 到账金额 }
+* @param {*} loadText
+* @returns
+*/
+export const insertSonTempTopup = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/insertSonTempTopup',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 点击管理模板获取充值模板（根据模板id获取充值模板）
+* @param {*} data {  tempid 模板id（tempid必须正确） }
+* @param {*} loadText
+* @returns
+*/
+export const inquireTemplateTopUp = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireTemplateTopUp',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 点击获取包月使用模板信息
+* @param {*} data {  tempid 模板id（tempid必须正确） }
+* @param {*} loadText
+* @returns
+*/
+export const inquireMerTemplateMonth = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireMerTemplateMonth',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 添加包月子模板
+* @param {*} data {  tempid 模板id（tempid必须正确） }
+* @param {*} loadText
+* @returns
+*/
+export const insertSonTempMonth = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/insertSonTempMonth',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/*
+* 修改包月模板
+* @param {*} data {  tempid 模板id（tempid必须正确） }
+* @param {*} loadText
+* @returns
+*/
+export const amendTempMonth = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/amendTempMonth',
+        method: 'post',
+        data,
+        loadText
+    })
+}

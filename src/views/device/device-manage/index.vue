@@ -9,7 +9,13 @@
       </div>
     </div>
     <div class="main">
-      <van-grid :column-num="3">
+      <div
+        class="d-flex justify-content-center align-items-center padding-y-4"
+        v-if="loading"
+      >
+        <van-loading color="#1989fa" size="1.5rem" />
+      </div>
+      <van-grid :column-num="3" v-else>
         <van-grid-item
           v-for="item in list"
           :key="item.title"
@@ -72,7 +78,7 @@ import hdOverlay from '@/components/hd-overlay'
 import hdQrcode from '@/components/hd-qrcode'
 import { mapState } from 'vuex'
 import { inquireDeviceMmanageInfo, merTranspositionImei, removeClient } from '@/require/device'
-import { getInfoByHdVersion, noOpen } from '@/utils/util'
+import { getInfoByHdVersion } from '@/utils/util'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
 const { PROXY_BASE_URL } = window.HDWX
@@ -92,6 +98,7 @@ export default {
         { title: '信道操作', icon: require('../../../assets/images/信道.png') }
         // 报警系统 08时显示
       ],
+      loading: false,
       changeModel: false, // 更换模块
       disconnect: false,
       deviceQRcode: false, // 设备二维码弹框
@@ -133,13 +140,18 @@ export default {
   methods: {
     async init () {
       try {
+        this.loading = true
         const { code, message, ...result } = await inquireDeviceMmanageInfo({ code: this.code })
         if (code === 200) {
           this.result = result
           if (result.deviceType === 2) {
             this.list = this.list.filter(item => !['设备二维码', '端口二维码', '系统参数', '信道操作'].includes(item.title))
           } else if (['00', '01', '02', '03', '04', '05', '06', '07'].includes(result.deviceversion)) {
-            this.list = this.list.filter(item => !['报警系统', '信道操作'].includes(item.title))
+            if (['04'].includes(result.deviceversion)) {
+              this.list = this.list.filter(item => !['报警系统', '信道操作', '端口二维码'].includes(item.title))
+            } else {
+              this.list = this.list.filter(item => !['报警系统', '信道操作'].includes(item.title))
+            }
           } else if (['08', '09', '10'].includes(result.deviceversion)) {
             this.list = this.list.filter(item => !['信道操作'].includes(item.title))
           }
@@ -148,6 +160,8 @@ export default {
         }
       } catch (error) {
         this.$toast('异常错误')
+      } finally {
+        this.loading = false
       }
     },
     handleClick (title) {
@@ -157,14 +171,6 @@ export default {
           this.$router.push({ path: '/device/portqrcode/' + this.code })
         break
         case '收费模板':
-          // this.$router.push({ path: '/device/templatelist/' + this.code })
-          if (HDWX.ENV === 'production') {
-            if (['08', '09', '10', '11'].includes(this.result.deviceversion)) {
-              return this.$router.push({ path: '/device/templatelist/' + this.code })
-            } else {
-               return noOpen()
-            }
-          }
           this.$router.push({ path: '/device/templatelist/' + this.code })
         break
         case '系统参数':

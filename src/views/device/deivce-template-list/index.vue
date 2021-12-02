@@ -248,7 +248,8 @@ export default {
                     break
                 case 'pulse' : path = `/template/pulse/${id}`
                     break // 脉冲
-                // case 'offline' : break; // 离线
+                case 'offline' : path = `/template/offline/${id}`
+                    break // 离线
                 case 'v3' : path = `/template/v3/${id}`
                     break
                 case 'v3-addr': path = `/template/v3/${id}`
@@ -264,9 +265,9 @@ export default {
                 case 'v2-car' : path = '/preview/v2'
                     break
                 case 'pulse' : path = '/preview/pulse'
-                    break
-                // case 'pulse' : break; // 脉冲
-                // case 'offline' : break; // 离线
+                    break // 脉冲
+                case 'offline' : path = '/preview/offline'
+                    break // 离线
                 case 'v3' : path = '/preview/v3'
                     break
                 case 'v3-addr': path = '/preview/v3'
