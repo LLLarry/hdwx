@@ -1,156 +1,165 @@
 <template>
   <div class="register">
-    <hd-scroll @getScroll="getScroll">
-        <div>
-            <van-contact-edit
-                is-edit
-                show-set-default
-                @save="onSave"
-                :contact-info="{ name: '123456', tel: '15093219054' }"
-            />
-            环境： {{ WECHAT_BROWSER_ENV }}
-            <!-- <button @click="download">下载</button> -->
-
-                <div  v-for="(one, index) in list"  :key="index" style="padding: 15px;  display: inline-block;" :data-title="one.title">
-                    <hd-qrcode :qrcode="one" />
-                </div>
-                <button @click="scrollTo">滚动到指定位置</button>
-                <div style="height: 10vh; background: pink;" v-for="item in num" :key="item">{{item}}</div>
-                <button @click="finishScroll">完成滚动</button>
+      <div class="bg-box">
+          <div class="race race-1" />
+            <div class="race race-2" />
+            <div class="race race-3" />
+      </div>
+      <div class="register-box">
+          <div class="content padding-4 border-box">
+            <div class="logo-box d-flex justify-content-center align-items-center margin-top-4">
+                <img src="../../assets/images/logo.png" alt="logo">
+                <h1 class=""></h1>
             </div>
-    </hd-scroll>
+
+            <form action="">
+                <div class="form-item padding-x-3 border-box rounded-md d-flex align-items-center margin-bottom-3">
+                    <div class="d-flex align-items-center overflow-hidden form-item-box" style="width: 6rem">
+                        <i class="iconfont icon-user text-999 text-left"></i>
+                        <input placeholder="请输入注册手机号" v-model="mobile" />
+                    </div>
+                </div>
+
+                <div class="form-item padding-x-3 border-box rounded-md d-flex align-items-center margin-bottom-3">
+                    <div class="d-flex align-items-center overflow-hidden form-item-box" style="width: 6rem">
+                        <i class="iconfont icon-anjian text-999 text-left"></i>
+                        <input placeholder="请输入邀请码" v-model="invitecode" />
+                    </div>
+                </div>
+
+                <div class="form-item padding-x-3 border-box rounded-md d-flex align-items-center justify-content-between margin-bottom-3">
+                    <div class="d-flex align-items-center overflow-hidden form-item-box" style="width: 4rem">
+                        <i class="iconfont icon-mimasuo text-999 text-left"></i>
+                        <input placeholder="请输入验证码" v-model="captcha" />
+                    </div>
+                    <div class="text-success text-size-sm get-code flex-1 text-right" v-if="expireTime <= 0" @click="getCaptcha">获取验证码</div>
+                    <div class="text-success text-size-sm time flex-1 text-right" v-else>倒计时：{{expireTime}}s</div>
+                </div>
+
+                <div class="border-box rounded-md d-flex align-items-center padding-top-3">
+                    <van-button type="primary" block round @click.prevent="submit">注册</van-button>
+                </div>
+            </form>
+            <div class="text-p text-size-sm text-center margin-top-4">当前页面仅供商户注册，充电用户不需要注册</div>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
-import ajax from '@/require/ajax'
-import HdQrcode from '@/components/hd-qrcode'
-import HdScroll from '@/components/hd-scroll/scroll'
-// const baseUrl = process.env.NODE_ENV === 'production' ? '' : '/api'
-const initData = `863488055282175  000193
-863488055281979  000194
-863488055282076  000195
-863488055282084  000196
-863488055282167  000197
-863488055281995  000198
-863488055282035  000199
-863488055282068  000200
-863488055281987  000201
-863488055282126  000202
-863488055277399  000203
-863488055278264  000204
-863488055282134  000205
-863488055278272  000206
-863488055278306  000207
-863488055471034  000208
-863488055454451  000209
-863488055483765  000210
-863488055448495  000211
-863488055488756  000212
-863488055577764  000213
-863488055588456  000214
-863488055578028  000215
-863488055577723  000216
-863488055586310  000217
-863488055578630  000218
-863488055577806  000219
-863488055578077  000220
-863488055585890  000221
-863488055585882  000222
-861714057206959  000333
-861714057201919  000334
-861714057205076  000335
-861714057207908  000336
-861714057208013  000337
-861714057201844  000338
-861714057204962  000339
-861714057201885  000340
-861714057201927  000341
-861714057201950  000342`
+import helper from './helper'
 export default {
-    data () {
-        return {
-            WECHAT_BROWSER_ENV: window.HDWX.WECHAT_BROWSER_ENV,
-            list: [],
-            scroll: null,
-            num: 30
-        }
-    },
-    methods: {
-        onSave ({ tel, name }) {
-            // console.log(content)
-            ajax({
-                url: '/webenter/accountEnter',
-                method: 'post',
-                data: {
-                    phone: tel,
-                    password: name,
-                    isolate: 1
-                }
-            }).then(res => {
-                const flag = confirm(res.userInfo.message)
-                if (flag) {
-                    this.$router.replace({ path: '/' })
-                }
-            })
-        },
-        createdQrCode () {
-            const list = []
-            initData.split(/[\n\r]/).slice(30, 40).forEach((one, i) => {
-                const imei = one.split(/\s/)[0]
-                for (let index = 0; index < 10; index++) {
-                    list.push({
-                        title: `000${333 + i}-${index + 1}`,
-                        value: `http://cdxt.nisennet.com.cn/cdzserver/wx/charge?imei=${imei}&port=${index + 1}`, // 二维码路径
-                        background: '#FFFFFF', // 二维码背景色
-                        size: 220, // 二维码大小
-                        key: `000${303 + i}-${index + 1}` // 二维码唯一标识
-                    })
-                }
-            })
-            this.list = list
-        },
-        download () {
-            const imgs = document.getElementsByTagName('img')
-            console.log(imgs)
-            Array.from(imgs).forEach((img, index) => {
-                setTimeout(() => {
-                    const a = document.createElement('a')
-                    const event = new MouseEvent('click')
-                    a.download = img.parentElement.parentElement.parentElement.getAttribute('data-title') + '.png'
-                    a.href = img.src
-                    a.dispatchEvent(event)
-                }, (index + 1) * 1000)
-            })
-        },
-        getScroll ({ scroll }) {
-            this.scroll = scroll
-            this.scroll.on('pullingUp', this.pullingUp)
-        },
-        pullingUp () {
-            console.log(1235555)
-        },
-        finishScroll () {
-            this.scroll && this.scroll.finishPullUp()
-        },
-        scrollTo () {
-            this.num = 60
-            this.scroll && this.scroll.refresh()
-            // this.scroll && this.scroll.scrollTo(1000, 0)
-        }
-    },
-    components: {
-        HdQrcode,
-        HdScroll
-    },
-    mounted () {
-        // this.createdQrCode()
+    setup (props, context) {
+        console.log(context)
+        return helper(context.root._router, context.root.$store)
     }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .register {
-    height: 70vh;
+    position: relative;
+    .register-box {
+        z-index: 1;
+        padding: 10vh 0;
+        .content {
+            width: 90vw;
+            margin: 0 5vw;
+            height: 80vh;
+            min-height: 500px;
+            background: #fff;
+            border-radius: 15px;
+            position: relative;
+            z-index: 2;
+            .logo-box {
+                padding-top: 20px;
+                img {
+                    width: 60px;
+                    height: 60px;
+                }
+                h1 {
+                    /* font-size: 30px; */
+                    /* color: #239E39; */
+                    width: 200px;
+                    height: 40px;
+                    background-image: url(../../assets/images/zzcdpt.png);
+                    background-size: 100% 100%;
+                    background-repeat: no-repeat;
+                }
+            }
+            form {
+                margin-top: 40px;
+                .form-item {
+                    background: #f5f5f5;
+                    height: 45px;
+                    i {
+                        width: 30px;
+                    }
+                    input {
+                        height: 36px;
+                        border: none;
+                        width: calc(100% - 30px);
+                    }
+                    .get-code {
+                        text-decoration: underline;
+                        white-space: nowrap;
+                        &:active {
+                            color: #069048;
+                        }
+                    }
+                    .time {
+                        white-space: nowrap;
+                        &:active {
+                            color: #069048;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .bg-box {
+        position: absolute;
+        height: 100%;
+        width: 100vw;
+        background: #25395d;
+        overflow: hidden;
+        z-index: -1;
+        .race {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            overflow: hidden;
+            /* background-image: linear-gradient(to bottom, #51D2EF, #67B9F5); */
+            background-image: linear-gradient(45deg, #4B94B7, #16294A);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, .6);
+        }
+        .race-1 {
+            width: 180px;
+            height: 180px;
+            border-radius: 180px;
+            position: absolute;
+            right: -55px;
+            top: -50px;
+            z-index: 1;
+        }
+        .race-2 {
+            width: 80px;
+            height: 80px;
+            border-radius: 80px;
+            position: absolute;
+            right: -30px;
+            top: 50px;
+            z-index: 1;
+        }
+        .race-3 {
+            width: 160px;
+            height: 160px;
+            border-radius: 160px;
+            position: absolute;
+            left: -55px;
+            bottom: -50px;
+            z-index: 1;
+        }
+    }
 }
 </style>

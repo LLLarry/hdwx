@@ -22,7 +22,7 @@ export default {
   },
   mounted () {
     new Promise((resolve, reject) => {
-      reject(new Error('失败156'))
+      reject(new Error('失败'))
     }).then(() => {}, reason => {
       console.log(reason)
     })

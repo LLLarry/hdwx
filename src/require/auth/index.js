@@ -33,3 +33,31 @@ export const getAjaxEquList = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 获取验证码
+ * @param
+ * @returns
+ */
+export const getCaptchaData = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/getCaptchaData',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/**
+ * 商户注册
+ * @param
+ * @returns
+ */
+ export const registerDealerAaccount = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/registerDealerAaccount',
+        method: 'post',
+        data,
+        loadText
+    })
+}
