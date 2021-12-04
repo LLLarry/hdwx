@@ -138,3 +138,17 @@ export const skipPersonCenter = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 商户收益明细详情
+ * @param {*} data {
+ * @returns
+ */
+ export const inquireMerEarnDetailInfo = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireMerEarnDetailInfo',
+        method: 'post',
+        data,
+        loadText
+    })
+}

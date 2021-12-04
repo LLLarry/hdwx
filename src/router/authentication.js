@@ -5,7 +5,7 @@ console.log('WECHAT_BROWSER_ENV', WECHAT_BROWSER_ENV)
 export default (router) => {
     router.beforeEach(async (to, from, next) => {
         store.commit('clearToken')
-        if (['/auth', '/register'].includes(to.path)) {
+        if (['/auth', '/register', '/login'].includes(to.path)) {
             next()
         } else if (getType(store.state.user.id) === 'undefined') {
             // if (WECHAT_BROWSER_ENV && ENV !== 'development') {

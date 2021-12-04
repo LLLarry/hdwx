@@ -59,6 +59,14 @@ const routes = [
     }
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/register/login.vue'),
+    meta: {
+      title: '商户登录'
+    }
+  },
+  {
     path: '/device/manage/:code',
     name: 'device-manage',
     component: () => import(/* webpackChunkName: "device-manage" */ '../views/device/device-manage/index.vue'),
@@ -356,7 +364,7 @@ const routes = [
     }
   },
   {
-    path: '/income/record/:id',
+    path: '/income/record/:ordernum',
     name: 'income-details-record',
     component: () => import(/* webpackChunkName: "income-details-record" */ '../views/mine/income-details-record/index.vue'),
     meta: {

@@ -13,7 +13,7 @@
                 <van-search
                     class="flex-1"
                     v-model="ordernum"
-                    placeholder="请输入提现单号"
+                    placeholder="请输入收益单号"
                 />
                 <van-button type="default" class="search-btn margin-left-2 text-success" @click="searchOrder">搜索</van-button>
             </div>
@@ -56,7 +56,7 @@
                         class="record-card position-relativetext-size-md text-666 shadow margin-x-2 rounded-md overflow-hidden margin-bottom-3 bg-white"
                         v-for="item in list"
                         :key="item.id"
-                        to=""
+                        :to="`/income/record/${item.ordernum}?id=${item.id}`"
                         tag="div"
                     >
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
@@ -115,7 +115,7 @@
 import { fmtDate, dateRange } from '@/utils/util'
 import hdCard from '@/components/hd-card'
 import hdCardItem from '@/components/hd-card-item'
-import hdScroll from '@/components/hd-scroll'
+import hdScroll from '@/components/hd-scroll/scroll'
 import hdBottom from '@/components/hd-bottom'
 import { inquireMerEarningsDetail } from '@/require/mine'
 const LIMIT = 10
@@ -205,7 +205,7 @@ export default {
                     if (init) {
                         // 初始化加载的时候刷新滚动对象，并滚动到起始位置
                         this.scroll.refresh()
-                        this.scroll.scrollTo(0, 0, 0, undefined, {})
+                        this.scroll.scrollTo(0, 0)
                         this.scroll.finishPullUp()
                     } else {
                         // 非初始化加载完成的时候完成上啦加载操作
