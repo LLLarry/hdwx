@@ -1,6 +1,5 @@
 <template>
   <div class="income-dr bg-gray">
-      <hd-line height=".4rem" />
       <!-- <div class="margin-x-3 rounded-md overflow-hidden">
           <section class="bg-success text-white padding-top-3 padding-bottom-2">
               <div class="text-center margin-bottom-4 text-size-default">充电收益</div>
@@ -40,16 +39,38 @@
               9631
           </template> -->
       </hd-order>
+      <hd-nav :list="[{}]" v-if="[0, 1, 2].includes(resultdata.payResult)">
+          <template>
+              <van-button
+                type="primary"
+                size="small"
+                class="w-50"
+                v-if="[0, 1].includes(resultdata.payResult)"
+                :disabled="resultdata.payResult === 1"
+                @click="refund"
+            >全额退款</van-button>
+              <van-button
+                type="warning"
+                size="small"
+                class="w-50"
+                v-else-if="resultdata === 2"
+                @click="reback"
+            >撤回</van-button>
+          </template>
+      </hd-nav>
   </div>
 </template>
 
 <script>
 import HdOrder from '@/components/hd-order'
+import HdNav from '@/components/hd-nav'
 import { inquireMerEarnDetailInfo } from '@/require/mine'
 import { fmtDate, fmtMoney } from '@/utils/util'
+import { refundUtil, recall } from '@/utils/refund-util'
 export default {
     components: {
-        HdOrder
+        HdOrder,
+        HdNav
     },
     data () {
         return {
@@ -178,6 +199,43 @@ export default {
             } catch (e) {
                 this.toast('异常错误')
             }
+        },
+        refund () {
+            const { paytype, returnId, refundsource } = this.resultdata
+            // 退费类型
+            const type = paytype === 2 ? 1 : paytype === 3 ? 6 : -1
+            if (type <= 0) return this.toast('对不起，当前订单不支持退费')
+            this.confirm('确定全额退款吗？')
+            .then(() => {
+                refundUtil(type, {
+                    id: returnId,
+                    refundState: refundsource,
+                    pwd: 0,
+                    utype: 2
+                }).then(res => {
+                    this.alert(res)
+                    .then(() => {
+                        this.initData()
+                    })
+                })
+                .catch(err => {
+                    this.toast(err)
+                })
+            })
+        },
+        reback () {
+            this.confirm('确定撤回吗？')
+            .then(() => {
+                recall({
+                    id: returnId
+                })
+                .then(() => {
+                    this.alert('撤回成功')
+                    .then(() => {
+                        this.initData()
+                    })
+                })
+            })
         }
     }
 }

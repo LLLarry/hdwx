@@ -61,6 +61,10 @@
                     ></i>
                 </div>
             </div>
+
+            <div class="redirect-old-version position-absolute">
+                <div><a href="/merchant/index" class="text-white">返回旧版本</a></div>
+            </div>
         </div>
         <section class="home-menu">
             <van-grid :column-num="3">
@@ -282,7 +286,6 @@
         padding-bottom: 1.8rem;
         .data-content {
             width: 100%;
-            // min-height: 40vh;
             background-image: -webkit-linear-gradient(-45deg, #2cb34b, #48b7ec);
             // &::after {
             //     content: '';
@@ -304,6 +307,15 @@
                     box-shadow: -1px -1px 3px rgba(44 , 179, 75 , 0.01), 2px 2px 6px rgba(0, 0, 0, .3);
                     padding: 7px;
                 }
+            }
+            .redirect-old-version {
+                left: 10px;
+                top: 25px;
+                background: rgba(0, 0, 0, 0.1);
+                padding: 7px;
+                font-size: 12px;
+                border-radius: 30px 30px 30px 30px;
+                box-shadow: -1px -1px 3px rgba(44 , 179, 75 , 0.01), 2px 2px 6px rgba(0, 0, 0, .3);
             }
             .circular-1 {
                 width: 25px;

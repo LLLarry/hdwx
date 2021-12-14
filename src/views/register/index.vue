@@ -21,10 +21,26 @@
                 </div>
 
                 <div class="form-item padding-x-3 border-box rounded-md d-flex align-items-center margin-bottom-3">
-                    <div class="d-flex align-items-center overflow-hidden form-item-box" style="width: 6rem">
+                    <div class="d-flex align-items-center overflow-hidden form-item-box" style="width: 9rem">
                         <i class="iconfont icon-anjian text-999 text-left"></i>
                         <input placeholder="请输入邀请码" v-model="invitecode" />
                     </div>
+                    <van-popover v-model="showPopover" trigger="click" placement="top-end" >
+                        <div class="text-size-sm padding-3 rounded-md" style="width: 60vw">
+                            <div class="margin-bottom-2 text-000">关于邀请码的说明</div>
+                            <ul>
+                                <li class="padding-y-1">
+                                    <p>1、邀请码输入【销售电话】您将会注册为商户</p>
+                                </li>
+                                <li class="padding-y-1">
+                                    <p>2、邀请码输入【代理商电话】您将会注册为代理商名下的商户</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <template #reference>
+                            <van-icon name="warning-o" size=".5rem" class="text-666" />
+                        </template>
+                    </van-popover>
                 </div>
 
                 <div class="form-item padding-x-3 border-box rounded-md d-flex align-items-center justify-content-between margin-bottom-3">

@@ -13,7 +13,8 @@ export default (router, store) => {
     mobile: '', // 用户输入的手机号
     invitecode: '', // 邀请码
     captcha: '', // 验证码
-    expireTime: 0 // 过期时间
+    expireTime: 0, // 过期时间
+    showPopover: false
   })
 
   // 设置邀请码，并开启定时器

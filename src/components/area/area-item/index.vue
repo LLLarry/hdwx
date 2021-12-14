@@ -38,8 +38,8 @@
            </span>
         </hd-card-item>
         <div class="area-contral d-flex justify-content-end w-100 margin-top-1">
-            <van-button type="primary" size="small" @click="handleEdit(value)">编辑</van-button>
-            <van-button type="primary" size="small" :to="`/area/manage/${value.id}`">管理</van-button>
+            <van-button type="primary" size="small" @click="handleEdit(value)" v-if="!ispartarea">编辑</van-button>
+            <van-button type="primary" size="small" :to="`/area/manage/${value.id}`"  v-if="!ispartarea">管理</van-button>
             <van-button type="primary" size="small" :to="`/area/statis/${value.id}`">统计</van-button>
         </div>
     </hd-card>
@@ -88,6 +88,10 @@ export default {
             }
 
             return baseUrl + icon
+        },
+        // 是否是合伙小区
+        ispartarea () {
+            return this.value.ispartarea === 1
         }
     },
     methods: {

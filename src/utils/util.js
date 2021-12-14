@@ -16,6 +16,7 @@ export const getType = (e) => {
  * @returns 解析之后的字符串
  */
 export const fmtDate = (date, type = 'YYYY-MM-DD HH:mm:ss') => {
+    if (/^\d+$/.test(date)) date = Number.parseInt(date)
     return dayjs(date).format(type)
 }
 

@@ -128,7 +128,7 @@ export const inquireDeviceStatus = (data, loadText) => {
 */
 export const querystate = (data, loadText) => {
     return ajax({
-        url: '/querystate',
+        url: '/queryPortStatus',
         method: 'post',
         data,
         loadText

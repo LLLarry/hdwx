@@ -179,7 +179,7 @@ export default {
     },
     setup (props, context) {
       const tempid = context.root._route.params.id // 主模板id
-      const code = context.root._route.query.code // 主模板id
+      const code = context.root._route.query.code // 设别好
       const version = context.root._route.params.version // 硬件版本号
       const {
         tempDataRef, // 主模板ref
@@ -192,7 +192,7 @@ export default {
         addTemp, // 添加主模板
         goBack, // 返回上一步
         sortList // 排序子模板
-      } = useInitTemp(tempid, version)
+      } = useInitTemp(tempid, version, code)
 
       const chargeTypeMap = useChargeType(tempDataRef)
       // const navList = [

@@ -3,7 +3,7 @@ import { Dialog } from 'vant'
 import { doRefund, alipayRefund, doWalletReturn, mercVirtualReturn, wxDoRefund, aliDoRefund, unionpaydoRefund, withdrawWalletRefund } from '@/require/home'
 
 const map = {
-    1: doRefund, // 为您退费
+    1: doRefund, // 微信退费
     2: alipayRefund, // 支付宝退费
     3: doWalletReturn, // 钱包退费
     4: mercVirtualReturn, // 虚拟充值退费

@@ -62,7 +62,7 @@
                             <hd-card-item class="" v-if="item.updateTime">
                                 <template>
                                     <span class="device-item-title text-333">更新时间：</span>
-                                    <span class="device-item-content text-666">{{ item.updateTime }}</span>
+                                    <span class="device-item-content text-666">{{ item.updateTime | fmtDate }}</span>
                                 </template>
                             </hd-card-item>
                             <hd-card-item class="w-100">
@@ -275,16 +275,16 @@ export default {
             const index = this.allPortStatusList.findIndex(one => one.port === item.port)
             if (this.addr) { // 从机
                 queryPortStatus({ code: this.code, port: item.port, addr: this.addr }).then(res => {
-                    if (res.returncode === 200) {
+                    if (res.wolfcode === '1000' || res.returncode === 200) {
                         this.allPortStatusList.splice(index, 1, res.result)
                     } else {
-                        this.$toast(res.message)
+                        this.$toast(res.message || res.wolfmsg)
                     }
                 })
             } else { // 设备
                 querystate({ code: this.code, port: item.port }).then(res => {
-                    if (res.returncode === 200) {
-                        this.allPortStatusList.splice(index, 1, res)
+                    if (res.code === 200) {
+                        this.allPortStatusList.splice(index, 1, { port: item.port, ...res.data })
                     } else {
                         this.$toast(res.message)
                     }
@@ -304,7 +304,7 @@ export default {
                     money: 1
                 })
                 .then(res => {
-                    if (res.returncode === 200) {
+                    if (res.wolfcode === '1000' || res.returncode === 200) {
                         this.$dialog.alert({
                             title: '提示',
                             message: `${port}号端口，远程充电成功`
@@ -313,7 +313,7 @@ export default {
                             this.handleUpdateStatus({ port })
                         })
                     } else {
-                        this.$toast(res.message)
+                        this.$toast(res.message || res.wolfmsg)
                     }
                 })
                 .catch(() => {
@@ -327,7 +327,7 @@ export default {
                     elec
                 })
                 .then(res => {
-                    if (res.returncode === 200) {
+                    if (res.wolfcode === '1000' || res.returncode === 200) {
                         this.$dialog.alert({
                             title: '提示',
                             message: `${port}号端口，远程充电成功`
@@ -336,7 +336,7 @@ export default {
                             this.handleUpdateStatus({ port })
                         })
                     } else {
-                        this.$toast(res.message)
+                        this.$toast(res.message || res.wolfmsg)
                     }
                 })
                 .catch(() => {
@@ -358,13 +358,13 @@ export default {
                         port: item.port
                     })
                     .then(res => {
-                        if (res.returncode === 200) {
+                        if (res.wolfcode === '1000' || res.returncode === 200) {
                             this.$toast(`${item.port}号端口，断电成功！`)
                             setTimeout(() => {
                                 this.handleUpdateStatus(item) // 更新端口状态
                             }, 2000)
                         } else {
-                            this.$toast(res.message)
+                            this.$toast(res.message || res.wolfmsg)
                         }
                     })
                     .catch(() => {
@@ -376,13 +376,13 @@ export default {
                         port: item.port
                     })
                     .then(res => {
-                        if (res.returncode === 200) {
+                        if (res.wolfcode === '1000' || res.returncode === 200) {
                             this.$toast(`${item.port}号端口，断电成功！`)
                             setTimeout(() => {
                                 this.handleUpdateStatus(item) // 更新端口状态
                             }, 2000)
                         } else {
-                            this.$toast(res.message)
+                            this.$toast(res.message || res.wolfmsg)
                         }
                     })
                     .catch(() => {

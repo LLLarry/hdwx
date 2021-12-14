@@ -193,12 +193,37 @@
                 <div class="flex-1 text-center">{{row.areaname}}</div>
             </template>
         </hd-select>
+
+        <hd-overlay :show="repeatOverlay" title="正在复用中" @close="repeatOverlay = false">
+            <div class="text-center text-size-sm margin-bottom-2" v-if="repeatList[0].length + repeatList[1].length < selectList.length">
+                正在复用系统参数中，请勿操作
+            </div>
+            <div class="text-center text-size-sm margin-bottom-2" v-else>
+                复用完成
+            </div>
+            <ul class="text-size-md repeat-box">
+                <li class="margin-bottom-1 d-flex"
+                    v-for="code in selectList"
+                    :key="code"
+                >
+                    <p class="flex-1 text-center">{{code}}</p>
+                    <p class="flex-1 text-center text-success" v-if="repeatList[0].includes(code)">成功</p>
+                    <p class="flex-1 text-center text-danger" v-else-if="repeatList[1].includes(code)">失败</p>
+                    <p class="flex-1 text-center" v-else-if="code === repeating">
+                        <van-loading type="spinner" color="#1989fa" size=".5rem" />
+                    </p>
+                    <p class="flex-1 text-center " v-else>
+                    </p>
+                </li>
+            </ul>
+        </hd-overlay>
     </div>
 </template>
 
 <script>
 import hdNav from '@/components/hd-nav'
 import hdSelect from '@/components/hd-select'
+import hdOverlay from '@/components/hd-overlay'
 import { getDeviceSystemParam, setSysParam, searchDeviceData } from '@/require/device'
 // 参数阈值map对照表
 const thresholdMap = {
@@ -296,12 +321,16 @@ export default {
                 // { code: '000134', remark: '回忆小区-南栋04', areaname: '明港路花园565456487812', aid: 2 }
             ],
             selectList: [], // 选中的list
-            isShow: false
+            isShow: false,
+            repeatList: [[], []],
+            repeatOverlay: false,
+            repeating: '' // 正在复用的设备号
         }
     },
     components: {
         hdNav,
-        hdSelect
+        hdSelect,
+        hdOverlay
     },
     watch: {
         model: {
@@ -320,6 +349,12 @@ export default {
         },
         handleSave () {
             this.setSysParamFn(this.code)
+            .then(res => {
+                this.alert(res)
+            })
+            .catch(message => {
+                this.alert(message)
+            })
         },
         async setSysParamFn (code) {
             if (!this.checkedFn(this.model)) return false
@@ -356,19 +391,29 @@ export default {
             if (Array.isArray(value)) {
                 this.selectList = value.filter(item => item !== this.code)
                 const code = this.selectList[0]
+                this.repeating = '' // 初始化正在复用的设备号
+                this.repeatList = [[], []] // 初始化复用结果容器
+                this.repeatOverlay = true
                 if (code) {
                     this.repeat(code, 0)
                 }
             }
             this.isShow = false
         },
-        repeat (code, index) {
-            this.setSysParamFn(code).then(() => {
-                const ind = index++
-                if (this.selectList[ind]) {
-                    repeat(list[ind], ind)
+        async repeat (code, index) {
+            try {
+                this.repeating = code
+                await this.setSysParamFn(code, true)
+                this.repeatList[0].push(code) // 成功容器
+            } catch (error) {
+                this.repeatList[1].push(code) // 失败容器
+            } finally {
+                const ind = ++index
+                const nextCode = this.selectList[ind]
+                if (typeof nextCode === 'string') {
+                    this.repeat(nextCode, ind)
                 }
-            })
+            }
         },
         // 获取系统参数
         async getSystemParmas (data) {
@@ -393,15 +438,14 @@ export default {
         // 设置系统参数
         async setSystemParmas (data) {
             try {
-                const { message } = await setSysParam(data)
-                this.$dialog.alert({
-                    title: '提示',
-                    message: message
-                })
-                return true
+                const { returncode, message } = await setSysParam(data)
+                if (returncode === 1001) {
+                    return Promise.reject(message)
+                } else {
+                    return Promise.resolve('设置成功')
+                }
             } catch (e) {
-                this.$toast('异常错误')
-                return false
+                return Promise.reject(new Error('异常错误'))
             }
         },
         // 校验参数
@@ -419,7 +463,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .v2-system {
     min-height: 100vh;
     .van-collapse-item__content {
@@ -427,6 +471,10 @@ export default {
     }
     .coll-input {
         padding: 3px 10px;
+    }
+    .repeat-box {
+        max-height: 50vh;
+        overflow-y: auto;
     }
 }
 </style>

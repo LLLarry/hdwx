@@ -351,7 +351,7 @@ const useEditTemp = (tempDataRef, copyTempDataRef) => {
 }
 
 // 新增主模板
-const useAddTemp = (tempDataRef) => {
+const useAddTemp = (tempDataRef, code) => {
     return (router) => {
         insertTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 4) })
         .then(res => {
@@ -361,7 +361,7 @@ const useAddTemp = (tempDataRef) => {
             })
             .then(() => {
                 if (res.code === 200) {
-                    router && router.replace({ path: `/template/v3/${res.tempid}` })
+                    router && router.replace({ path: `/template/v3/${res.tempid}?code=${code}` })
                 }
             })
         })
@@ -460,7 +460,7 @@ export const createNavList = ({
     return navList
 }
 
-export const useInitTemp = (tempid, version) => {
+export const useInitTemp = (tempid, version, code) => {
     // 获取模板信息，通过主模板id
     const {
         tempData: tempDataRef,
@@ -475,7 +475,7 @@ export const useInitTemp = (tempid, version) => {
     // 获取编辑主模板函数
     const editTemp = useEditTemp(tempDataRef, copyTempDataRef)
     // 获取新增主模板函数
-    const addTemp = useAddTemp(tempDataRef)
+    const addTemp = useAddTemp(tempDataRef, code)
     // 返回上一步函数
     const goBack = useGoBack(tempDataRef, copyTempDataRef, type)
     // 排序子模板

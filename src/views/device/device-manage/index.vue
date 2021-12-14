@@ -70,6 +70,31 @@
         断开重连
       </van-button>
     </hd-overlay>
+
+    <hd-overlay :show="changeResult" title="IMEI号互换结果" @close="changeResult = false">
+        <div class="text-center text-size-sm margin-bottom-2">
+            IMEI号互换结果
+        </div>
+        <ul class="text-size-md repeat-box">
+            <li class="margin-bottom-1 d-flex align-items-center border-bottom-1 border-ccc padding-bottom-3 margin-bottom-3">
+                <p class="flex-1 text-center font-weight-bold">{{changeResultMap.code1}}</p>
+                <div class="flex-1 text-center">
+                  <p>{{changeResultMap.oldCode1}}</p>
+                  <van-icon name="exchange" size=".5rem"  class="text-primary" />
+                  <p>{{changeResultMap.newCode1}}</p>
+                </div>
+            </li>
+
+            <li class="margin-bottom-1 d-flex align-items-center">
+                <p class="flex-1 text-center font-weight-bold">{{changeResultMap.code2}}</p>
+                <div class="flex-1 text-center">
+                  <p>{{changeResultMap.oldCode2}}</p>
+                  <van-icon name="exchange" size=".5rem"  class="text-primary" />
+                  <p>{{changeResultMap.newCode2}}</p>
+                </div>
+            </li>
+        </ul>
+    </hd-overlay>
   </div>
 </template>
 
@@ -109,7 +134,9 @@ export default {
         size: 220, // 二维码大小
         title: `设备：${this.$route.params.code}`
       },
-      result: {} // 设备信息
+      result: {}, // 设备信息
+      changeResult: false, // 互换IMEI号结果是否显示
+      changeResultMap: {}
     }
   },
   components: {
@@ -227,6 +254,11 @@ export default {
           })
           .then(res => {
             if (res.code === 200) {
+              this.changeResultMap = Object.assign({
+                code1: this.code,
+                code2: result.code
+              }, res.result)
+              this.changeResult = true
               this.$toast('IMEI号更换成功')
             } else {
               this.$toast(res.message)
