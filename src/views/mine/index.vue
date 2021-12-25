@@ -1,6 +1,6 @@
 <template>
     <div class="mine bg-gray">
-        <div class="header position-relative">
+        <div class="header position-relative bg-success">
             <div class="header-box">
                 <div class="userinfo d-flex padding-x-3">
                     <div class="avatar rounded-circle overflow-hidden">
@@ -195,7 +195,7 @@ export default {
     min-height: 100vh;
     padding-bottom: 80px;
   .header {
-    background-color: #07c160;
+    /* background-color: #07c160; */
     background-image: url('../../assets/images/bottom_wave.png');
     background-position: bottom;
     background-repeat: no-repeat;
@@ -242,5 +242,12 @@ export default {
           font-size: 0;
       }
   }
+}
+[theme="dark"] {
+    .mine {
+        .header {
+            background-image: url('../../assets/images/bottom_wave_dark.png');
+        }
+    }
 }
 </style>

@@ -131,7 +131,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .charge-standard {
     .post-session {
         position: relative;
@@ -143,8 +143,20 @@ export default {
             bottom: 0;
             right: 10px;
             height: 1px;
-            background: #cecece;
+            background: #ddd;
         }
     }
+}
+</style>
+
+<style lang="scss">
+[theme="dark"] {
+   .charge-standard {
+        .post-session {
+            &::after {
+                background: #222;
+            }
+        }
+   }
 }
 </style>

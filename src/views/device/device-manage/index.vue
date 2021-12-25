@@ -1,6 +1,6 @@
 <template>
   <div class="device-manage">
-    <div class="header">
+    <div class="header bg-primary">
       <div class="header-box d-flex flex-column align-items-center">
           <div class="header-device-code text-size-default margin-bottom-2">{{code}}</div>
           <div class="d-flex align-items-center">
@@ -299,7 +299,7 @@ export default {
 .device-manage {
   .header {
     min-height: 30vh;
-    background-color: #4d95ff;
+    /* background-color: #4d95ff; */
     background-image: url('../../../assets/images/bottom_wave.png');
     background-position: bottom;
     background-repeat: no-repeat;
@@ -313,6 +313,13 @@ export default {
     .van-icon__image {
       width: 45px;
       height: 45px;
+    }
+  }
+}
+[theme="dark"] {
+  .device-manage  {
+    .header {
+      background-image: url('../../../assets/images/bottom_wave_dark.png');
     }
   }
 }

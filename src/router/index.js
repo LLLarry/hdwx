@@ -279,7 +279,7 @@ const routes = [
     name: 'device-order',
     component: () => import(/* webpackChunkName: "device-order" */ '../views/device/device-order/index.vue'),
     meta: {
-      title: '设备端口状态'
+      title: '设备订单'
     }
   },
   {
@@ -287,7 +287,7 @@ const routes = [
     name: 'device-statis',
     component: () => import(/* webpackChunkName: "device-statis" */ '../views/device/device-statis/index.vue'),
     meta: {
-      title: '设备端口状态'
+      title: '设备统计'
     }
   },
   {

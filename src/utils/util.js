@@ -137,7 +137,7 @@ export const isiOS = () => {
         '08': 10,
         '09': 2,
         10: 20,
-        11: 0,
+        11: 2,
         12: 2
     }
     if (Number(hdVersion) !== 11) { // 非一拖二设备
@@ -213,4 +213,71 @@ export const noOpen = () => {
         title: '提示',
         message: '对不起，此功能暂未开放！'
     })
+}
+
+/**
+ * paytype转化名称
+ * @param {*} payType 支付方式
+ * @returns 对应的名称
+ */
+export const payTypeToName = (payType) => {
+    switch (payType) {
+        case 1 :
+            return '钱包'
+        case 2 :
+            return '微信'
+        case 3 :
+            return '支付宝'
+        case 4 :
+            return '包月'
+        case 5 :
+            return '投币'
+        case 6 :
+            return '离线卡'
+        case 7 :
+            return '在线卡'
+        case 8 :
+            return '支付宝小程序'
+        case 12 :
+            return '银联'
+        default:
+            return ''
+    }
+}
+
+/**
+ * 通过platform获取微信公众号信息
+ * @param {*} platform number
+ * @returns { name: 公众号名称，key: 名称缩写  }
+ */
+export const getWechatPublicAccountInfo = platform => {
+    getWechatPublicAccountInfo.DEFAULT = {
+        name: '自助充电平台',
+        key: 'zzcdpt'
+    }
+    if ([0, 1].includes(platform)) {
+        return {
+            name: '自助充电平台',
+            key: 'zzcdpt'
+        }
+    }
+    // if (platform === 2) {
+    //     return {
+    //         name: '兴煌科技',
+    //         key: 'xhkj'
+    //     }
+    // }
+    // if (platform === 3) {
+    //     return {
+    //         name: '易安居科技',
+    //         key: 'yankj'
+    //     }
+    // }
+    if (platform === 5) {
+        return {
+            name: '智慧充电服务平台',
+            key: 'jn',
+            scale: 0.8
+        }
+    }
 }

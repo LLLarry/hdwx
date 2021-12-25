@@ -99,3 +99,18 @@ export const getV3TempData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 修改用户手机号
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const updateAccountPhoneById = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/updateAccountPhoneById',
+        method: 'post',
+        data,
+        loadText
+    })
+}

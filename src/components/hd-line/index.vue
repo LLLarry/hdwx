@@ -1,5 +1,5 @@
 <template>
-    <div class="hd-line" :style="getStyle"></div>
+    <div class="hd-line bg-gray" :style="getStyle"></div>
 </template>
 
 <script>
@@ -19,9 +19,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss">
-.hd-line {
-    background: #f5f7fa;
-}
-</style>

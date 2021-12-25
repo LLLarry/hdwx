@@ -1,7 +1,7 @@
 <template>
   <van-overlay class="hd-overlay" :show="show" @click="handleClose(1)">
     <div class="wrapper">
-        <div class="block rounded-md position-relative text-333" @click.stop>
+        <div class="block rounded-md position-relative text-333 bg-white" @click.stop>
             <h3 class="text-center margin-bottom-3 text-size-default" v-if="!!title">{{title}}</h3>
             <slot></slot>
             <div class="hd-overlay-close position-absolute" @click="handleClose(2)" v-if="bottomClose">
@@ -56,7 +56,6 @@ export default {
     .block {
         padding: 20px;
         width: 60vw;
-        background-color: #fff;
     }
 }
 </style>

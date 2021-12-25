@@ -30,7 +30,13 @@
                     >
                         <div class="padding-top-3">
                             <div v-no-data="source[0].list.length <= 0"></div>
-                            <device-item v-for="item in source[0].list" :key="item.code" :value="item" class="margin-bottom-3"/>
+                            <device-item
+                                v-for="item in source[0].list"
+                                :key="item.code"
+                                :value="item"
+                                class="margin-bottom-3"
+                                @changeDeviceInfo="changeDeviceInfo"
+                            />
                             <div
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[0].list.length !== 0}"
@@ -48,7 +54,13 @@
                     >
                         <div class="padding-top-3">
                             <div v-no-data="source[1].list.length <= 0"></div>
-                            <device-item v-for="item in source[1].list" :key="item.code" :value="item" class="margin-bottom-3"/>
+                            <device-item
+                                v-for="item in source[1].list"
+                                :key="item.code"
+                                :value="item"
+                                class="margin-bottom-3"
+                                 @changeDeviceInfo="changeDeviceInfo"
+                            />
                             <div
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
                                 :class="{removePaddingTop: source[1].list.length !== 0}"
@@ -66,7 +78,13 @@
                     >
                         <div class="padding-top-3">
                             <div v-no-data="source[2].list.length <= 0"></div>
-                            <device-item v-for="item in source[2].list" :key="item.code" :value="item" class="margin-bottom-3"/>
+                            <device-item
+                                v-for="item in source[2].list"
+                                :key="item.code"
+                                :value="item"
+                                class="margin-bottom-3"
+                                 @changeDeviceInfo="changeDeviceInfo"
+                            />
                             <div
                                 v-if="source[2].list.length > 0"
                                 class="text-center padding-bottom-3 padding-top-3 text-666"
@@ -261,6 +279,17 @@ export default {
         // 保存 scroll 实例
         getScroll ({ scroll, index }) {
             this.source[index].scroll = scroll
+        },
+        changeDeviceInfo ({ code, remark, name }) {
+           this.source.forEach(({ list }) => {
+               const deviceInfo = list.find(item => {
+                   return item.code === code
+               })
+               if (deviceInfo) {
+                    deviceInfo.name = name
+                    deviceInfo.remark = remark
+               }
+           })
         }
     }
 }

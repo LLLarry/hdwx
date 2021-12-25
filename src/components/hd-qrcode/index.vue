@@ -6,7 +6,7 @@
                 v-bind="qrcode"
               />
           </div>
-          <h3 v-if="qrcode.title" class="desc text-center text-size-default text-000 font-weight-bold">{{qrcode.title}}</h3>
+          <h3 v-if="qrcode.title" class="desc text-center text-size-default font-weight-bold" style="color: #000;">{{qrcode.title}}</h3>
         </div>
         <div class="qrcode-img position-absolute" style="left: 0; top: 0;" :ref="`img-${qrcode.key}`">
             <img :src="src" :style="imgStyle" v-if="src">

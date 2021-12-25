@@ -5,7 +5,7 @@
         <div class="desc text-white text-center text-size-default">{{hardversion}}{{versionName}}</div>
     </header>
     <main class="position-relative">
-        <div class="post-top overflow-hidden shadow padding-3">
+        <div class="post-top overflow-hidden shadow padding-3 bg-white">
             <div class="clearfix">
                 <div class="w-50 float-left border-box d-flex justify-content-center flex-column align-items-center border-right-1 border-ccc padding-x-2">
                     <div class="text-size-default font-weight-bold">设备编号</div>
@@ -28,33 +28,29 @@
                         type="danger"
                         size="mini"
                         class="margin-right-1 padding-x-2"
-                        plain
-                        round
                         v-if="item.merid !== 0"
                         @click="deleteTemp(item)"
                     >删除</van-button>
-                    <van-button type="info" size="mini" class="margin-right-1 padding-x-2" plain round @click="preview(item)">预览</van-button>
-                    <van-button type="info" size="mini" class="margin-right-1 padding-x-2" plain round @click="repeatUseTemp(item)">复用</van-button>
+                    <van-button type="info" size="mini" class="margin-right-1 padding-x-2" @click="preview(item)">预览</van-button>
+                    <van-button type="info" size="mini" class="margin-right-1 padding-x-2" @click="repeatUseTemp(item)">复用</van-button>
                    <van-button
                         :type="item.merid === 0 ? 'warning' : 'primary'"
                         size="mini"
                         class="padding-x-2"
-                        plain
-                        round
                         @click="editTemp(item)"
                     >
                     {{ item.merid === 0 ? '查看' : '编辑' }}
                     </van-button>
                 </div>
                 <div class="select-box position-absolute" :class="{ active: item.pitchon === 1 }" @click="handleSelectTemp(item)">
-                    <van-icon name="success" class="select-icon position-absolute" />
+                    <van-icon name="success" class="select-icon position-absolute text-white" />
                 </div>
             </div>
         </div>
     </main>
 
     <!-- 复用模板到其他设备 -->
-    <hd-select
+    <!-- <hd-select
         :list="list"
         :isShow="repeatIsShow"
         :title="repeatTitle"
@@ -64,13 +60,24 @@
     >
         <template #title>
             <div class="flex-1 text-center">设备号</div>
-            <div class="flex-1 text-center">所属小区</div>
+            <div class="flex-1 text-center">
+                <van-popover
+                    v-model="showPopover"
+                    trigger="click"
+                    :actions="actions"
+                    @select="onSelect"
+                >
+                <template #reference>
+                    <span>所属小区</span>
+                </template>
+                </van-popover>
+            </div>
         </template>
         <template v-slot="{row}">
             <div class="flex-1 text-center">{{row.code}}</div>
             <div class="flex-1 text-center">{{row.areaname}}</div>
         </template>
-    </hd-select>
+    </hd-select> -->
     <!-- 底部：新增充电模板部分 -->
     <hd-nav :list="navList">
         <template v-slot="{ row }">
@@ -83,11 +90,20 @@
             >{{row.text}}</van-button>
         </template>
     </hd-nav>
+
+    <hd-select-filter
+        :list="list"
+        :repeatIsShow="repeatIsShow"
+        :repeatTitle="repeatTitle"
+        @submit="handleRepeatSubmit"
+        @close="closeRepeatIsShow"
+    />
   </div>
 </template>
 
 <script>
-import hdSelect from '@/components/hd-select'
+// import hdSelect from '@/components/hd-select'
+import hdSelectFilter from '@/components/hd-select-filter'
 import hdNav from '@/components/hd-nav'
 import { inquireDeviceTemlataData, updateDeviceTemplate, updateSingleDeviceTemplate, deleteTemlataById } from '@/require/template'
 import { inquireTheSameDeviceData } from '@/require/device'
@@ -114,8 +130,9 @@ export default {
         }
     },
     components: {
-        hdSelect,
-        hdNav
+        // hdSelect,
+        hdNav,
+        hdSelectFilter
     },
     computed: {
         versionName () {
@@ -148,6 +165,9 @@ export default {
             this.selectRow = row
             this.repeatTitle = `选中设备使用<span class="text-success">${row.tempname}</span>模板`
             this.getDeviceList(row)
+        },
+        closeRepeatIsShow () {
+            this.repeatIsShow = false
         },
         async getDeviceList ({ id: tempid }) {
             try {
@@ -304,7 +324,8 @@ export default {
             background: url(../../../assets/images/post_2.png);
             background-size: 100% 100%;
             filter: blur(8px);
-            z-index: -2;
+            /* z-index: -2; */
+            z-index: 0;
             position: relative;
         }
         .mask {
@@ -315,7 +336,7 @@ export default {
             background: rgba(0, 0, 0, 0);
             background-size: 100% 100%;
             filter: blur(10px);
-            z-index: -1;
+            z-index: 1;
             position: absolute;
         }
         .desc {
@@ -323,6 +344,7 @@ export default {
             position: absolute;
             left: 0;
             right: 0;
+            z-index: 1;
             text-shadow: 5px 5px 6px #000;
         }
     }
@@ -331,7 +353,7 @@ export default {
         padding-bottom: 60px;
         .post-top {
             // height: 100px;
-            background: #fff;
+            /* background: #fff; */
             width: 90%;
             margin: 0 auto;
             border-radius: 10px 10px 0 0;
@@ -341,6 +363,11 @@ export default {
             width: 90%;
             margin: 15px auto;
             box-sizing: border-box;
+            .contral {
+                [class~=van-button] {
+                    padding: 0 10px;
+                }
+            }
             .select-box {
                 border-top: 18px solid #ddd;
                 border-right: 18px solid #ddd;
@@ -355,12 +382,27 @@ export default {
                     top: -15px;
                     right: -15px;
                     font-size: 16px;
-                    color: #fff;
+                    /* color: #fff; */
                 }
                 &.active {
                     border-top-color: #28a745;
                     border-right-color: #28a745;
                 }
+            }
+        }
+    }
+}
+</style>
+
+<style lang="scss">
+[theme="dark"] {
+    .device-template-list {
+        .select-box {
+            border-top-color: #222 !important;
+            border-right-color: #222 !important;
+            &.active {
+                border-top-color: #28a745 !important;
+                border-right-color: #28a745 !important;
             }
         }
     }

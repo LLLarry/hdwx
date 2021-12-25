@@ -77,7 +77,7 @@
                 </div>
                 <textarea
                     v-model="tempData.hintMessage"
-                    class="d-block w-100 border-ccc rounded padding-2 border-box text-size-sm"
+                    class="d-block w-100 border-ccc rounded padding-2 border-box text-size-sm border-ccc bg-white"
                     rows="5"
                     placeholder="请输入充电说明"
                     :disabled="isSystemTem"

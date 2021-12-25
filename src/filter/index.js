@@ -24,3 +24,28 @@ Vue.filter('fmtMoney', fmtMoney)
     }
     return url
  })
+
+ /**
+ * 格式化名称
+ * date：格式化日期
+ * type：格式
+ */
+  Vue.filter('fmtName', (value, unit = '— —') => {
+    if (value === null || value === '') {
+        return unit
+    } else {
+        return value
+    }
+  })
+
+  /**
+ * 格式化金額
+ * money：格式化金額
+ * digit：格式化位數
+ */
+Vue.filter('fmtFill', (value, length, fill = '0') => {
+    if (typeof value !== 'string') {
+        value = String(value)
+    }
+    return value.padStart(length, fill)
+})

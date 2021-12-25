@@ -375,7 +375,7 @@ const useAddTemp = (tempDataRef, code) => {
 const useGoBack = (tempDataRef, copyTempDataRef, type) => {
     return (router) => {
         if (type.value === 2) { // type为新增时，可以直接回退
-            return true
+            return router && router.go(-1)
         }
         const tempData = tempDataRef.value
         // 校验数据是否发生了改变
@@ -435,24 +435,22 @@ export const createNavList = ({
         { text: '返回', icon: 'share-o', onClick: () => goBack(router) }
     ])
     watch([() => isSystemTem.value, () => typeRef.value], ([flag, type]) => {
-        console.log(flag, type)
-       if (type === 1) {
-           if (flag) {
+       if (type === 1) { // 编辑
+           if (flag) { // 系统模板
                 navList.value = [
                     { text: '返回', icon: 'share-o', onClick: () => goBack(router) },
                     { text: '预览', icon: 'eye-o', onClick: () => router.push({ path: '/preview/v3', query: { code, tempid } }) }
                 ]
-           } else {
+           } else { // 非系统模板
                 navList.value = [
                     { text: '返回', icon: 'share-o', onClick: () => goBack(router) },
                     { text: '预览', icon: 'eye-o', onClick: () => router.push({ path: '/preview/v3', query: { code, tempid } }) },
                     { text: '保存', icon: 'pending-payment', onClick: editTemp, type: 'info' }
                 ]
            }
-        } else {
+        } else { // 新增
             navList.value = [
                 { text: '返回', icon: 'share-o', onClick: () => goBack(router) },
-                { text: '预览', icon: 'eye-o', onClick: () => router.push({ path: '/preview/v3', query: { code, tempid } }) },
                 { text: '新增', icon: 'pending-payment', onClick: () => addTemp(router), type: 'info' }
             ]
         }

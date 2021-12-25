@@ -403,4 +403,10 @@
             }
         }
     }
+    /* 暗黑模式 */
+    [theme="dark"] {
+        .home .data-content {
+            background-image: -webkit-linear-gradient(-45deg, #165a26, #245c76);
+        }
+    }
 </style>

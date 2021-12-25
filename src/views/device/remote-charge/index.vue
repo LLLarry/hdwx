@@ -50,7 +50,7 @@ export default {
     methods: {
         async init () {
             try {
-                const { code, message, templatelist, hardversion } = await remotechargechoose({ code: this.code })
+                const { code, message, templatelist, hardversion } = await remotechargechoose({ code: this.code, addr: this.addr })
                 if (code === 200) {
                     const { portNum = 0 } = getInfoByHdVersion(hardversion)
                     this.list = new Array(portNum).fill(1).map((item, index) => ({ port: index + 1, portStatus: 1 }))

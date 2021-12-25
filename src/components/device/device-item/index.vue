@@ -1,6 +1,6 @@
 <template>
   <div class="device-item text-size-sm text-666 shadow margin-x-2 rounded-md overflow-hidden" :class="{ active: !deviceBindOwn }">
-    <hd-card class="padding-2">
+    <hd-card class="padding-2 bg-white">
          <hd-card-item>
             <span class="device-item-title text-666">设备号：</span>
             <span class="device-item-content text-999">{{value.code}}</span>
@@ -13,13 +13,29 @@
             <span class="device-item-title text-666">投币收益：</span>
             <span class="device-item-content text-999">{{value.totalCoinsEarn}}元</span>
         </hd-card-item>
-        <hd-card-item>
+        <hd-card-item class="w-100">
             <span class="device-item-title text-666">设备名称：</span>
             <span class="device-item-content text-999">{{value.remark}}</span>
+            <edit-device
+                class="float-right"
+                :code="value.code"
+                :default-value="{ areaname: value.name, devicename: value.remark }"
+                @changeDeviceInfo="changeDeviceInfo"
+            >
+                <van-icon name="edit" size=".5rem" class="text-success" />
+            </edit-device>
         </hd-card-item>
-        <hd-card-item>
+        <hd-card-item class="w-100">
             <span class="device-item-title text-666">所属小区：</span>
             <span class="device-item-content text-999">{{value.name}}</span>
+            <edit-device
+                class="float-right"
+                :code="value.code"
+                :default-value="{ areaname: value.name, devicename: value.remark }"
+                @changeDeviceInfo="changeDeviceInfo"
+            >
+                <van-icon name="edit" size=".5rem" class="text-success" />
+            </edit-device>
         </hd-card-item>
         <hd-card-item
             v-if="!['03', '04'].includes(value.hardversion) && value.state === 1"
@@ -80,6 +96,7 @@
 <script>
 import hdCard from '@/components/hd-card'
 import hdCardItem from '@/components/hd-card-item'
+import EditDevice from '@/components/device/edit-device'
 export default {
     props: {
         value: {
@@ -88,7 +105,8 @@ export default {
     },
     components: {
         hdCard,
-        hdCardItem
+        hdCardItem,
+        EditDevice
     },
     computed: {
         // 是否显示投币收益
@@ -120,6 +138,11 @@ export default {
 
             return baseUrl + icon
         }
+    },
+    methods: {
+        changeDeviceInfo ({ areaname: name, devicename: remark }) {
+            this.$emit('changeDeviceInfo', { code: this.value.code, name, remark })
+        }
     }
 }
 </script>
@@ -143,7 +166,7 @@ export default {
         }
     }
     .hd-card {
-        background: #fff;
+        /* background: #fff; */
         .hd-card-item {
             min-width: 50%;
             box-sizing: border-box;

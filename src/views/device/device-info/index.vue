@@ -21,7 +21,13 @@
                   <span class="text-666">设备名称</span>
                   <span>
                       {{ info.devicename || '— —' }}
-                      <van-icon name="edit" size=".5rem" class="text-success" @click="changeDeviceInfo" />
+                        <edit-device
+                            :code="code"
+                            :default-value="info"
+                            @changeDeviceInfo="changeDeviceInfo"
+                        >
+                          <van-icon name="edit" size=".5rem" class="text-success" />
+                        </edit-device>
                   </span>
                 </div>
               </li>
@@ -30,7 +36,13 @@
                   <span class="text-666">小区名称</span>
                   <span>
                         {{ info.areaname || '— —' }}
-                        <van-icon name="edit" size=".5rem" class="text-success"  @click="changeDeviceInfo" />
+                        <edit-device
+                            :code="code"
+                            :default-value="info"
+                            @changeDeviceInfo="changeDeviceInfo"
+                        >
+                          <van-icon name="edit" size=".5rem" class="text-success" />
+                        </edit-device>
                     </span>
                 </div>
               </li>
@@ -81,7 +93,7 @@
     </van-popup>
 
     <!-- 请选择修改的硬件版本 -->
-    <van-popup v-model="showChangePicker" position="top">
+    <!-- <van-popup v-model="showChangePicker" position="top">
         <div class="padding-3 bg-gray">
             <h3 class="text-center margin-bottom-3 text-size-default">修改设备信息</h3>
             <van-form @submit="onSubmit">
@@ -107,10 +119,10 @@
                 </div>
             </van-form>
         </div>
-    </van-popup>
+    </van-popup> -->
 
     <!-- 小区列表 -->
-    <van-popup v-model="showAreaPicker" round position="bottom">
+    <!-- <van-popup v-model="showAreaPicker" round position="bottom">
         <van-picker
             title="请选择小区列表"
             show-toolbar
@@ -118,13 +130,14 @@
             @confirm="onConfirmArea"
             @cancel="showAreaPicker = false"
         />
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 
 <script>
-import { inquireDeviceMmanageInfo, updateDeviceInfoByCode, getDealAreaListInfo, dealUnbindDevice } from '@/require/device'
+import { inquireDeviceMmanageInfo, updateDeviceInfoByCode, dealUnbindDevice } from '@/require/device'
 import { getDeviceVersionName } from '@/utils/util'
+import EditDevice from '@/components/device/edit-device'
 /* 修改硬件版本号 */
 /*
     修改规则：
@@ -149,11 +162,11 @@ export default {
             info: {},
             columns: [], // 可选的硬件版本号
             showPicker: false, // 是否显示可选的硬件版本号列表
-            showChangePicker: false, // 是否显示修改设备的名字和归属小区
-            changeForm: {},
-            areaList: [], // 设备所属商户的小区列表
-            showAreaPicker: false // 显示小区列表
+            showChangePicker: false // 是否显示修改设备名称、归属小区弹框
         }
+    },
+    components: {
+        EditDevice
     },
     mounted () {
         this.init()
@@ -200,36 +213,6 @@ export default {
                 this.$toast('异常错误')
             }
         },
-        // 点击修改设备名/ 归属小区
-        async changeDeviceInfo () {
-            try {
-                if (this.areaList && this.areaList.length <= 0) {
-                    const { code, resultlist } = await getDealAreaListInfo()
-                    if (code === 200) {
-                        this.areaList = resultlist.map(item => ({
-                            ...item,
-                            text: item.name
-                        }))
-                    }
-                }
-            } catch (error) {
-                console.log(error)
-            } finally {
-                this.showChangePicker = true
-            }
-        },
-        // 选中的小区
-        onConfirmArea (value, index) {
-            this.changeForm.areaname = value.name
-            this.changeForm.aid = value.id
-            this.showAreaPicker = false
-        },
-        // 提交修改设备信息
-        onSubmit () {
-            const { devicename, aid } = this.changeForm
-            this.changeDeviceFn({ devicename, aid }, '修改成功')
-            this.showChangePicker = false
-        },
         // 解绑设备
         handleUnBindDevice () {
             this.$dialog.confirm({
@@ -257,6 +240,10 @@ export default {
                     this.$toast('异常错误')
                 })
             })
+        },
+        // 改变用户信息
+        changeDeviceInfo (value) {
+            this.info = Object.assign(this.info, value)
         }
     }
 }

@@ -91,53 +91,95 @@
                         v-for="item in list" :key="item.id"
                     >
                         <div class="top padding-x-2 padding-top-2 d-flex align-items-center">
-                            <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
+                            <!-- <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
                                 <div class="">
-                                    <div class="font-weight-bold text-000 text-size-default card-num text-success" v-if="item.status === 1">
-                                       &yen; {{ item.paymoney | fmtMoney }}
+                                    <div class="font-weight-bold text-000 text-size-default card-num " v-if="item.status === 1">
+                                       付款金额：<span class="text-success">&yen; {{ item.paymoney | fmtMoney }}</span>
                                     </div>
-                                    <div class="font-weight-bold text-000 text-size-default card-num text-danger" v-else>
-                                       &yen; -{{ item.paymoney | fmtMoney }}
+                                    <div class="font-weight-bold text-000 text-size-default card-num" v-else>
+                                       退费金额：<span class="text-danger">&yen; -{{ item.paymoney | fmtMoney }}</span>
                                     </div>
                                 </div>
-                                <!-- <van-tag v-if="item.paysource === 1" type="primary">充值订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 2 || item.paysource === 3" type="danger">消费订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 5" type="success">部分退费订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 7" type="warning">虚拟充值订单</van-tag>
-                                <van-tag v-else-if="item.paysource === 6 || item.paysource === 8" type="success">钱包退款订单</van-tag> -->
+                            </div> -->
+                            <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
+                                <div class="">
+                                    <div class="font-weight-bold text-666 text-size-md card-num ">
+                                       交易金额：<span class="text-666">&yen; {{ item.paymoney | fmtMoney }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hd-card class="padding-2 text-size-sm">
                             <hd-card-item class="">
                                 <span class="card-item-title text-333">订单号：</span>
+                                <span class="card-item-content text-666">{{ item.ordernum }}</span>
+                            </hd-card-item>
+
+                            <hd-card-item class="">
+                                <span class="card-item-title text-333">用户名：</span>
+                                <span class="card-item-content text-666">{{ item.username | fmtName}}</span>
+                            </hd-card-item>
+
+                            <hd-card-item class="">
+                                <span class="card-item-title text-333">设备号：</span>
+                                <span class="card-item-content text-666">{{ item.equipmentnum }}-{{ item.port | fmtFill(2, 0) }}</span>
+                            </hd-card-item>
+
+                            <hd-card-item class="">
+                                <span class="card-item-title text-333">订单状态：</span>
+                                <span class="card-item-content text-success" v-if="item.number === 0">正常</span>
+                                <span class="card-item-content text-danger" v-else-if="item.number === 1">全额退款</span>
+                                <span class="card-item-content text-warning" v-if="item.number === 2">部分退款</span>
+                            </hd-card-item>
+
+                            <hd-card-item class="">
+                                <span class="card-item-title text-333">支付方式：</span>
+                                <span class="card-item-content text-666">{{ item.paytype | fmtPayType }}</span>
+                            </hd-card-item>
+
+                            <hd-card-item class="">
+                                <span class="card-item-title text-333">开始时间：</span>
+                                <span class="card-item-content text-666">{{ item.begintime | fmtName }}</span>
+                            </hd-card-item>
+                            <hd-card-item class="">
+                                <span class="card-item-title text-333">结束时间：</span>
+                                <span class="card-item-content text-666">{{ item.endtime | fmtName }}</span>
+                            </hd-card-item>
+                            <!-- <hd-card-item class="">
+                                <span class="card-item-title text-333">订单号：</span>
                                 <span class="card-item-content text-666">{{item.ordernum}}</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">付款人：</span>
-                                <span class="card-item-content text-666">{{item.uusername}}</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333" v-if="item.paysource">充电功率：</span>
-                                <router-link class="card-item-content text-666 text-link" :to="`/order/powercurve/${item.chargeid}`">
-                                    查看功率
-                                </router-link>
-                            </hd-card-item>
-                             <hd-card-item>
-                                <span class="card-item-title text-333" v-if="item.paysource">操作：</span>
-                                <span class="card-item-content text-666 text-link">
-                                    <van-button
-                                        type="primary"
-                                        size="mini"
-                                        v-if="item.status === 1"
-                                        @click="handleRefund(item)"
-                                    >退款</van-button>
-                                    <van-button type="primary" size="mini" v-if="item.status !== 1 && item !== 2" disabled>退款</van-button>
-                                    <van-button type="warning" size="mini" v-if="item.status !== 1 && item === 2" @click="handleRefund(item.chargeid)">撤回</van-button>
-                                </span>
+                                <span class="card-item-content text-666">{{item.uusername || '— —'}}</span>
                             </hd-card-item>
                             <hd-card-item>
                                 <span class="card-item-title text-333">交易时间：</span>
                                 <span class="card-item-content text-666">{{item.createtime}}</span>
+                            </hd-card-item> -->
+                            <hd-card-item class="w-100 d-flex justify-content-end">
+                                <van-button
+                                    type="primary"
+                                    size="mini"
+                                    v-if="item.number === 0 && ![6,7].includes(item.paytype)"
+                                    @click="handleRefund(item)"
+                                >退款</van-button>
+
+                                <van-button
+                                    type="warning"
+                                    size="mini"
+                                    v-else-if="item.number === 2"
+                                    @click="handleRecall(item.id)"
+                                >撤回部分退款</van-button>
+
+                                <van-button
+                                    type="primary"
+                                    size="mini"
+                                    v-else-if="item.number === 1 && ![6,7].includes(item.paytype)"
+                                    disabled
+                                >退款</van-button>
+
+                                <van-button type="primary" size="mini" :to="`/order/powercurve/${item.chargeid}`">功率曲线</van-button>
                             </hd-card-item>
                         </hd-card>
                     </div>
@@ -148,7 +190,7 @@
     </div>
 </template>
 <script>
-import { fmtDate, dateRange } from '@/utils/util'
+import { fmtDate, dateRange, payTypeToName } from '@/utils/util'
 // import hdSelectBox from '@/components/hd-select-box'
 // import hdSelectBoxItem from '@/components/hd-select-box-item'
 import hdCard from '@/components/hd-card'
@@ -156,7 +198,6 @@ import hdCardItem from '@/components/hd-card-item'
 import hdScroll from '@/components/hd-scroll'
 import hdBottom from '@/components/hd-bottom'
 import { inquireDeviceOrderData } from '@/require/device'
-import { verifyorder } from '@/require/home'
 import { refundUtil, recall } from '@/utils/refund-util'
 const LIMIT = 10
 export default {
@@ -168,22 +209,6 @@ export default {
             currentPage: 1,
             ordernum: '',
             slideMenuIsShow: false, // 侧边菜单是否显示
-            // orderType: [
-            //     { text: '全部', value: 1 },
-            //     { text: '正常', value: 2 },
-            //     { text: '部分退费', value: 3 },
-            //     { text: '全额退费', value: 4 }
-            // ],
-            // selectOrderType: 1,
-            // payType: [
-            //     { text: '全部', value: 1 },
-            //     { text: '微信支付', value: 2 },
-            //     { text: '支付宝支付', value: 3 },
-            //     { text: '钱包支付', value: 4 },
-            //     { text: '包月支付', value: 5 },
-            //     { text: '银联支付', value: 5 }
-            // ],
-            // selectPayType: 1,
             showCalendar: false,
             searchTime: {
                 startTime: range[0],
@@ -203,12 +228,6 @@ export default {
         }
         this.gatDeviceOrder(this.searchForm, true)
     },
-    // computed: {
-    //     // 筛选支付方式是否显示
-    //     payTypeIsShow () {
-    //         return this.selectOrderType === 2
-    //     }
-    // },
     components: {
         // hdSelectBox,
         // hdSelectBoxItem,
@@ -218,12 +237,6 @@ export default {
         hdBottom
     },
     methods: {
-        // handleOrderTypeChange ({ text, value }) {
-        //     this.selectOrderType = value
-        // },
-        // handlePayTypeChange ({ text, value }) {
-        //     this.selectPayType = value
-        // },
         // 确认选择日期
         onConfirmCalendar ([startDate, endDate]) {
             const startTime = fmtDate(startDate, 'YYYY/MM/DD')
@@ -257,12 +270,12 @@ export default {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
                     // eslint-disable-next-line no-debugger
                     if (init) {
-                        this.list = result.tradedataList
+                        this.list = result.chargeList
                     } else {
-                        this.list = [...this.list, ...result.tradedataList]
+                        this.list = [...this.list, ...result.chargeList]
                     }
                     // 更改状态，看是否还有数据
-                    if (result.tradedataList.length >= LIMIT) {
+                    if (result.chargeList.length >= LIMIT) {
                         this.status = 1
                     } else {
                         this.status = 2
@@ -322,63 +335,30 @@ export default {
             this.gatDeviceOrder(this.searchForm, true)
             this.slideMenuIsShow = false
         },
-        async handleRefund ({ id: orderId, paytype, paysource, ordernum }) {
+        async handleRefund ({ id, paytype, paysource, ordernum }) {
             this.$dialog.confirm({
                 title: '提示',
                 message: '确认退费吗？'
             })
             .then(() => {
-                this.refundFn(orderId, paytype, paysource, ordernum)
+                this.refundFn(id, paytype)
             })
         },
-        async refundFn (orderId, paytype, paysource, ordernum) {
-            console.log('paysource, ordernum', paysource, ordernum)
-            const { code, id, message } = await verifyorder({ ordernum, paysource })
-            let oid
-            if (code === 200) {
-                oid = id
-            } else {
-                return this.$toast(message)
-            }
-
-            let refundState // 1:充电、 2:离线、 3:投币
+        // 退费函数
+        async refundFn (id, paytype) {
+            const refundState = 1 // 1:充电、 2:离线、 3:投币
             let payTypeNum // 支付类型
-            let wolfkey = 0
-            if (paysource === 1) { // 充电模块
-                switch (paytype) {
-                    case 1: payTypeNum = 3; break
-                    case 2: payTypeNum = 1; break
-                    case 3: payTypeNum = 2; break
-                    case 4: payTypeNum = 5; break
-                    case 5: payTypeNum = 6; break
-                    case 12: payTypeNum = 1; break
-                }
-                refundState = 1
-            } else if (paysource === 2) { // 充电模块
-                switch (paytype) {
-                    case 1: payTypeNum = 3; break
-                    case 2: payTypeNum = 1; break
-                    case 3: payTypeNum = 2; break
-                    case 4: payTypeNum = 5; wolfkey = 3; break
-                    case 5: payTypeNum = 6; wolfkey = 4; break
-                    case 12: payTypeNum = 1; break
-                }
-                refundState = 3
-            } else if (paysource === 3) { // 离线充值机
-                switch (paytype) {
-                    case 1: payTypeNum = 3; break
-                    case 2: payTypeNum = 1; break
-                    case 3: payTypeNum = 2; break
-                }
-                refundState = 2
-            } else if (paysource === 4) { // 用户充值钱包
-                switch (paytype) {
-                    case 2: payTypeNum = 1; break
-                }
-                refundState = 4
+            const wolfkey = 0
+            switch (paytype) {
+                case 1: payTypeNum = 3; break
+                case 2: payTypeNum = 1; break
+                case 3: payTypeNum = 2; break
+                case 8: payTypeNum = 6; break
+                // case 7: payTypeNum = 6; break
+                case 12: payTypeNum = 7; break
             }
             refundUtil(payTypeNum, {
-                id: oid,
+                id,
                 refundState,
                 pwd: 0,
                 utype: 2,
@@ -404,7 +384,7 @@ export default {
         handleRecall (id) {
             this.$dialog.confirm({
                 title: '提示',
-                message: '确认部分退费吗？'
+                message: '确认撤回部分退费吗？'
             })
             .then(() => {
                 recall({
@@ -414,6 +394,12 @@ export default {
                     this.gatDeviceOrder(this.searchForm, true)
                 })
             })
+        }
+    },
+    filters: {
+        fmtPayType (value) {
+            const name = payTypeToName(value)
+            return name ? `${name}支付` : '— —'
         }
     }
 }

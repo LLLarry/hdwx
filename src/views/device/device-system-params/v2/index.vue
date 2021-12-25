@@ -174,7 +174,7 @@
         </hd-nav>
 
         <!-- 复用模板到其他设备 -->
-        <hd-select
+        <!-- <hd-select
             :list="list"
             :isShow="isShow"
             title="选择以下设备复用此系统参数"
@@ -192,7 +192,15 @@
                 <div class="flex-1 text-center">{{row.remark}}</div>
                 <div class="flex-1 text-center">{{row.areaname}}</div>
             </template>
-        </hd-select>
+        </hd-select> -->
+
+         <hd-select-filter
+            :list="list"
+            :repeatIsShow="isShow"
+            repeatTitle="选择以下设备复用此系统参数"
+            @submit="handleSelectSubmit"
+            @close="isShow = false"
+        />
 
         <hd-overlay :show="repeatOverlay" title="正在复用中" @close="repeatOverlay = false">
             <div class="text-center text-size-sm margin-bottom-2" v-if="repeatList[0].length + repeatList[1].length < selectList.length">
@@ -222,7 +230,8 @@
 
 <script>
 import hdNav from '@/components/hd-nav'
-import hdSelect from '@/components/hd-select'
+// import hdSelect from '@/components/hd-select'
+import hdSelectFilter from '@/components/hd-select-filter'
 import hdOverlay from '@/components/hd-overlay'
 import { getDeviceSystemParam, setSysParam, searchDeviceData } from '@/require/device'
 // 参数阈值map对照表
@@ -329,7 +338,8 @@ export default {
     },
     components: {
         hdNav,
-        hdSelect,
+        // hdSelect,
+        hdSelectFilter,
         hdOverlay
     },
     watch: {

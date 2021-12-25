@@ -1,6 +1,6 @@
 <template>
   <div class="device-port-qrcode">
-    <div class="header">
+    <div class="header bg-primary">
       <div class="header-box d-flex flex-column align-items-center">
           <div class="header-device-code text-size-default margin-bottom-2">{{code}}设备端口二维码</div>
       </div>
@@ -18,6 +18,7 @@
                         <div class="qr_c">
                             <qrcode
                                 v-bind="item.qrcode"
+                                :foreground="foreground"
                             />
                         </div>
                         <h3 v-if="item.qrcode.title" class="desc text-center text-size-sm text-000 font-weight-bold">{{item.qrcode.title}}</h3>
@@ -65,7 +66,12 @@ export default {
       this.init()
   },
   computed: {
-    ...mapState(['global'])
+    ...mapState(['global']),
+    // 缩略图二维码前景图
+    foreground () {
+      const { theme } = this.global
+      return theme === 'dark' ? '#FFFFFF' : '#000000'
+    }
   },
   watch: {
     // 监听设备二维码关闭的时候,延迟移除二维码
@@ -123,7 +129,7 @@ export default {
 .device-port-qrcode {
   .header {
     min-height: 20vh;
-    background-color: #4d95ff;
+    /* background-color: #4d95ff; */
     background-image: url('../../../assets/images/bottom_wave.png');
     background-position: bottom;
     background-repeat: no-repeat;
@@ -137,6 +143,13 @@ export default {
     .van-icon__image {
       width: 150px;
       height: 150px;
+    }
+  }
+}
+[theme="dark"] {
+  .device-port-qrcode {
+    .header {
+       background-image: url('../../../assets/images/bottom_wave_dark.png');
     }
   }
 }

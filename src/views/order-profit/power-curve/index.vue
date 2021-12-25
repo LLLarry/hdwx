@@ -4,9 +4,14 @@
         title="功率曲线"
         left-text="返回"
         left-arrow
+        right-text="123"
         @click-left="$router.go(-1)"
         class="shadow position-fixed w-100 fixed-header"
-    />
+    >
+        <template #right>
+            <van-icon :name="hiddenPower ? 'eye-o' : 'closed-eye'" size=".5rem" @click="hiddenPower=!hiddenPower"/>
+        </template>
+    </van-nav-bar>
     <main>
         <div class="power-post padding-3">
             <div class="d-flex justify-content-between border-1 rounded-md padding-3 text-666" style="border-color: #add9c0; background: rgba(255, 255, 255, .5);">
@@ -14,8 +19,11 @@
                     <span class="margin-bottom-2">已充时长</span>
                     <span class="font-weight-bold text-size-default">{{useTime}}</span>
                 </div>
-                <div class="flex-1 d-flex justify-content-between flex-column align-items-center">
-                    <span class="margin-bottom-2">消耗电量</span>
+                <div class="flex-1 d-flex justify-content-between flex-column align-items-center" v-if="!hiddenPower">
+                    <span class="margin-bottom-2 position-relative">
+                        消耗电量
+                        <!-- <van-icon name="closed-eye" size=".5rem" class="text-primary position-absolute margin-left-1" @click="hiddenPower=true" /> -->
+                    </span>
                     <span class="font-weight-bold text-size-default">{{useElec}}</span>
                 </div>
             </div>
@@ -44,12 +52,27 @@
                 </hd-card-item>
                 <hd-card-item>
                     <span>付款金额：</span>
-                    <span class="text-333">&yen;{{ result.paymoney | fmtMoney }}</span>
+                    <span class="text-333 d-inline-flex align-items-center">&yen;
+                        <span>{{ result.paymoney | fmtMoney }}</span>
+                        <van-popover
+                            v-model="showPopover"
+                            trigger="click"
+                            >
+                            <div class="padding-3 rounded-md bg-white text-size-sm" style="width: 50vw">
+                                <p class="margin-bottom-1">1、当前订单为“按时间充电”订单</p>
+                                <p class="margin-bottom-1">2、在订单结束充电之前，会显示付款金额为0.00是正常现象</p>
+                                <p>3、当充电结束后会显示付款金额</p>
+                            </div>
+                            <template #reference>
+                                <van-icon name="question-o" size=".4rem" class="text-primary margin-left-1" v-if="result.advance === 2" />
+                            </template>
+                        </van-popover>
+                    </span>
                 </hd-card-item>
                 <hd-card-item>
                     <span>退费金额：</span>
                     <span class="text-333" v-if="result.number === 1 && result.refundmoney === 0">&yen;{{result.paymoney | fmtMoney}}</span>
-                    <span class="text-333" v-else>&yen;{{result.refundmoney | fmtMoney}}</span>
+                    <span class="text-333" v-else>&yen;{{refMoney}}</span>
                 </hd-card-item>
                 <hd-card-item>
                     <span>最大功率：</span>
@@ -89,17 +112,19 @@
             <div>
                 <van-sticky offset-top="1.2266666666666666rem">
                     <van-row class="d-flex post-border-row post-header margin-x-3 text-size-sm font-weight-bold">
-                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">记录时间</van-col>
-                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余时间(分钟)</van-col>
-                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余电量(千瓦·时)</van-col>
-                         <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center" v-if="showAV">实时电压/电流</van-col>
-                        <van-col :span="spanNum" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">实时功率(瓦)</van-col>
+                        <van-col :span="spanNum + 1" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">记录时间</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">剩余时间</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">功率</van-col>
+                        <van-col :span="spanNum - 1" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">电量</van-col>
+                        <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center" v-if="showAV">实时电压/电流</van-col>
+                        <van-col :span="spanNum" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center" v-if="showConsumemoney">费用</van-col>
                     </van-row>
                 </van-sticky>
                  <van-row class="d-flex post-border-row margin-x-3 text-size-sm text-666" v-for="item in powerTableList" :key="item.id">
-                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.createtime | fmtDate }}</van-col>
-                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.chargetime}}</van-col>
-                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.surpluselec / 100}}</van-col>
+                    <van-col :span="spanNum + 1" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.createtime | fmtDate }}</van-col>
+                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.chargetime}}分钟</van-col>
+                    <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.power }}瓦</van-col>
+                    <van-col :span="spanNum - 1" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{item.surpluselec / 100}}度</van-col>
                     <van-col :span="spanNum" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center"  v-if="showAV">
                         <div>
                             {{item.portV == -1 ? '— —' : `${item.portV}V`}}
@@ -108,7 +133,7 @@
                             {{item.portA == -1 ? '— —' : `${item.portA}A`}}
                         </div>
                     </van-col>
-                    <van-col :span="spanNum" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">{{ item.power }}</van-col>
+                    <van-col :span="spanNum" class="padding-y-1 padding-x-1 d-flex align-items-center justify-content-center" v-if="showConsumemoney">{{ item.money | fmtMoney }}元</van-col>
                 </van-row>
             </div>
         </div>
@@ -120,6 +145,7 @@
 import HdCard from '@/components/hd-card'
 import HdCardItem from '@/components/hd-card-item'
 import { powerbrokenline, powerdrawing } from '@/require/order-profit'
+import { getVersion } from '@/utils/util'
 export default {
     components: {
         HdCard,
@@ -131,11 +157,10 @@ export default {
             myChart: null, // myChart实例对象
             powerList: [], // 功率曲线
             powerTableList: [], // 功率表格
-            result: {}
+            result: {},
+            hiddenPower: false, // 异常电量
+            showPopover: false
         }
-    },
-    created () {
-
     },
     async mounted () {
         const echarts = await import('echarts')
@@ -161,6 +186,9 @@ export default {
             if (this.showAV) {
                 num++
             }
+            if (this.showConsumemoney) {
+                num++
+            }
             return 24 / num
         },
         // 使用时间
@@ -183,6 +211,20 @@ export default {
             } else {
                 return '— —'
             }
+        },
+        // 退费金额
+        refMoney () {
+            const { endtime, refundmoney = 0 } = this.result
+            if (endtime) {
+                return refundmoney.toFixed(2)
+            } else {
+                return ' — —'
+            }
+        },
+        // 是否显示扣费金额（v3版本显示）
+        showConsumemoney () {
+            const version = getVersion(this.result.hardversion)
+            return ['v3', 'v3-addr'].includes(version)
         }
     },
     methods: {

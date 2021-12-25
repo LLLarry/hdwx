@@ -28,8 +28,12 @@
 </template>
 
 <script>
-    // import { getNetworkType } from '@/utils/wechat-util'
+    import { mapState } from 'vuex'
     import accessRecord from '@/assets/js/access-record'
+    import { generateNewStyle, writeStyle } from '@/utils/theme'
+    import color from 'css-color-function'
+    import rgbHex from 'rgb-hex'
+    console.log(rgbHex(color.convert('color(rgba(0 ,0 , 0) tint(100%))')))
     export default {
         data () {
             return {
@@ -40,6 +44,9 @@
         mounted () {
           accessRecord()
         },
+        computed: {
+          ...mapState(['global'])
+        },
         watch: {
           $route: {
             handler (route) {
@@ -47,14 +54,37 @@
               const { path } = this.$route
               this.active = path === '/' ? 0 : path === '/navigation' ? 1 : 2
             }
+          },
+          // 监听主题值的改变，设置项目主题
+          'global.theme': {
+            handler (theme) {
+              try {
+                const styles = Array.from(document.querySelectorAll('.reset-style'))
+                for (const style of styles) {
+                  style && style.remove()
+                }
+                const html = document.documentElement || document.querySelector('html') || document.getElementsByTagName('html')[0]
+                if (theme === 'dark') {
+                  generateNewStyle('#000000').then(cssText => {
+                    writeStyle(cssText)
+                    html && html.setAttribute('theme', 'dark')
+                  })
+                } else {
+                  html && html.removeAttribute('theme')
+                }
+              } catch (error) {
+
+              }
+            },
+            immediate: true
           }
         }
     }
 </script>
 
 <style lang="scss">
-@import './assets/style/base.css';
-@import './assets/style/hdwx-bootstrap.css';
+@import './assets/style/base.scss';
+@import './assets/style/hdwx-bootstrap.scss';
 // @import './assets/style/iconfont.css';
 @import './assets/style/animate.css';
 @font-face {

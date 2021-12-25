@@ -1,4 +1,103 @@
 /*自己分装的bootstarap库*/ 
+// $success: #07c160;
+// $warning: #ff976a;
+// $danger: #ee0a24;
+// $info: #17a2b8;
+// $primary: #1989fa;
+// $link: #409eff;
+// $white: '#FFFFFF';
+// $black: #000000;
+// $gray-333: #333333;
+// $gray-666: #666666;
+// $gray-999: #999999;
+
+// .bg-success {
+//   background-color: #28a745 !important;
+// }
+// .bg-warning {
+//   background-color: #ffc107 !important;
+// }
+// .bg-danger {
+//   background-color: #dc3545 !important;
+// }
+// .bg-info {
+//   background-color: #17a2b8 !important;
+// }
+// .bg-primary {
+//   background-color: rgb(16, 142, 233) !important;
+// }
+// .bg-white {
+//  background-color: #FFFFFF !important;
+// }
+// .bg-transparent {
+//   background-color: transparent !important;
+// }
+// .bg-gray {
+// background-color: #f5f7fa !important;
+// }
+:root {
+  --success: #07c160;
+  --warning: #ff976a;
+  --danger: #ee0a24;
+  --info: #17a2b8;
+  --primary: #1989fa;
+  --link: #409eff;
+  --white: #FFFFFF;
+  --black: #000000;
+  --gray-333: #333333;
+  --gray-666: #666666;
+  --gray-999: #999999;
+  --gray-ccc: #cccccc;
+  --gray-ddd: #dddddd;
+  --gray-eee: #eeeeee;
+  --gray-p: #8f8f94;
+  --bg-success: #28a745;
+  --bg-warning: #ffc107;
+  --bg-danger: #dc3545;
+  --bg-info: #17a2b8;
+  --bg-primary: #1989fa;
+  --bg-white: #FFFFFF;
+  --bg-gray: #f5f7fa;
+  --bg-ddd: #dddddd;
+  --shadow: 0 2px 12px rgba(100, 101, 102, 0.12);
+  --shadow-md: 0 2px 12px rgba(100, 101, 102, 0.24);
+  --shadow-lg: 0 2px 12px rgba(100, 101, 102, 0.36);
+  --shadow-y: 0 -2px 12px rgba(100, 101, 102, 0.12);
+  --shadow-y-md: 0 -2px 12px rgba(100, 101, 102, 0.24);
+  --shadow-y-lg: 0 -2px 12px rgba(100, 101, 102, 0.36);
+}
+
+[theme="dark"]:root {
+  --success: #058744;
+  --warning: #b36a4a;
+  --danger: #a70719;
+  --info: #107181;
+  --primary: #1260af;
+  --link: #2d6fb3;
+  --white: #000000;
+  --black: #ffffff;
+  --gray-333: #cccccc;
+  --gray-666: #999999;
+  --gray-999: #666666;
+  --gray-ccc: #333333;
+  --gray-ddd: #222222;
+  --gray-eee: #111111;
+  --gray-p: #70706b;
+  --bg-success: #1c7530;
+  --bg-warning: #b38705;
+  --bg-danger: #9a2530;
+  --bg-info: #107181;
+  --bg-primary: #1260af;
+  --bg-white: #000000;
+  --bg-gray: #0a0805;
+  --bg-ddd: #222222;
+  --shadow: 0 2px 12px rgba(155, 154, 153, 0.12);
+  --shadow-md: 0 2px 12px rgba(155, 154, 153, 0.24);
+  --shadow-lg: 0 2px 12px rgba(155, 154, 153, 0.36);
+  --shadow-y: 0 -2px 12px rgba(155, 154, 153, 0.12);
+  --shadow-y-md: 0 -2px 12px rgba(155, 154, 153, 0.24);
+  --shadow-y-lg: 0 -2px 12px rgba(155, 154, 153, 0.36);
+}
 
 /*1、文字类*/
 .lead {
@@ -19,42 +118,42 @@
   font-size: 18px;
 }
 .text-success {
-    color: #07c160 !important;
+    color: var(--success) !important;
 }
 .text-warning {
-    color: #ffc107 !important;
+    color: var(--warning) !important;
 }
 .text-danger {
-    color: #ee0a24 !important;
+    color: var(--danger) !important;
 }
 .text-info {
-    color: #17a2b8 !important;
+    color: var(--info) !important;
 }
 .text-primary {
-    color: #1989fa !important;
+    color: var(--primary) !important;
 }
 .text-link {
-  color: #409eff !important;
+  color: var(--link) !important;
   text-decoration: underline;
 }
 .text-000 {
-  color: #000000;
+  color: var(--black);
 }
 .text-333 {
-  color: #333333;
+  color: var(--gray-333);
 }
 .text-666 {
-  color: #666666;
+  color: var(--gray-666);
 }
 .text-999 {
-  color: #999999;
+  color: var(--gray-999);
 }
 .text-p {
-  color: #8f8f94;
+  color: var(--gray-p);
 }
 
 .text-white {
-  color: #fff;
+  color: var(--white);
 }
 
 .text-left {
@@ -102,28 +201,31 @@
 
 
 .bg-success {
-    background-color: #28a745 !important;
+    background-color: var(--bg-success) !important;
 }
 .bg-warning {
-    background-color: #ffc107 !important;
+    background-color: var(--bg-warning) !important;
 }
 .bg-danger {
-    background-color: #dc3545 !important;
+    background-color: var(--bg-danger) !important;
 }
 .bg-info {
-    background-color: #17a2b8 !important;
+    background-color: var(--bg-info) !important;
 }
 .bg-primary {
-    background-color: rgb(16, 142, 233) !important;
+    background-color: var(--bg-primary) !important;
 }
 .bg-white {
-   background-color: #FFFFFF !important;
+   background-color: var(--bg-white) !important;
 }
 .bg-transparent {
     background-color: transparent !important;
 }
 .bg-gray {
-  background-color: #f5f7fa !important;
+  background-color: var(--bg-gray) !important;
+}
+.bg-ddd {
+  background-color: var(--bg-ddd) !important;
 }
 
 /* 3、边框类*/ 
@@ -147,19 +249,19 @@
 /* 3、边框类*/ 
 
 .border-1 {
-	border: 1px solid #000;
+	border: 1px solid var(--black);
 }
 .border-top-1 {
-	border-top: 1px solid #000;
+	border-top: 1px solid var(--black);
 }
 .border-right-1 {
-	border-right: 1px solid #000;
+	border-right: 1px solid var(--black);
 }
 .border-bottom-1 {
-	border-bottom: 1px solid #000;
+	border-bottom: 1px solid var(--black);
 }
 .border-left-1 {
-	border-left: 1px solid #000;
+	border-left: 1px solid var(--black);
 }
  
  /*3.1、边框颜色*/
@@ -179,22 +281,22 @@
  	 border-color: #17a2b8;
  }
  .border-333 {
-  border-color: #333;
+  border-color: var(--gray-333);
  }
  .border-666 {
-  border-color: #666;
+  border-color: var(--gray-666);
  }
  .border-999 {
-  border-color: #999;
+  border-color: var(--gray-999);
  }
  .border-ccc {
-  border-color: #ccc;
+  border-color: var(--gray-ccc);
  }
  .border-ddd {
-  border-color: #ddd;
+  border-color: var(--gray-ddd);
  }
  .border-eee {
-  border-color: #eee;
+  border-color: var(--gray-eee);
  }
  .outline-none {
    outline: none;
@@ -690,22 +792,22 @@
  }
 
  .shadow {
-  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.12);
+  box-shadow: var(--shadow);
  }
  .shadow-md {
-  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.24);
+  box-shadow: var(--shadow-md);
  }
  .shadow-lg {
-  box-shadow: 0 2px 12px rgba(100, 101, 102, 0.36);
+  box-shadow: var(--shadow-lg);
  }
  .shadow-y {
-  box-shadow: 0 -2px 12px rgba(100, 101, 102, 0.12);
+  box-shadow: var(--shadow-y);
  }
  .shadow-y-md {
-  box-shadow: 0 -2px 12px rgba(100, 101, 102, 0.24);
+  box-shadow: var(--shadow-y-md);
  }
  .shadow-y-lg {
-  box-shadow: 0 -2px 12px rgba(100, 101, 102, 0.36);
+  box-shadow: var(--shadow-y-lg);
  }
 
  .h-25 {

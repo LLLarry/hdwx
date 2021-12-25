@@ -44,4 +44,10 @@ export default {
     background: rgba(0, 0, 0, .7);
     color: #fff;
 }
+[theme="dark"] {
+  .hd-loading-content {
+      background: rgba(255, 255, 255, .7);
+      color: #000;
+  }
+}
 </style>

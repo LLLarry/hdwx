@@ -1,7 +1,9 @@
 import { reactive, toRefs } from '@vue/composition-api'
 import { toast } from '@/assets/js/vant-helper'
 import { getCaptchaData, registerDealerAaccount } from '@/require/auth'
-export default (router, store) => {
+import { getWechatPublicAccountInfo } from '@/utils/util'
+
+export default (router, route, store) => {
   let timer = null
   // 校验手机号
   const checkPhone = phone => /^1[3|4|5|6|7|8|9]\d{9}$/.test(phone)
@@ -14,7 +16,8 @@ export default (router, store) => {
     invitecode: '', // 邀请码
     captcha: '', // 验证码
     expireTime: 0, // 过期时间
-    showPopover: false
+    showPopover: false,
+    logoModel: createLogoModel(route, store)
   })
 
   // 设置邀请码，并开启定时器
@@ -89,4 +92,43 @@ export default (router, store) => {
     getCaptcha,
     submit
   }
+}
+
+/**
+ * 创建logoModel
+ * @param {*} route
+ * @param {*} store
+ * @returns logoModel对象
+ */
+const createLogoModel = (route, store) => {
+  const platform = Number.isNaN(Number(route.query.platform)) ? Number(store.state.user.platform) : Number(route.query.platform)
+  const publicAccountInfo = getWechatPublicAccountInfo(platform)
+  // 获取公众号名字缩写
+  const name = (publicAccountInfo || getWechatPublicAccountInfo.DEFAULT).key
+  // 获取title缩放比例
+  const scale = (publicAccountInfo || getWechatPublicAccountInfo.DEFAULT).scale || 1
+  // 获取logo图片路径
+  const logoModel = getLogoModel(name, scale)
+  return logoModel
+}
+
+/**
+ * 获取logo图片信息
+ * @param {*} name 公众号名称速写 scale title缩放比例
+ * @returns { logo: logo路径, title: title图片路径 }
+ */
+const getLogoModel = (name, scale) => {
+  const imgRequire = require.context('../../assets/images/logo/', true, /\.(png)|(jpg)$/)
+  const logoModel = imgRequire.keys()
+            .filter(path => path.includes(name))
+            .reduce((acc, path) => {
+              if (path.includes('_logo')) {
+                acc.logo = imgRequire(path)
+              } else {
+                acc.title = imgRequire(path)
+              }
+              return acc
+            }, {})
+    logoModel.scale = scale
+    return logoModel
 }

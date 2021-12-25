@@ -52,18 +52,32 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .template-header {
-    .van-cell {
+    ::v-deep .van-cell {
         background: transparent;
         padding: 5px 0;
         .van-field__control {
             background-color: #fff;
+            border: 1px solid #ccc;
             padding: 5px 10px;
         }
         .van-field__label {
             display: flex;
             align-items: center;
+        }
+    }
+}
+</style>
+
+<style lang="scss">
+[theme="dark"] {
+    .template-header {
+        .van-cell {
+            .van-field__control {
+                background-color: #000;
+                border: 1px solid #333;
+            }
         }
     }
 }
