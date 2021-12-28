@@ -190,8 +190,14 @@
                         this.loading = true
                     }
                     const { code, message, hasdata, ...result } = await getDealHomePageData(data, isShowLoading)
+                    /**
+                     * hasdata:
+                     *  0: 缓存数据不存在、重新请求
+                     *  1: 缓存数据在当天、数据正常，不重新请求
+                     *  2: 缓存数据不在当天、数据异正常，重新请求
+                     */
                     this.loading = false
-                    if (hasdata === 1 || hasdata === 3) {
+                    if (hasdata === 0 || hasdata === 2) {
                         this.getInitData({ type: 1 }, '更新数据中')
                         return false
                     }

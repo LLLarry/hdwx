@@ -30,7 +30,7 @@
 <script>
     import { mapState } from 'vuex'
     import accessRecord from '@/assets/js/access-record'
-    import { generateNewStyle, writeStyle } from '@/utils/theme'
+    import watchThemeHandler from '@/assets/js/watch-theme'
     import color from 'css-color-function'
     import rgbHex from 'rgb-hex'
     console.log(rgbHex(color.convert('color(rgba(0 ,0 , 0) tint(100%))')))
@@ -58,23 +58,7 @@
           // 监听主题值的改变，设置项目主题
           'global.theme': {
             handler (theme) {
-              try {
-                const styles = Array.from(document.querySelectorAll('.reset-style'))
-                for (const style of styles) {
-                  style && style.remove()
-                }
-                const html = document.documentElement || document.querySelector('html') || document.getElementsByTagName('html')[0]
-                if (theme === 'dark') {
-                  generateNewStyle('#000000').then(cssText => {
-                    writeStyle(cssText)
-                    html && html.setAttribute('theme', 'dark')
-                  })
-                } else {
-                  html && html.removeAttribute('theme')
-                }
-              } catch (error) {
-
-              }
+              watchThemeHandler(theme)
             },
             immediate: true
           }
