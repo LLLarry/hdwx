@@ -5,7 +5,7 @@
                 <h1 class="text-center margin-bottom-3">子账号功能</h1>
                 <p class="text-size-md">
                   为方便各运营商操作，我们推出“财务子账号”和“维修子账号”功能；运营商可以通过邀请码邀请指定用户来成为“子账户功能”。
-                  <van-popover
+                  <!-- <van-popover
                     v-model="showPopover"
                     trigger="click"
                   >
@@ -21,36 +21,35 @@
                         </ul>
                       </div>
                     </template>
-                  </van-popover>
-
+                  </van-popover> -->
                 </p>
             </div>
 
             <div class="header-card padding-x-3">
               <ul class="d-flex justify-content-between padding-3 shadow bg-white rounded-md text-666">
                 <li class="d-flex flex-column align-items-center">
-                    <i class="padding-bottom-2 iconfont icon-erweima header-card-icon"></i>
-                    <span class="text-size-sm">生成邀请码</span>
+                    <i class="padding-bottom-2 iconfont icon-add header-card-icon"></i>
+                    <span class="text-size-sm">点击添加按钮</span>
                 </li>
                 <li class="d-flex flex-column align-items-center justify-content-between">
                     <i class="iconfont icon-a-youjiantouzhixiangyoujiantou header-card-icon"></i>
                 </li>
                 <li class="d-flex flex-column align-items-center">
-                    <i class="padding-bottom-2 iconfont icon-tianchongxing- header-card-icon"></i>
-                    <span class="text-size-sm">用户使用邀请码</span>
+                    <i class="padding-bottom-2 iconfont icon-sousuo header-card-icon"></i>
+                    <span class="text-size-sm">搜索用户</span>
                 </li>
                 <li class="d-flex flex-column align-items-center">
                     <i class="iconfont icon-a-youjiantouzhixiangyoujiantou header-card-icon"></i>
                 </li>
                 <li class="d-flex flex-column align-items-center">
                     <i class="padding-bottom-2 iconfont icon-yingyong header-card-icon"></i>
-                    <span class="text-size-sm">选择子账号类型</span>
+                    <span class="text-size-sm">点击添加按钮</span>
                 </li>
               </ul>
             </div>
         </header>
         <main>
-          <div class="sub-qr margin-3 padding-1 rounded-lg shadow-lg">
+          <!-- <div class="sub-qr margin-3 padding-1 rounded-lg shadow-lg">
             <div class="sub-qr-box padding-3 rounded-lg">
                 <div class="d-flex">
                     <div class="left flex-2">
@@ -68,7 +67,6 @@
                           />
                           <span class="font-weight-bold" @click="copyText(captcha)">{{captcha}}</span>
                         <span class="text-size-sm text-666 margin-top-1" @click="copyText(captcha)">复制邀请码</span>
-                        <!-- <span>到期时间： {{ expireData }}</span> -->
                       </div>
                       <div class="create-code h-100 d-flex flex-column align-items-center justify-content-center" v-else>
                         <button class="create-code-btn" @click="handleCreateCaptcha">生成邀请码</button>
@@ -77,16 +75,22 @@
                 </div>
                 <div class="text-center text-333 text-size-sm margin-top-1" v-if="captcha">剩余有效时间：{{expireData}}</div>
             </div>
-          </div>
-
+          </div> -->
+          <!-- <div class="add-account d-flex justify-content-center margin-y-3">
+            <div class="text-center text-primary padding-x-4 padding-y-2 d-flex justify-content-center align-items-center add-account-item rounded">
+              <van-icon name="plus" size="0.45rem" class="text-primary" />
+              <span>添加子账号</span>
+              </div>
+          </div> -->
           <div class="">
               <hd-title>
               子账号管理
-              <!-- <template #desc>
-                <div class="padding-y-1 padding-left-2" style="font-size: 0;">
-                  <van-icon name="add-o" size=".6rem" color="#07c160" />
+              <template #desc>
+                <div class="padding-y-1 padding-left-2 d-flex justify-content-center align-items-center" @click="showSelectUser">
+                  <van-icon name="plus" size="0.5rem" class="text-primary" />
+                  <span class="text-primary margin-left-1">添加子账号</span>
                 </div>
-              </template> -->
+              </template>
             </hd-title>
             <div class="bg-white padding-y-3">
               <van-tabs type="card" color="#07c160">
@@ -148,12 +152,79 @@
             </div>
           </div>
         </main>
+
+        <van-popup position="top" v-model="addSubAccountIsShow">
+          <div class="bg-gray">
+            <div class="padding-x-3 padding-y-2 text-666 text-center text-size-default" v-show="!userModel.loaded">搜索用户</div>
+            <div
+              class="d-flex align-items-center justify-content-center padding-top-4 padding-bottom-2"
+              v-show="userModel.loaded"
+            >
+              <van-image
+                width="2.2rem"
+                height="2.2rem"
+                round
+                :src="userModel.headimgurl | fmtAvatar"
+              />
+            </div>
+            <van-form class="padding-x-3">
+              <van-field
+                v-model="userModel.username"
+                name="昵称"
+                label="昵称"
+                placeholder=""
+                disabled
+                v-show="userModel.loaded"
+              />
+              <van-field
+                v-model="userModel.realname"
+                name="姓名"
+                label="姓名"
+                placeholder=""
+                disabled
+                v-show="userModel.loaded"
+              />
+              <van-field
+                v-model="userModel.id"
+                name="用户ID"
+                label="用户ID"
+                placeholder="用户ID"
+                :disabled="userModel.loaded"
+              />
+              <van-field
+                v-model="userModel.phone"
+                name="电话"
+                label="电话"
+                placeholder="电话"
+                :disabled="userModel.loaded"
+              />
+              <van-field
+                label="子账号类型"
+                v-show="userModel.loaded"
+              >
+                <template #input>
+                  <van-radio-group v-model="userModel.type">
+                    <van-radio :name="1" class="margin-bottom-2">维修子账号</van-radio>
+                    <van-radio :name="2">财务子账号</van-radio>
+                  </van-radio-group>
+                </template>
+              </van-field>
+              <div class="bg-white padding-3 text-danger text-size-sm" v-if="userModel.message">{{ userModel.message }}</div>
+              <div style="margin: 16px;" v-if="!userModel.loaded">
+                <van-button round block type="primary" @click="queryUser">查询用户</van-button>
+              </div>
+              <div style="margin: 16px;" v-else>
+                <van-button round block type="info" @click="addAccountBack">添加子账号</van-button>
+              </div>
+            </van-form>
+          </div>
+        </van-popup>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { createCaptcha, inquireMerChildUser, switchoverChildUser, deleteChildUser } from '@/require/mine'
+import { createCaptcha, inquireMerChildUser, switchoverChildUser, deleteChildUser, inquireAccountForChild, insertChildAccount } from '@/require/mine'
 import copyText from '@/utils/copy-text'
 let timer = null
 export default {
@@ -163,7 +234,18 @@ export default {
       expireTime: 0, // 邀请码过期时间
       childList: [], // 维修子账号
       financeList: [], // 财务子账号
-      showPopover: false
+      showPopover: false,
+      addSubAccountIsShow: false,
+      userModel: {
+        id: '',
+        username: '',
+        realname: '',
+        phone: '',
+        headimgurl: '',
+        message: '',
+        type: 1,
+        loaded: false // 是否已经加载过
+      }
     }
   },
   mounted () {
@@ -297,6 +379,57 @@ export default {
     },
     copyText (text) {
       copyText(text)
+    },
+    showSelectUser () {
+      this.userModel = {
+        id: '',
+        username: '',
+        realname: '',
+        phone: '',
+        headimgurl: '',
+        message: '',
+        type: 1,
+        loaded: false
+      }
+      this.addSubAccountIsShow = true
+    },
+    async queryUser () {
+      try {
+        const { id: member, phone } = this.userModel
+        const { code, message, account } = await inquireAccountForChild({ member, phone })
+        if (code === 200) {
+          const { id, username, realname, phoneNum: phone, headimgurl } = account
+          this.userModel = {
+            ...this.userModel,
+            id,
+            username,
+            realname,
+            phone,
+            headimgurl,
+            message: '',
+            loaded: true
+          }
+        } else {
+          this.userModel.message = message
+        }
+      } catch (error) {
+        this.toast('异常错误')
+      }
+    },
+    async addAccountBack () {
+      try {
+        const { id: uid, type, phone } = this.userModel
+        const { code, message } = await insertChildAccount({ uid, type, phone })
+        if (code === 200) {
+          this.addSubAccountIsShow = false
+          this.toast('添加成功')
+          this.handleGetSubAccount()
+        } else {
+          this.toast(message)
+        }
+      } catch (error) {
+        this.toast('异常错误')
+      }
     }
   }
 }
@@ -367,6 +500,14 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+    .add-account {
+      .add-account-item {
+        box-shadow: inset 2px 2px 4px  rgba(0, 0, 0, .1),  inset -2px -2px 4px  rgba(0, 0, 0, .1);
+        &:active {
+          background: rgba(0, 0, 0, .05);
         }
       }
     }

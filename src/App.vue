@@ -29,20 +29,16 @@
 
 <script>
     import { mapState } from 'vuex'
-    import accessRecord from '@/assets/js/access-record'
     import watchThemeHandler from '@/assets/js/watch-theme'
-    import color from 'css-color-function'
-    import rgbHex from 'rgb-hex'
-    console.log(rgbHex(color.convert('color(rgba(0 ,0 , 0) tint(100%))')))
+    // import color from 'css-color-function'
+    // import rgbHex from 'rgb-hex'
+    // console.log(rgbHex(color.convert('color(rgba(0 ,0 , 0) tint(100%))')))
     export default {
         data () {
             return {
                 active: 0,
                 showTabBar: false
             }
-        },
-        mounted () {
-          accessRecord()
         },
         computed: {
           ...mapState(['global'])

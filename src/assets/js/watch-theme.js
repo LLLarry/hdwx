@@ -4,7 +4,6 @@ import { generateNewStyle, writeStyle } from '@/utils/theme'
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 function darkModeHandler () {
     // 正式环境禁止使用
-    console.log(HDWX, HDWX.ENV, mediaQuery.matches)
     if (HDWX.ENV !== 'production' && mediaQuery.matches) {
         store.commit('setGlobalData', { theme: 'dark' })
     } else {

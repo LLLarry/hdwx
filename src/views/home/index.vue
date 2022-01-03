@@ -86,6 +86,9 @@
                 </van-grid-item>
             </van-grid>
         </section>
+        <van-popup v-model="bindResultIsShow" position="right" :style="{ width: '100vw', height: '100vh' }">
+            <bind-result v-model="bindResultIsShow" :bindResultMap="bindResultMap"/>
+        </van-popup>
     </div>
 </template>
 
@@ -96,7 +99,11 @@
     import { scanQRCode } from '@/utils/wechat-util'
     import parseURL from '@/utils/parse-url'
     import { mapState, mapMutations } from 'vuex'
+    import BindResult from '@/components/home/bind-result'
     export default {
+        components: {
+            BindResult
+        },
         data () {
             return {
                 tt: false,
@@ -127,7 +134,9 @@
                 updateTime: '', // 更新时间
                 showincoins: '', // 是否显示投币收益
                 loading: false, // 是否正在更新数据
-                isHide: false // 是否开启隐藏模式
+                isHide: false, // 是否开启隐藏模式
+                bindResultIsShow: false,
+                bindResultMap: {}
             }
         },
         async mounted () {
@@ -149,6 +158,13 @@
                         this.setUser({ ...this.user, showincoins: this.showincoins })
                     }
                     return this.showincoins === 1
+                }
+            },
+            titleText () {
+                if (this.bindResultIsShow) {
+                    return '绑定结果'
+                } else {
+                    return this.$route.meta.title
                 }
             }
         },
@@ -201,25 +217,25 @@
                         this.getInitData({ type: 1 }, '更新数据中')
                         return false
                     }
-                    this.todayMoney = result.nowincomemoney
+                    this.todayMoney = result.nowMoney
                     this.showincoins = result.showincoins
                     if (this.isShowIcon) {
                         this.list = [
-                            { title: '线上收益', value: fmtMoney(result.totalincomemoney) },
+                            { title: '线上收益', value: fmtMoney(result.allMoney) },
                             { title: '未提现', value: fmtMoney(result.earnings) },
-                            { title: '昨日收益', value: fmtMoney(result.yestincomemoney) },
+                            { title: '昨日收益', value: fmtMoney(result.yestMoney) },
                             { title: '投币收益', value: result.totalcoins },
-                            { title: '今日投币', value: result.nowcoins },
-                            { title: '昨日投币', value: result.yestcoins },
+                            { title: '今日投币', value: result.codenowcoins },
+                            { title: '昨日投币', value: result.codeyestcoins },
                             { title: '总耗电量', value: fmtMoney(result.totalConsume) },
                             { title: '今日耗电', value: fmtMoney(result.todayConsume) },
                             { title: '昨日耗电', value: fmtMoney(result.yesterdayConsume) }
                         ]
                     } else {
                         this.list = [
-                            { title: '线上收益', value: fmtMoney(result.totalincomemoney) },
+                            { title: '线上收益', value: fmtMoney(result.allMoney) },
                             { title: '未提现', value: fmtMoney(result.earnings) },
-                            { title: '昨日收益', value: fmtMoney(result.yestincomemoney) },
+                            { title: '昨日收益', value: fmtMoney(result.yestMoney) },
                             { title: '总耗电量', value: fmtMoney(result.totalConsume) },
                             { title: '今日耗电', value: fmtMoney(result.todayConsume) },
                             { title: '昨日耗电', value: fmtMoney(result.yesterdayConsume) }
@@ -272,10 +288,11 @@
                         devicenum: result.code
                     })
                     .then(res => {
-                        this.$toast(res.message)
+                        this.bindResultMap = { ...res }
+                        this.bindResultIsShow = true
                     })
                     .catch(e => {
-                        this.$toast('异常错误')
+                       this.toast('异常错误')
                     })
                 })
                 .catch(err => {

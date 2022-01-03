@@ -103,7 +103,7 @@ import hdOverlay from '@/components/hd-overlay'
 import hdQrcode from '@/components/hd-qrcode'
 import { mapState } from 'vuex'
 import { inquireDeviceMmanageInfo, merTranspositionImei, removeClient } from '@/require/device'
-import { getInfoByHdVersion } from '@/utils/util'
+import { getInfoByHdVersion, getVersion } from '@/utils/util'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
 const { PROXY_BASE_URL } = window.HDWX
@@ -201,7 +201,7 @@ export default {
           this.$router.push({ path: '/device/templatelist/' + this.code })
         break
         case '系统参数':
-          this.$router.push({ path: `/device/system/${this.result.deviceversion === '07' ? 'car' : 'v2'}/` + this.code })
+          this.$router.push({ path: `/device/system/${getVersion(this.result.deviceversion) === 'v2-car' ? 'car' : 'v2'}/` + this.code })
         break
         case '更换模块':
           this.changeModel = true

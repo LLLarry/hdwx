@@ -290,7 +290,7 @@ const thresholdMap = {
     }, // 最大浮充功率
     fullChargeTime: {
         title: '浮充时间',
-        range: [30, 240]
+        range: [1, 240]
     } // 浮充时间
 }
 export default {

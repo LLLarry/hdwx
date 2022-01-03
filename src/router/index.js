@@ -43,6 +43,14 @@ const routes = [
     }
   },
   {
+    path: '/home/bindresult',
+    name: 'bind-result',
+    component: () => import(/* webpackChunkName: "bind-result" */ '../views/home/bind-result/index.vue'),
+    meta: {
+      title: '绑定结果'
+    }
+  },
+  {
     path: '/device/list',
     name: 'device-list',
     component: () => import(/* webpackChunkName: "device-list" */ '../views/device/device-list/index.vue'),

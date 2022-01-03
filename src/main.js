@@ -22,12 +22,7 @@ import '@/assets/js/watch-theme'
 import wx from 'weixin-js-sdk'
 import VueCompositionApi from '@vue/composition-api'
 import '@/assets/js/vant-helper'
-// import { isiOS } from '@/utils/util'
-// import ECharts from 'vue-echarts'
-// import { use } from 'echarts/core'
-// import { CanvasRenderer } from 'echarts/renderers'
-// import { /* BarChart, */ PieChart } from 'echarts/charts'
-// import { /* GridComponent,  */TooltipComponent, TitleComponent, LegendComponent } from 'echarts/components'
+import '@/assets/js/mixin'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
@@ -99,25 +94,6 @@ Vue.use(VueMeta, {
   refreshOnceOnNavigation: true
 })
 Window.prototype.wx = wx
-
-Vue.mixin({
-  metaInfo () {
-      return {
-          title: this.titleText
-      }
-  }
-})
-
-// use([
-//   CanvasRenderer,
-//   // BarChart,
-//   // GridComponent,
-//   TooltipComponent,
-//   TitleComponent,
-//   LegendComponent,
-//   PieChart
-// ])
-// Vue.component('v-chart', ECharts)
 
 new Vue({
   router,

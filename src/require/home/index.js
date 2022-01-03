@@ -166,3 +166,17 @@ export const getDealHomePageData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 完善设备信息
+ * @param {*} data
+ * @returns
+ */
+ export const editEquipmentInfo = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/editEquipmentInfo',
+        method: 'post',
+        data,
+        loadText
+    })
+}

@@ -152,3 +152,31 @@ export const skipPersonCenter = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 通过会员号/手机号，筛选用户是否可以成为子账号
+ * @param {*} data {
+ * @returns
+ */
+ export const inquireAccountForChild = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/inquireAccountForChild',
+        method: 'post',
+        data,
+        loadText
+    })
+}
+
+/**
+ * 添加子账号
+ * @param {*} data {
+ * @returns
+ */
+ export const insertChildAccount = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/insertChildAccount',
+        method: 'post',
+        data,
+        loadText
+    })
+}
