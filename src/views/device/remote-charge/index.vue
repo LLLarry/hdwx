@@ -29,6 +29,7 @@ import selectPort from '@/components/charge/select-port'
 import selectTemp from '@/components/charge/select-temp'
 import { remotechargechoose, remotechargeaccess } from '@/require/device'
 import { getInfoByHdVersion } from '@/utils/util'
+import { updatePortStatusHook } from '@/views/device/utils/helper.js'
 export default {
     data () {
         return {
@@ -50,16 +51,26 @@ export default {
     methods: {
         async init () {
             try {
+                // 获取设备信息
                 const { code, message, templatelist, hardversion } = await remotechargechoose({ code: this.code, addr: this.addr })
                 if (code === 200) {
                     const { portNum = 0 } = getInfoByHdVersion(hardversion)
                     this.list = new Array(portNum).fill(1).map((item, index) => ({ port: index + 1, portStatus: 1 }))
                     this.templateTimelist = templatelist
+                    try {
+                        // 更新端口状态信息
+                        const map = await updatePortStatusHook({ code: this.code, addr: this.addr })
+                        this.list = this.list.map(item => ({
+                            ...item,
+                            portStatus: (map[item.port] < -1 || typeof map[item.port] === 'undefined') ? 1 : map[item.port]
+                        }))
+                    } catch (e) {
+                        this.$toast(e)
+                    }
                 } else {
                     this.$toast(message)
                 }
             } catch (error) {
-                console.log(error)
                 this.$toast('异常错误')
             }
         },

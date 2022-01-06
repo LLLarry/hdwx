@@ -150,7 +150,6 @@ export default {
       this.deviceModel.temp = name
     },
     goHome () {
-      console.log(12)
       this.$emit('change', false)
     }
   }

@@ -23,6 +23,7 @@ import wx from 'weixin-js-sdk'
 import VueCompositionApi from '@vue/composition-api'
 import '@/assets/js/vant-helper'
 import '@/assets/js/mixin'
+import '@/assets/js/v-console'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,

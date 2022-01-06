@@ -584,3 +584,33 @@ export const inquireTheSameDeviceData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 更新一拖二设备端口状态
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const queryAddrAllPortStatus = (data, loadText) => {
+    return ajax({
+        url: '/wolfNewSendData/queryAddrAllPortStatus',
+        data,
+        method: 'post',
+        loadText
+    })
+}
+
+/**
+ * 更新端口状态
+ * @param {*} data {  code: String }
+ * @param {*} loadText
+ * @returns
+ */
+ export const portstate1 = (data, loadText) => {
+    return ajax({
+        url: '/portstate1',
+        data,
+        method: 'post',
+        loadText
+    })
+}

@@ -4,7 +4,7 @@
             <div class="header-top padding-x-3 padding-y-3">
                 <h1 class="text-center margin-bottom-3">子账号功能</h1>
                 <p class="text-size-md">
-                  为方便各运营商操作，我们推出“财务子账号”和“维修子账号”功能；运营商可以通过邀请码邀请指定用户来成为“子账户功能”。
+                  为方便各运营商管理操作，我们推出“财务子账号”和“维修子账号”功能；运营商可以通过搜索用户id查找符合条件的用户成为“子账号”。
                   <!-- <van-popover
                     v-model="showPopover"
                     trigger="click"
@@ -185,18 +185,41 @@
                 v-show="userModel.loaded"
               />
               <van-field
-                v-model="userModel.id"
-                name="用户ID"
                 label="用户ID"
-                placeholder="用户ID"
-                :disabled="userModel.loaded"
-              />
+              >
+                <template #input>
+                  <input
+                    v-model="userModel.id"
+                    :disabled="userModel.loaded"
+                    placeholder="用户ID"
+                    class="van-field__control"
+                  />
+                  <van-popover
+                    v-model="showPopover"
+                    trigger="click"
+                    placement="bottom"
+                  >
+                    <div class="text-size-sm padding-3 tip-content">
+                      <div class="tip-content-title text-size-md margin-bottom-1 font-weight-bold">查看用户id方法</div>
+                      <ul>
+                        <li class="margin-bottom-1">1、用户进入“自助充电平台”公众号，进入“充电中心”</li>
+                        <li class="margin-bottom-1">2、点击底部导航栏进入“个人中心”</li>
+                        <li>3、在“我的”页面点击“个人中心”，即可查看到“账号”一栏为用户ID</li>
+                      </ul>
+                    </div>
+                    <template #reference>
+                      <van-icon name="warning-o" size="0.5rem" />
+                    </template>
+                  </van-popover>
+                </template>
+              </van-field>
               <van-field
                 v-model="userModel.phone"
                 name="电话"
                 label="电话"
                 placeholder="电话"
-                :disabled="userModel.loaded"
+                disabled
+                v-show="userModel.loaded"
               />
               <van-field
                 label="子账号类型"
@@ -314,14 +337,14 @@ export default {
       }, 1000)
     },
     // 子账号切换
-    handleToggle ({ username, type, phone }) {
+    handleToggle ({ username, type, uid }) {
       this.$dialog.confirm({
         title: '提示',
         message: `确认将【${username}】切换为“${type === 1 ? '财务子账号' : '维修子账号'}”吗？`,
         beforeClose: async (action, done) => {
           if (action === 'confirm') {
             try {
-              const { code, message } = await switchoverChildUser({ phone, type: type === 1 ? 2 : 1 })
+              const { code, message } = await switchoverChildUser({ uid, type: type === 1 ? 2 : 1 })
               if (code === 200) {
                 setTimeout(() => {
                   this.$dialog.alert({
@@ -346,14 +369,14 @@ export default {
       })
     },
     // 删除子账号
-    handleDelete ({ username, type, phone }) {
+    handleDelete ({ username, type, uid }) {
       this.$dialog.confirm({
         title: '提示',
         message: `确认将【${username}】在“${type === 2 ? '财务子账号' : '维修子账号'}”中移除吗?`,
         beforeClose: async (action, done) => {
           if (action === 'confirm') {
             try {
-              const { code, message } = await deleteChildUser({ phone })
+              const { code, message } = await deleteChildUser({ uid })
               if (code === 200) {
                 setTimeout(() => {
                   this.$dialog.alert({
