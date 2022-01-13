@@ -70,7 +70,8 @@
     "rules": {
       "no-new": "off",
       "indent": "off",
-      "no-undef": "off"
+      "no-undef": "off",
+      "space-before-function-paren": "off"
     }
   },
   "browserslist": [
