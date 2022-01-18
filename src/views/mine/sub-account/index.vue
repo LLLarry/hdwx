@@ -1,11 +1,11 @@
 <template>
   <div class="sub-account bg-gray">
-      <header>
-            <div class="header-top padding-x-3 padding-y-3">
-                <h1 class="text-center margin-bottom-3">子账号功能</h1>
-                <p class="text-size-md">
-                  为方便各运营商管理操作，我们推出“财务子账号”和“维修子账号”功能；运营商可以通过搜索用户id查找符合条件的用户成为“子账号”。
-                  <!-- <van-popover
+    <header>
+      <div class="header-top padding-x-3 padding-y-3">
+        <h1 class="text-center margin-bottom-3">子账号功能</h1>
+        <p class="text-size-md">
+          为方便各运营商管理操作，我们推出“财务子账号”和“维修子账号”功能；运营商可以通过搜索用户id查找符合条件的用户成为“子账号”。
+          <!-- <van-popover
                     v-model="showPopover"
                     trigger="click"
                   >
@@ -15,41 +15,55 @@
                     <template>
                       <div class="text-size-sm padding-3 text-666 use-tip">
                         <ul class="padding-left-3">
-                          <li class="margin-bottom-2" style="list-style: decimal"><p>用户进入“自助充电平台”公众号，进入“充电中心”</p></li>
+                          <li class="margin-bottom-2" style="list-style: decimal"><p>用户进入“{{
+                        $store.getters.getWPN
+                      }}”公众号，进入“充电中心”</p></li>
                           <li class="margin-bottom-2" style="list-style: decimal"><p>在下方导航栏点击“个人中心”，进入“我的”页面，再点击“个人中心”，进入“个人信息”页面</p></li>
                           <li style="list-style: decimal"><p>在“个人信息”页面，找到“成为子账户”，输入“邀请码”，并选择“子账号”类型即可</p></li>
                         </ul>
                       </div>
                     </template>
                   </van-popover> -->
-                </p>
-            </div>
+        </p>
+      </div>
 
-            <div class="header-card padding-x-3">
-              <ul class="d-flex justify-content-between padding-3 shadow bg-white rounded-md text-666">
-                <li class="d-flex flex-column align-items-center">
-                    <i class="padding-bottom-2 iconfont icon-add header-card-icon"></i>
-                    <span class="text-size-sm">点击添加按钮</span>
-                </li>
-                <li class="d-flex flex-column align-items-center justify-content-between">
-                    <i class="iconfont icon-a-youjiantouzhixiangyoujiantou header-card-icon"></i>
-                </li>
-                <li class="d-flex flex-column align-items-center">
-                    <i class="padding-bottom-2 iconfont icon-sousuo header-card-icon"></i>
-                    <span class="text-size-sm">搜索用户</span>
-                </li>
-                <li class="d-flex flex-column align-items-center">
-                    <i class="iconfont icon-a-youjiantouzhixiangyoujiantou header-card-icon"></i>
-                </li>
-                <li class="d-flex flex-column align-items-center">
-                    <i class="padding-bottom-2 iconfont icon-yingyong header-card-icon"></i>
-                    <span class="text-size-sm">点击添加按钮</span>
-                </li>
-              </ul>
-            </div>
-        </header>
-        <main>
-          <!-- <div class="sub-qr margin-3 padding-1 rounded-lg shadow-lg">
+      <div class="header-card padding-x-3">
+        <ul
+          class="d-flex justify-content-between padding-3 shadow bg-white rounded-md text-666"
+        >
+          <li class="d-flex flex-column align-items-center">
+            <i class="padding-bottom-2 iconfont icon-add header-card-icon"></i>
+            <span class="text-size-sm">点击添加按钮</span>
+          </li>
+          <li
+            class="d-flex flex-column align-items-center justify-content-between"
+          >
+            <i
+              class="iconfont icon-a-youjiantouzhixiangyoujiantou header-card-icon"
+            ></i>
+          </li>
+          <li class="d-flex flex-column align-items-center">
+            <i
+              class="padding-bottom-2 iconfont icon-sousuo header-card-icon"
+            ></i>
+            <span class="text-size-sm">搜索用户</span>
+          </li>
+          <li class="d-flex flex-column align-items-center">
+            <i
+              class="iconfont icon-a-youjiantouzhixiangyoujiantou header-card-icon"
+            ></i>
+          </li>
+          <li class="d-flex flex-column align-items-center">
+            <i
+              class="padding-bottom-2 iconfont icon-yingyong header-card-icon"
+            ></i>
+            <span class="text-size-sm">点击添加按钮</span>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main>
+      <!-- <div class="sub-qr margin-3 padding-1 rounded-lg shadow-lg">
             <div class="sub-qr-box padding-3 rounded-lg">
                 <div class="d-flex">
                     <div class="left flex-2">
@@ -76,182 +90,253 @@
                 <div class="text-center text-333 text-size-sm margin-top-1" v-if="captcha">剩余有效时间：{{expireData}}</div>
             </div>
           </div> -->
-          <!-- <div class="add-account d-flex justify-content-center margin-y-3">
+      <!-- <div class="add-account d-flex justify-content-center margin-y-3">
             <div class="text-center text-primary padding-x-4 padding-y-2 d-flex justify-content-center align-items-center add-account-item rounded">
               <van-icon name="plus" size="0.45rem" class="text-primary" />
               <span>添加子账号</span>
               </div>
           </div> -->
-          <div class="">
-              <hd-title>
-              子账号管理
-              <template #desc>
-                <div class="padding-y-1 padding-left-2 d-flex justify-content-center align-items-center" @click="showSelectUser">
-                  <van-icon name="plus" size="0.5rem" class="text-primary" />
-                  <span class="text-primary margin-left-1">添加子账号</span>
-                </div>
-              </template>
-            </hd-title>
-            <div class="bg-white padding-y-3">
-              <van-tabs type="card" color="#07c160">
-                <van-tab :title="`维修子账号（${childList.length}）`">
-                  <hd-line height=".3rem"></hd-line>
-                  <div class="bg-white margin-x-3" v-for="item in childList" :key="item.id">
-                      <div class="d-flex justify-content-between align-items-center padding-y-2">
-                          <div class="d-flex align-items-center">
-                              <div class="avatar margin-right-2">
-                                <van-image
-                                    width="1.6rem"
-                                    height="1.6rem"
-                                    fit="fill"
-                                    round
-                                    :src="item.headimgurl | fmtAvatar"
-                                  />
-                              </div>
-                              <div class="user-info">
-                                <div class="margin-bottom-2 text-000 font-weight-bold">{{item.username}}</div>
-                                <div class="text-p ">{{item.phone}}</div>
-                              </div>
-                          </div>
-                          <div class="contral">
-                            <van-button type="primary" class="margin-right-2" size="small" @click="handleToggle(item)">切换</van-button>
-                            <van-button type="danger" size="small"  @click="handleDelete(item)">删除</van-button>
-                          </div>
-                      </div>
-                      <hd-line height=".3rem"></hd-line>
-                  </div>
-                </van-tab>
-                <van-tab :title="`财务子账号（${financeList.length}）`">
-                  <hd-line height=".3rem"></hd-line>
-                  <div class="bg-white margin-x-3" v-for="item in financeList" :key="item.id">
-                      <div class="d-flex justify-content-between align-items-center padding-y-2">
-                          <div class="d-flex align-items-center">
-                              <div class="avatar margin-right-2">
-                                <van-image
-                                    width="1.6rem"
-                                    height="1.6rem"
-                                    fit="fill"
-                                    round
-                                    :src="item.headimgurl | fmtAvatar"
-                                  />
-                              </div>
-                              <div class="user-info">
-                                <div class="margin-bottom-2 text-000 font-weight-bold">{{item.username}}</div>
-                                <div class="text-p ">{{item.phone}}</div>
-                              </div>
-                          </div>
-                          <div class="contral">
-                            <van-button type="primary" class="margin-right-2" size="small" @click="handleToggle(item)">切换</van-button>
-                            <van-button type="danger" size="small"  @click="handleDelete(item)">删除</van-button>
-                          </div>
-                      </div>
-                      <hd-line height=".3rem"></hd-line>
-                  </div>
-                </van-tab>
-              </van-tabs>
-            </div>
-          </div>
-        </main>
-
-        <van-popup position="top" v-model="addSubAccountIsShow">
-          <div class="bg-gray">
-            <div class="padding-x-3 padding-y-2 text-666 text-center text-size-default" v-show="!userModel.loaded">搜索用户</div>
+      <div class="">
+        <hd-title>
+          子账号管理
+          <template #desc>
             <div
-              class="d-flex align-items-center justify-content-center padding-top-4 padding-bottom-2"
-              v-show="userModel.loaded"
+              class="padding-y-1 padding-left-2 d-flex justify-content-center align-items-center"
+              @click="showSelectUser"
             >
-              <van-image
-                width="2.2rem"
-                height="2.2rem"
-                round
-                :src="userModel.headimgurl | fmtAvatar"
-              />
+              <van-icon name="plus" size="0.5rem" class="text-primary" />
+              <span class="text-primary margin-left-1">添加子账号</span>
             </div>
-            <van-form class="padding-x-3">
-              <van-field
-                v-model="userModel.username"
-                name="昵称"
-                label="昵称"
-                placeholder=""
-                disabled
-                v-show="userModel.loaded"
-              />
-              <van-field
-                v-model="userModel.realname"
-                name="姓名"
-                label="姓名"
-                placeholder=""
-                disabled
-                v-show="userModel.loaded"
-              />
-              <van-field
-                label="用户ID"
+          </template>
+        </hd-title>
+        <div class="bg-white padding-y-3">
+          <van-tabs type="card" color="#07c160">
+            <van-tab :title="`维修子账号（${childList.length}）`">
+              <hd-line height=".3rem"></hd-line>
+              <div
+                class="bg-white margin-x-3"
+                v-for="item in childList"
+                :key="item.id"
               >
-                <template #input>
-                  <input
-                    v-model="userModel.id"
-                    :disabled="userModel.loaded"
-                    placeholder="用户ID"
-                    class="van-field__control"
-                  />
-                  <van-popover
-                    v-model="showPopover"
-                    trigger="click"
-                    placement="bottom"
-                  >
-                    <div class="text-size-sm padding-3 tip-content">
-                      <div class="tip-content-title text-size-md margin-bottom-1 font-weight-bold">查看用户id方法</div>
-                      <ul>
-                        <li class="margin-bottom-1">1、用户进入“自助充电平台”公众号，进入“充电中心”</li>
-                        <li class="margin-bottom-1">2、点击底部导航栏进入“个人中心”</li>
-                        <li>3、在“我的”页面点击“个人中心”，即可查看到“账号”一栏为用户ID</li>
-                      </ul>
+                <div
+                  class="d-flex justify-content-between align-items-center padding-y-2"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="avatar margin-right-2">
+                      <van-image
+                        width="1.6rem"
+                        height="1.6rem"
+                        fit="fill"
+                        round
+                        :src="item.headimgurl | fmtAvatar"
+                      />
                     </div>
-                    <template #reference>
-                      <van-icon name="warning-o" size="0.5rem" />
-                    </template>
-                  </van-popover>
-                </template>
-              </van-field>
-              <van-field
-                v-model="userModel.phone"
-                name="电话"
-                label="电话"
-                placeholder="电话"
-                disabled
-                v-show="userModel.loaded"
-              />
-              <van-field
-                label="子账号类型"
-                v-show="userModel.loaded"
+                    <div class="user-info">
+                      <div class="margin-bottom-2 text-000 font-weight-bold">
+                        {{ item.username }}
+                      </div>
+                      <div class="text-p ">{{ item.phone }}</div>
+                    </div>
+                  </div>
+                  <div class="contral">
+                    <van-button
+                      type="primary"
+                      class="margin-right-2"
+                      size="small"
+                      @click="handleToggle(item)"
+                      >切换</van-button
+                    >
+                    <van-button
+                      type="danger"
+                      size="small"
+                      @click="handleDelete(item)"
+                      >删除</van-button
+                    >
+                  </div>
+                </div>
+                <hd-line height=".3rem"></hd-line>
+              </div>
+            </van-tab>
+            <van-tab :title="`财务子账号（${financeList.length}）`">
+              <hd-line height=".3rem"></hd-line>
+              <div
+                class="bg-white margin-x-3"
+                v-for="item in financeList"
+                :key="item.id"
               >
-                <template #input>
-                  <van-radio-group v-model="userModel.type">
-                    <van-radio :name="1" class="margin-bottom-2">维修子账号</van-radio>
-                    <van-radio :name="2">财务子账号</van-radio>
-                  </van-radio-group>
+                <div
+                  class="d-flex justify-content-between align-items-center padding-y-2"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="avatar margin-right-2">
+                      <van-image
+                        width="1.6rem"
+                        height="1.6rem"
+                        fit="fill"
+                        round
+                        :src="item.headimgurl | fmtAvatar"
+                      />
+                    </div>
+                    <div class="user-info">
+                      <div class="margin-bottom-2 text-000 font-weight-bold">
+                        {{ item.username }}
+                      </div>
+                      <div class="text-p ">{{ item.phone }}</div>
+                    </div>
+                  </div>
+                  <div class="contral">
+                    <van-button
+                      type="primary"
+                      class="margin-right-2"
+                      size="small"
+                      @click="handleToggle(item)"
+                      >切换</van-button
+                    >
+                    <van-button
+                      type="danger"
+                      size="small"
+                      @click="handleDelete(item)"
+                      >删除</van-button
+                    >
+                  </div>
+                </div>
+                <hd-line height=".3rem"></hd-line>
+              </div>
+            </van-tab>
+          </van-tabs>
+        </div>
+      </div>
+    </main>
+
+    <van-popup position="top" v-model="addSubAccountIsShow">
+      <div class="bg-gray">
+        <div
+          class="padding-x-3 padding-y-2 text-666 text-center text-size-default"
+          v-show="!userModel.loaded"
+        >
+          搜索用户
+        </div>
+        <div
+          class="d-flex align-items-center justify-content-center padding-top-4 padding-bottom-2"
+          v-show="userModel.loaded"
+        >
+          <van-image
+            width="2.2rem"
+            height="2.2rem"
+            round
+            :src="userModel.headimgurl | fmtAvatar"
+          />
+        </div>
+        <van-form class="padding-x-3">
+          <van-field
+            v-model="userModel.username"
+            name="昵称"
+            label="昵称"
+            placeholder=""
+            disabled
+            v-show="userModel.loaded"
+          />
+          <van-field
+            v-model="userModel.realname"
+            name="姓名"
+            label="姓名"
+            placeholder=""
+            disabled
+            v-show="userModel.loaded"
+          />
+          <van-field label="用户ID">
+            <template #input>
+              <input
+                v-model="userModel.id"
+                :disabled="userModel.loaded"
+                placeholder="用户ID"
+                class="van-field__control"
+              />
+              <van-popover
+                v-model="showPopover"
+                trigger="click"
+                placement="bottom"
+              >
+                <div class="text-size-sm padding-3 tip-content">
+                  <div
+                    class="tip-content-title text-size-md margin-bottom-1 font-weight-bold"
+                  >
+                    查看用户id方法
+                  </div>
+                  <ul>
+                    <li class="margin-bottom-1">
+                      1、用户进入“{{
+                        $store.getters.getWPN
+                      }}”公众号，进入“充电中心”
+                    </li>
+                    <li class="margin-bottom-1">
+                      2、点击底部导航栏进入“个人中心”
+                    </li>
+                    <li>
+                      3、在“我的”页面点击“个人中心”，即可查看到“账号”一栏为用户ID
+                    </li>
+                  </ul>
+                </div>
+                <template #reference>
+                  <van-icon name="warning-o" size="0.5rem" />
                 </template>
-              </van-field>
-              <div class="bg-white padding-3 text-danger text-size-sm" v-if="userModel.message">{{ userModel.message }}</div>
-              <div style="margin: 16px;" v-if="!userModel.loaded">
-                <van-button round block type="primary" @click="queryUser">查询用户</van-button>
-              </div>
-              <div style="margin: 16px;" v-else>
-                <van-button round block type="info" @click="addAccountBack">添加子账号</van-button>
-              </div>
-            </van-form>
+              </van-popover>
+            </template>
+          </van-field>
+          <van-field
+            v-model="userModel.phone"
+            name="电话"
+            label="电话"
+            placeholder="电话"
+            disabled
+            v-show="userModel.loaded"
+          />
+          <van-field label="子账号类型" v-show="userModel.loaded">
+            <template #input>
+              <van-radio-group v-model="userModel.type">
+                <van-radio :name="1" class="margin-bottom-2"
+                  >维修子账号</van-radio
+                >
+                <van-radio :name="2">财务子账号</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <div
+            class="bg-white padding-3 text-danger text-size-sm"
+            v-if="userModel.message"
+          >
+            {{ userModel.message }}
           </div>
-        </van-popup>
+          <div style="margin: 16px;" v-if="!userModel.loaded">
+            <van-button round block type="primary" @click="queryUser"
+              >查询用户</van-button
+            >
+          </div>
+          <div style="margin: 16px;" v-else>
+            <van-button round block type="info" @click="addAccountBack"
+              >添加子账号</van-button
+            >
+          </div>
+        </van-form>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { createCaptcha, inquireMerChildUser, switchoverChildUser, deleteChildUser, inquireAccountForChild, insertChildAccount } from '@/require/mine'
+import {
+  createCaptcha,
+  inquireMerChildUser,
+  switchoverChildUser,
+  deleteChildUser,
+  inquireAccountForChild,
+  insertChildAccount
+} from '@/require/mine'
 import copyText from '@/utils/copy-text'
 let timer = null
 export default {
-  data () {
+  data() {
     return {
       captcha: '', // 邀请码
       expireTime: 0, // 邀请码过期时间
@@ -271,18 +356,18 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     // this.createTimeout()
     // 查询子账号
     this.handleGetSubAccount()
   },
   computed: {
     ...mapState(['global']),
-    qrSize () {
-      return 80 * this.global.clientWidth / 375
+    qrSize() {
+      return (80 * this.global.clientWidth) / 375
     },
     // 格式化到期时间
-    expireData () {
+    expireData() {
       const returnSeconds = Number.parseInt(this.expireTime)
       const hours = Math.floor(returnSeconds / 3600)
       const mi = Math.ceil((returnSeconds % 3600) / 60)
@@ -291,9 +376,16 @@ export default {
   },
   methods: {
     // 查询子账号
-    async handleGetSubAccount () {
+    async handleGetSubAccount() {
       try {
-        const { code, message, captcha, valueTime, financeList, childList } = await inquireMerChildUser()
+        const {
+          code,
+          message,
+          captcha,
+          valueTime,
+          financeList,
+          childList
+        } = await inquireMerChildUser()
         if (code === 200) {
           if (captcha) {
             this.captcha = captcha
@@ -310,7 +402,7 @@ export default {
       }
     },
     // 创建子账号
-    async handleCreateCaptcha () {
+    async handleCreateCaptcha() {
       try {
         const { code, message, result } = await createCaptcha()
         if (code === 200) {
@@ -325,7 +417,7 @@ export default {
         this.$toast('异常错误')
       }
     },
-    createTimeout () {
+    createTimeout() {
       if (timer) {
         clearInterval(timer)
       }
@@ -337,23 +429,29 @@ export default {
       }, 1000)
     },
     // 子账号切换
-    handleToggle ({ username, type, uid }) {
+    handleToggle({ username, type, uid }) {
       this.$dialog.confirm({
         title: '提示',
-        message: `确认将【${username}】切换为“${type === 1 ? '财务子账号' : '维修子账号'}”吗？`,
+        message: `确认将【${username}】切换为“${
+          type === 1 ? '财务子账号' : '维修子账号'
+        }”吗？`,
         beforeClose: async (action, done) => {
           if (action === 'confirm') {
             try {
-              const { code, message } = await switchoverChildUser({ uid, type: type === 1 ? 2 : 1 })
+              const { code, message } = await switchoverChildUser({
+                uid,
+                type: type === 1 ? 2 : 1
+              })
               if (code === 200) {
                 setTimeout(() => {
-                  this.$dialog.alert({
-                    title: '提示',
-                    message: '切换成功'
-                  })
-                  .then(() => {
-                    this.handleGetSubAccount()
-                  })
+                  this.$dialog
+                    .alert({
+                      title: '提示',
+                      message: '切换成功'
+                    })
+                    .then(() => {
+                      this.handleGetSubAccount()
+                    })
                 }, 500)
               } else {
                 this.$toast(message)
@@ -369,23 +467,26 @@ export default {
       })
     },
     // 删除子账号
-    handleDelete ({ username, type, uid }) {
+    handleDelete({ username, type, uid }) {
       this.$dialog.confirm({
         title: '提示',
-        message: `确认将【${username}】在“${type === 2 ? '财务子账号' : '维修子账号'}”中移除吗?`,
+        message: `确认将【${username}】在“${
+          type === 2 ? '财务子账号' : '维修子账号'
+        }”中移除吗?`,
         beforeClose: async (action, done) => {
           if (action === 'confirm') {
             try {
               const { code, message } = await deleteChildUser({ uid })
               if (code === 200) {
                 setTimeout(() => {
-                  this.$dialog.alert({
-                    title: '提示',
-                    message: '删除成功'
-                  })
-                  .then(() => {
-                    this.handleGetSubAccount()
-                  })
+                  this.$dialog
+                    .alert({
+                      title: '提示',
+                      message: '删除成功'
+                    })
+                    .then(() => {
+                      this.handleGetSubAccount()
+                    })
                 }, 500)
               } else {
                 this.$toast(message)
@@ -400,10 +501,10 @@ export default {
         }
       })
     },
-    copyText (text) {
+    copyText(text) {
       copyText(text)
     },
-    showSelectUser () {
+    showSelectUser() {
       this.userModel = {
         id: '',
         username: '',
@@ -416,12 +517,21 @@ export default {
       }
       this.addSubAccountIsShow = true
     },
-    async queryUser () {
+    async queryUser() {
       try {
         const { id: member, phone } = this.userModel
-        const { code, message, account } = await inquireAccountForChild({ member, phone })
+        const { code, message, account } = await inquireAccountForChild({
+          member,
+          phone
+        })
         if (code === 200) {
-          const { id, username, realname, phoneNum: phone, headimgurl } = account
+          const {
+            id,
+            username,
+            realname,
+            phoneNum: phone,
+            headimgurl
+          } = account
           this.userModel = {
             ...this.userModel,
             id,
@@ -439,7 +549,7 @@ export default {
         this.toast('异常错误')
       }
     },
-    async addAccountBack () {
+    async addAccountBack() {
       try {
         const { id: uid, type, phone } = this.userModel
         const { code, message } = await insertChildAccount({ uid, type, phone })
@@ -474,7 +584,7 @@ export default {
     // overflow-x: clip;
     position: relative;
     color: #ffffff;
-    font-family: "STFangsong";
+    font-family: 'STFangsong';
     &::after {
       content: '';
       position: absolute;
@@ -501,9 +611,9 @@ export default {
   }
   main {
     .sub-qr {
-      background-image: linear-gradient(to bottom, #F7E3BE, #F2DEB3);
+      background-image: linear-gradient(to bottom, #f7e3be, #f2deb3);
       .sub-qr-box {
-        border: 1px solid #D1AF5C;
+        border: 1px solid #d1af5c;
         .left {
           ul {
             li {
@@ -514,10 +624,10 @@ export default {
         .right {
           .create-code {
             button {
-                  background: #f2deb3;
-                  border: 1px solid #ff603429;
-                  padding: 5px;
-                  color: #ff976a;
+              background: #f2deb3;
+              border: 1px solid #ff603429;
+              padding: 5px;
+              color: #ff976a;
               &:active {
                 background: rgba(40, 167, 69, 0.24);
               }
@@ -528,9 +638,10 @@ export default {
     }
     .add-account {
       .add-account-item {
-        box-shadow: inset 2px 2px 4px  rgba(0, 0, 0, .1),  inset -2px -2px 4px  rgba(0, 0, 0, .1);
+        box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1),
+          inset -2px -2px 4px rgba(0, 0, 0, 0.1);
         &:active {
-          background: rgba(0, 0, 0, .05);
+          background: rgba(0, 0, 0, 0.05);
         }
       }
     }
