@@ -18,7 +18,11 @@ export default (router) => {
             //         next('/register')
             //     }
             // }
-            const result = await store.dispatch('verifyCookieIsExpire', { merid: to.query.merid })
+
+            // 判断地址栏中是否存在tenantId（租户表示）,存在则拿过来作为参数向后台请求
+            // const tenantId = getURLParams().tenantId
+            const tenantId = window.sessionStorage.getItem('__init_tenantId__') || undefined
+            const result = await store.dispatch('verifyCookieIsExpire', { merid: to.query.merid, tenantId })
             if (result === 200) {
                 next()
             } else {

@@ -5,10 +5,27 @@ export default function parseURL (url) {
     console.log('url', url)
     console.log('PROXY_BASE_URL', PROXY_BASE_URL)
     if (PROXY_BASE_URL.includes('http://www.he360')) {
-      PROXY_BASE_URL = ['http://www.he360.cn', 'http://www.he360.com.cn']
+      PROXY_BASE_URL = ['http://www.he360.cn', 'http://www.he360.com.cn', 'https://www.tengfuchong.cn/applet/']
     }
     console.log('PROXY_BASE_URL2', PROXY_BASE_URL)
     if (Array.isArray(PROXY_BASE_URL)) { // 正式环境
+        // 判断蓝牙设备
+        if (url.includes(PROXY_BASE_URL[2])) {
+          const code = url.replace(PROXY_BASE_URL[2], '')
+          if (/^\d{6,8}$/.test(code)) {
+            return {
+              status: 200, // 解析状态码
+              code: code.substr(0, 6), // 参数值
+              key: 'code', // 参数关键字
+              message: '解析成功'
+            }
+          } else {
+            return {
+              status: 205, // 解析状态码
+              message: '解析错误'
+            }
+          }
+        }
         if (!url.includes(PROXY_BASE_URL[0]) && !url.includes(PROXY_BASE_URL[1])) {
             return ({
                 code: 204,

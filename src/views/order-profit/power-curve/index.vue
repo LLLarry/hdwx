@@ -59,6 +59,10 @@
             <span>设备编号：</span>
             <span class="text-333">{{ result.devicenum }}</span>
           </hd-card-item>
+          <hd-card-item v-if="result.addr">
+            <span>从机地址：</span>
+            <span class="text-333">{{ result.addr }}</span>
+          </hd-card-item>
           <hd-card-item>
             <span>充电端口：</span>
             <span class="text-333">{{ result.port }}</span>

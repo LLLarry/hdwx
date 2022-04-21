@@ -173,14 +173,16 @@ export default {
           this.result = result
           if (result.deviceType === 2) {
             this.list = this.list.filter(item => !['设备二维码', '端口二维码', '系统参数', '信道操作'].includes(item.title))
-          } else if (['00', '01', '02', '03', '04', '05', '06', '07'].includes(result.deviceversion)) {
+          } else if (['00', '01', '02', '03', '04', '05', '06', '07', '12'].includes(result.deviceversion)) {
             if (['04'].includes(result.deviceversion)) {
-              this.list = this.list.filter(item => !['报警系统', '信道操作', '端口二维码'].includes(item.title))
+              this.list = this.list.filter(item => !['报警系统', '信道操作', '端口二维码', '系统参数'].includes(item.title))
             } else {
               this.list = this.list.filter(item => !['报警系统', '信道操作'].includes(item.title))
             }
           } else if (['08', '09', '10'].includes(result.deviceversion)) {
             this.list = this.list.filter(item => !['信道操作'].includes(item.title))
+          } else if (['11'].includes(result.deviceversion)) {
+            this.list = this.list.filter(item => !['系统参数'].includes(item.title))
           }
         } else {
           this.$toast(message)

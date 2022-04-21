@@ -293,6 +293,56 @@ const thresholdMap = {
         range: [1, 240]
     } // 浮充时间
 }
+// 后台数据与前台字段映射字典
+const map = {
+    param1: 'coinMin',
+    param2: 'cardMin',
+    param3: {
+        key: 'coinElec',
+        format (value) {
+            return Number.parseFloat(value) / 10
+        }
+    },
+    param4: {
+        key: 'cardElec',
+        format (value) {
+            return Number.parseFloat(value) / 10
+        }
+    },
+    param5: {
+        key: 'cst',
+        format (value) {
+            return Number.parseFloat(value) / 10
+        }
+    },
+    param6: 'powerMax1',
+    param7: 'powerMax2',
+    param8: 'powerMax3',
+    param9: 'powerMax4',
+    param10: 'powerTim2',
+    param11: 'powerTim3',
+    param12: 'powerTim4',
+    param13: {
+        key: 'spRecMon',
+        format (value) {
+            return Number.parseFloat(value) === 1
+        }
+    },
+    param14: {
+        key: 'spFullEmpty',
+        format (value) {
+            return Number.parseFloat(value) === 1
+        }
+    },
+    param15: 'fullPowerMin',
+    param16: 'fullChargeTime',
+    param17: {
+        key: 'elecTimeFirst',
+        format (value) {
+            return Number.parseFloat(value) === 1
+        }
+    }
+}
 export default {
     data () {
         return {
@@ -341,6 +391,15 @@ export default {
         // hdSelect,
         hdSelectFilter,
         hdOverlay
+    },
+    computed: {
+        titleText () {
+            if (!this.code) {
+                return '系统模板'
+            } else {
+                return `${this.code}设备系统模板`
+            }
+        }
     },
     watch: {
         model: {
@@ -431,12 +490,13 @@ export default {
                 const { code, message, sysparam: params, hardversion } = await getDeviceSystemParam(data)
                 const sysparam = params || {}
                 if (code === 200) {
-                    this.model = Object.assign({}, {
-                        ...sysparam,
-                        spRecMon: sysparam.spRecMon === 1, // 是否余额回收
-                        spFullEmpty: sysparam.spFullEmpty === 1, // 是否断电自停
-                        elecTimeFirst: sysparam.elecTimeFirst === 1 // 是否初始显示电量
-                    })
+                    // this.model = Object.assign({}, {
+                    //     ...sysparam,
+                    //     spRecMon: Number(sysparam.spRecMon) === 1, // 是否余额回收
+                    //     spFullEmpty: Number(sysparam.spFullEmpty) === 1, // 是否断电自停
+                    //     elecTimeFirst: Number(sysparam.elecTimeFirst) === 1 // 是否初始显示电量
+                    // })
+                    this.model = Object.assign({}, this.formatParmas(sysparam))
                     this.hardversion = hardversion
                 } else {
                     this.$toast(message)
@@ -469,6 +529,19 @@ export default {
                 }
             }
            return true
+        },
+        // 格式化请求参数
+        formatParmas (data = {}) {
+            const params = {}
+            for (const [key, value] of Object.entries(data)) {
+                const type = typeof map[key]
+                if (type === 'undefined') continue
+                if (type === 'string') params[map[key]] = Number.parseFloat(value)
+                if (type === 'object') {
+                    params[map[key].key] = map[key].format(value)
+                }
+            }
+            return params
         }
     }
 }

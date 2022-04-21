@@ -10,5 +10,8 @@ export default {
     return (
       getWechatPublicAccountInfo(platform) || getWechatPublicAccountInfo.DEFAULT
     ).name
+  },
+  tenantId (state) {
+    return state.user.tenantId
   }
 }

@@ -95,7 +95,11 @@
               value.device_type !== 2 &&
               value.hardversion !== '11'
           "
-          :to="`/remote/charge/${value.code}`"
+          :to="
+            value.hardversion === '04'
+              ? `/remote/recharge/${value.code}`
+              : `/remote/charge/${value.code}`
+          "
           >远程</van-button
         >
         <van-button

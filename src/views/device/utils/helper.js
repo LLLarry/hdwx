@@ -4,8 +4,8 @@ import { portstate1, queryAddrAllPortStatus } from '@/require/device'
  * @param {} data 请求参数 addr boolean 是否是addr
  * @returns Promise
  */
-export const updatePortStatusHook = (data, addr) => {
-    if (addr) {
+export const updatePortStatusHook = (data) => {
+    if (data.addr) {
         return updatePortStatusForAddr(data)
     }
     return updatePortStatusForNormal(data)
@@ -54,7 +54,7 @@ function updatePortStatusForAddr (data) {
         try {
             queryAddrAllPortStatus(data)
             .then(({ code, message, portlist }) => {
-                if (code === 200) {
+                if (Number(code) === 200) {
                     resolve(portlist)
                 } else {
                     reject(message)

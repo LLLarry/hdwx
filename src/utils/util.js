@@ -1,5 +1,6 @@
 import * as dayjs from 'dayjs'
 import { Dialog } from 'vant'
+import qs from 'qs'
 /**
  * 获取元素的类型： number、string、array、regexp ...
  * @param {*} e 元素
@@ -280,4 +281,18 @@ export const getWechatPublicAccountInfo = platform => {
             scale: 0.8
         }
     }
+}
+
+/**
+ * 获取地址中的参数
+ * @param {*} url 参数 [可选] 不传默认获取地址中的参数
+ * @returns map { key: value }
+ */
+export const getURLParams = (url) => {
+    url = url || window.location.search
+    const index = url.indexOf('?')
+    if (index !== -1) {
+        url = url.substring(index + 1)
+    }
+    return qs.parse(url)
 }

@@ -213,6 +213,42 @@ const routes = [
     }
   },
   {
+    path: '/area/reportform/:id',
+    name: 'report-form',
+    component: () =>
+      import(
+        /* webpackChunkName: "report-form" */ '../views/area/report-form/index.vue'
+      ),
+    meta: {
+      title: '小区报表',
+      auth: [0, 2, 3, 4, 6, 7]
+    }
+  },
+  {
+    path: '/area/exportreport',
+    name: 'export-report',
+    component: () =>
+      import(
+        /* webpackChunkName: "export-report" */ '../views/area/export-report/index.vue'
+      ),
+    meta: {
+      title: '导出小区报表',
+      auth: [0, 2, 3, 4, 6, 7]
+    }
+  },
+  {
+    path: '/area/authmanage/:id',
+    name: 'auth-manage',
+    component: () =>
+      import(
+        /* webpackChunkName: "auth-manage" */ '../views/area/auth-manage/index.vue'
+      ),
+    meta: {
+      title: '小区管理',
+      auth: [0, 2, 3, 4, 6, 7]
+    }
+  },
+  {
     path: '/template/addv3/:version',
     name: 'template-v3-add',
     component: () =>
@@ -364,7 +400,7 @@ const routes = [
         /* webpackChunkName: "device-system-car" */ '../views/device/device-system-params/car/index.vue'
       ),
     meta: {
-      title: '单路系统模板',
+      title: '汽车桩系统参数',
       auth: [0, 2, 3, 4, 6, 7]
     }
   },
@@ -604,6 +640,18 @@ const routes = [
       ),
     meta: {
       title: '远程充电',
+      auth: [0, 2, 3, 4, 6, 7]
+    }
+  },
+  {
+    path: '/remote/recharge/:code',
+    name: 'remote-recharge',
+    component: () =>
+      import(
+        /* webpackChunkName: "remote-recharge" */ '../views/device/remote-recharge/index.vue'
+      ),
+    meta: {
+      title: '远程充值',
       auth: [0, 2, 3, 4, 6, 7]
     }
   },

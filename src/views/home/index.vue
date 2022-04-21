@@ -134,7 +134,7 @@ import { getDealHomePageData, bindingDevice } from '@/require/home'
 import { fmtMoney } from '@/utils/util'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import BindResult from '@/components/home/bind-result'
 export default {
   components: {
@@ -196,6 +196,7 @@ export default {
   },
   computed: {
     ...mapState(['user']),
+    ...mapGetters(['tenantId']),
     isShowIcon() {
       // if (this.showincoins === '') {
       //   return this.user.showincoins === 1
@@ -253,7 +254,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setUser']),
+    // ...mapMutations(['setUser']),
     async getInitData(data, isShowLoading) {
       try {
         if (isShowLoading === false) {
@@ -261,7 +262,10 @@ export default {
           this.loading = true
         }
         const { code, message, hasdata, ...result } = await getDealHomePageData(
-          data,
+          {
+            ...data,
+            tenantId: this.tenantId
+          },
           isShowLoading
         )
         /**
@@ -379,7 +383,8 @@ export default {
           if (status !== 200) return this.$toast(message)
           if (!result.code) return this.$toast('请扫描设备的二维码')
           bindingDevice({
-            devicenum: result.code
+            devicenum: result.code,
+            tenantId: this.tenantId
           })
             .then(res => {
               this.bindResultMap = { ...res }

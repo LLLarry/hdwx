@@ -1,9 +1,10 @@
 import { reactive, toRefs } from '@vue/composition-api'
 import { toast } from '@/assets/js/vant-helper'
 import { getCaptchaData, registerDealerAaccount } from '@/require/auth'
-import { getWechatPublicAccountInfo } from '@/utils/util'
+import { getWechatPublicAccountInfo, getURLParams } from '@/utils/util'
 
 export default (router, route, store) => {
+  const tenantId = getURLParams().tenantId
   let timer = null
   // 校验手机号
   const checkPhone = phone => /^1[3|4|5|6|7|8|9]\d{9}$/.test(phone)
@@ -40,7 +41,7 @@ export default (router, route, store) => {
     mobile = mobile.trim()
     if (checkNull(mobile)) { toast('请先输入注册手机号'); return false }
     if (!checkPhone(mobile)) { toast('注册手机号格式不正确'); return false }
-    getCaptchaData({ phone: mobile })
+    getCaptchaData({ phone: mobile, tenantId })
     .then(res => {
       if (res.code === 200) {
         toast('验证码获取成功', 'success')
@@ -56,13 +57,14 @@ export default (router, route, store) => {
 
   const submit = () => {
     if (!verifi()) return false
-    registerDealerAaccount({ ...initData, expireTime: undefined })
+    // 从地址栏中或获取工厂id
+    registerDealerAaccount({ ...initData, tenantId, expireTime: undefined })
     .then(res => {
       if (res.code === 200) {
         store.commit('setUser', res.userinfo)
         toast('注册成功', 'success')
         setTimeout(() => {
-          router && router.replace({ path: '/' })
+          router && router.replace({ path: '/', query: { tenantId: tenantId } })
         }, 2000)
       } else {
         toast(res.message, 'fail')

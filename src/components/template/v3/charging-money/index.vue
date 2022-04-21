@@ -83,7 +83,10 @@ export default {
     },
     data () {
         return {
-            hdMask3Text: '<span class="text-danger">未开启临时充电<span>'
+            hdMask3Text: `
+              <p class="text-danger">未开启临时充电</p>
+              <p class="text-danger text-size-md margin-top-1">（可在上面“是否支持按金额充电”中开启）</p>
+            `
         }
     },
     methods: {

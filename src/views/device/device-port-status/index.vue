@@ -55,7 +55,7 @@
                             </hd-card-item>
                             <hd-card-item class="">
                                 <template>
-                                    <span class="device-item-title text-333">充电功率：</span>
+                                    <span class="device-item-title text-333">消耗电量：</span>
                                     <span class="device-item-content text-666">{{ item.elec / 100 }} 度</span>
                                 </template>
                             </hd-card-item>

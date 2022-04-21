@@ -29,6 +29,14 @@
             <span class="area-item-title text-666">今日消费金额：</span>
             <span class="area-item-content text-999">{{value.consumemoney | fmtMoney}}元</span>
         </hd-card-item>
+        <!-- <hd-card-item>
+            <span class="area-item-title text-666">总耗电量：</span>
+            <span class="area-item-content text-999">{{0 }}度</span>
+        </hd-card-item>
+         <hd-card-item>
+            <span class="area-item-title text-666">今日耗电量：</span>
+            <span class="area-item-content text-999">{{0}}度</span>
+        </hd-card-item> -->
         <hd-card-item>
            <span>端口状态：</span>
            <span>
@@ -40,6 +48,7 @@
         <div class="area-contral d-flex justify-content-end w-100 margin-top-1">
             <van-button type="primary" size="small" @click="handleEdit(value)" v-if="!ispartarea">编辑</van-button>
             <van-button type="primary" size="small" :to="`/area/manage/${value.id}`"  v-if="!ispartarea">管理</van-button>
+            <!-- <van-button type="primary" size="small" :to="`/area/reportform/${value.id}`" >月统计</van-button> -->
             <van-button type="primary" size="small" :to="`/area/statis/${value.id}`">统计</van-button>
         </div>
     </hd-card>

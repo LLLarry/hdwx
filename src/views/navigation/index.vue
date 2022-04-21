@@ -249,7 +249,8 @@ export default {
     this.bindEvent()
   },
   computed: {
-    ...mapState(['global', 'user'])
+    ...mapState(['global', 'user']),
+    ...mapGetters(['tenantId'])
   },
   watch: {
     global: {
@@ -345,7 +346,8 @@ export default {
             if (status !== 200) return this.$toast(message)
             if (!result.code) return this.$toast('请扫描设备的二维码')
             bindingDevice({
-              devicenum: result.code
+              devicenum: result.code,
+              tenantId: this.tenantId
             })
               .then(res => {
                 this.$toast(res.message)

@@ -1,23 +1,26 @@
 // mutations
 import { getType } from '@/utils/util'
 import { initState } from '../state'
-const HDWX_STATE = '__hdwx_state__'
+import { setItem, clear } from '@/utils/storage'
+export const HDWX_STATE = '__hdwx_state__'
 export default {
   setGlobalData(state, globalData) {
     if (getType(globalData) !== 'object') {
       throw new TypeError('globalData is not Object')
     }
     state.global = { ...state.global, ...globalData }
-    sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    // sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    setItem('global', { ...state.global, ...globalData })
   },
   setUser(state, userInfo) {
     state.user = { ...state.user, ...userInfo }
-    sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    // sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
   },
   // 重新设置state
   resetState(state) {
     state = initState
-    sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    // sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    clear()
   },
   pushToken(state, payload) {
     state.cancelTokenList.push(payload)
@@ -40,6 +43,6 @@ export default {
   // 修改投币收显示
   setShowincoins(state, showincoins) {
     state.user.showincoins = showincoins
-    sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
+    // sessionStorage.setItem(HDWX_STATE, JSON.stringify(state))
   }
 }

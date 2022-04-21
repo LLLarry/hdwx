@@ -6,7 +6,11 @@
             left-arrow
             class="header-fixed"
             @click-left="$router.go(-1)"
-        />
+        >
+            <!-- <template #right>
+                <van-icon name="setting-o" size=".6rem" @click="push" />
+            </template> -->
+        </van-nav-bar>
         <main>
             <hd-line height="1.5rem"/>
             <!-- <hd-title exec>小区合伙人</hd-title> -->
@@ -77,7 +81,7 @@ import { inquireAreaDataById, dealeteAreaInfo } from '@/require/area'
 export default {
     data () {
         return {
-             id: '',
+            id: this.$route.params.id,
             active: 0,
             noData: 0, // 0 正常 1 loading 2 noData
             noDataText2: {
@@ -93,7 +97,6 @@ export default {
         }
     },
     mounted () {
-        this.id = this.$route.params.id
         this.init()
     },
     components: {
@@ -150,6 +153,9 @@ export default {
                     }
                 }
             })
+        },
+        push () {
+            this.$router.push(`/area/authmanage/${this.id}`)
         }
     }
 }

@@ -123,7 +123,7 @@
                             </div>
                             <div class="center padding-x-1 margin-left-1">
                                 <p class="margin-bottom-1">{{item.ordernum}}</p>
-                                <p class="text-333 font-weight-bold margin-bottom-1">{{item.code}}</p>
+                                <p class="text-333 font-weight-bold margin-bottom-1">{{item.code}} <span v-if="item.addr">- {{item.addr}}</span></p>
                                 <p class="text-p">{{item.createTtime}}</p>
                             </div>
                             <div class="right d-flex flex-column justify-content-between text-right">

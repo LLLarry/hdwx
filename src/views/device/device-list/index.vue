@@ -122,6 +122,7 @@
 import hdScroll from '@/components/hd-scroll/scroll'
 import deviceItem from '@/components/device/device-item'
 import { getDeviceInfoList } from '@/require/device'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -171,6 +172,9 @@ export default {
   components: {
     hdScroll,
     deviceItem
+  },
+  computed: {
+    ...mapGetters(['tenantId'])
   },
   watch: {
     // 监听路由的变化，当前路由调回来的时候将存储的位置信息重新赋值回来
@@ -232,7 +236,8 @@ export default {
             currentPage: this.source[index].currentPage,
             querynum: index + 1,
             source: this.type + 1,
-            parameter: this.parameter
+            parameter: this.parameter,
+            tenantId: this.tenantId
           },
           '正在加载数据'
         )
@@ -267,7 +272,8 @@ export default {
         const { code, message, result } = await getDeviceInfoList(
           {
             source: this.type + 1,
-            parameter: this.parameter
+            parameter: this.parameter,
+            tenantId: this.tenantId
           },
           '正在加载数据'
         )

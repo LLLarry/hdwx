@@ -316,7 +316,7 @@ export default {
                     this.equip = equip
                     this.order = order
                     this.partrecord = partrecord
-                    this.tourist = tourist
+                    this.tourist = tourist || {}
                     this.user = user
                     this.paysource = paysource
                     this.paytype = paytype
@@ -334,18 +334,19 @@ export default {
                         this.list = [
                             { title: '订单编号', content: order.ordernum },
                             { title: '付款方式', content: parType },
-                            { title: '用户昵称', content: tourist.username },
+                            { title: '用户昵称', content: this.tourist.username },
                             { title: '用户ID', content: (partrecord.uid).toString().padStart(8, '0') },
                             { title: '小区名称', content: !equip.areaname ? '— —' : equip.areaname },
                             { title: '设备名称', content: !equip.remark ? '— —' : equip.remark },
                             { title: '设备编号', content: equip.code },
+                            fmtOrder.addr ? { title: '从机地址', content: fmtOrder.addr } : null,
                             { title: '端口号', content: order.port }
                         ]
                     } else {
                         this.list = [
                             { title: '订单编号', content: order.ordernum },
                             { title: '付款方式', content: parType },
-                            { title: '用户昵称', content: tourist.username },
+                            { title: '用户昵称', content: this.tourist.username },
                             { title: '用户ID', content: (partrecord.uid).toString().padStart(8, '0') },
                             { title: '小区名称', content: equip.areaname === null ? '— —' : equip.areaname },
                             { title: '设备名称', content: equip.remark === null ? '— —' : equip.remark },

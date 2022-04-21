@@ -33,13 +33,23 @@ export const useSelectListMap = (initListRef, selectListRef, initUserRef, apport
         // 要展示的用户信息
         const usersInfo = initUserRef.value.map(user => {
             if (apportionRef.value) {
-                return ({ ...user, payMonet: user.percent * 1000 * totalMoney / 1000 })
+                return ({ ...user, payMonet: user.percent * 1000 * totalMoney / 1000, earnings: user.percent })
             } else {
                 return { ...user, payMonet: user.rank === -1 ? 0 : totalMoney }
             }
         })
         // 要提交的用户信息
-        const users = usersInfo.slice(0, (apportionRef.value ? usersInfo.length : 1))
+        let users = usersInfo.slice(0, (apportionRef.value ? usersInfo.length : 1))
+
+        users = users.map((item, index) => {
+            if (index === 0) {
+                const { id, earnings, username, payMonet, rank, openid } = item
+                return { id, earnings, username, payMonet, rank, openid }
+            } else {
+                const { uid: id, earnings, username, payMonet, rank } = item
+                return { id, earnings, username, payMonet, rank }
+            }
+        })
         // 选择的设备转化为字符串
         const selectListString = selectList.join(',')
         return {

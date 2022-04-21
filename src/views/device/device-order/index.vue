@@ -116,16 +116,6 @@
             <div
               class="top padding-x-2 padding-top-2 d-flex align-items-center"
             >
-              <!-- <div class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2">
-                                <div class="">
-                                    <div class="font-weight-bold text-000 text-size-default card-num " v-if="item.status === 1">
-                                       付款金额：<span class="text-success">&yen; {{ item.paymoney | fmtMoney }}</span>
-                                    </div>
-                                    <div class="font-weight-bold text-000 text-size-default card-num" v-else>
-                                       退费金额：<span class="text-danger">&yen; -{{ item.paymoney | fmtMoney }}</span>
-                                    </div>
-                                </div>
-                            </div> -->
               <div
                 class="top-title flex-1 d-flex justify-content-between align-items-center padding-bottom-2"
               >
@@ -154,12 +144,26 @@
               </hd-card-item>
 
               <hd-card-item class="">
+                <span class="card-item-title text-333">用户id：</span>
+                <span class="card-item-content text-666">{{
+                  item.uid | fmtFill(8)
+                }}</span>
+              </hd-card-item>
+
+              <hd-card-item class="">
                 <span class="card-item-title text-333">设备号：</span>
                 <span class="card-item-content text-666" v-if="item.port"
                   >{{ item.equipmentnum }}-{{ item.port | fmtFill(2, 0) }}</span
                 >
                 <span class="card-item-content text-666" v-else>{{
                   item.equipmentnum
+                }}</span>
+              </hd-card-item>
+
+              <hd-card-item class="" v-if="item.addr">
+                <span class="card-item-title text-333">从机地址：</span>
+                <span class="card-item-content text-666">{{
+                  item.addr
                 }}</span>
               </hd-card-item>
 
@@ -190,6 +194,13 @@
               </hd-card-item>
 
               <hd-card-item class="">
+                <span class="card-item-title text-333">结束原因：</span>
+                <span class="card-item-content text-666">{{
+                  item.resultinfo | fmtReason
+                }}</span>
+              </hd-card-item>
+
+              <hd-card-item class="">
                 <span class="card-item-title text-333">开始时间：</span>
                 <span class="card-item-content text-666">{{
                   item.begintime | fmtName
@@ -201,22 +212,11 @@
                   item.endtime | fmtName
                 }}</span>
               </hd-card-item>
-              <!-- <hd-card-item class="">
-                                <span class="card-item-title text-333">订单号：</span>
-                                <span class="card-item-content text-666">{{item.ordernum}}</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">付款人：</span>
-                                <span class="card-item-content text-666">{{item.uusername || '— —'}}</span>
-                            </hd-card-item>
-                            <hd-card-item>
-                                <span class="card-item-title text-333">交易时间：</span>
-                                <span class="card-item-content text-666">{{item.createtime}}</span>
-                            </hd-card-item> -->
               <hd-card-item class="w-100 d-flex justify-content-end">
                 <van-button
                   type="primary"
-                  size="mini"
+                  size="small"
+                  class="margin-right-2"
                   v-if="item.number === 0 && ![6, 7].includes(item.paytype)"
                   @click="handleRefund(item)"
                   >退款</van-button
@@ -224,7 +224,8 @@
 
                 <van-button
                   type="warning"
-                  size="mini"
+                  size="small"
+                  class="margin-right-2"
                   v-else-if="item.number === 2"
                   @click="handleRecall(item.id)"
                   >撤回部分退款</van-button
@@ -232,18 +233,19 @@
 
                 <van-button
                   type="primary"
-                  size="mini"
+                  size="small"
                   v-else-if="
                     item.number === 1 && ![6, 7].includes(item.paytype)
                   "
+                  class="margin-right-2"
                   disabled
                   >退款</van-button
                 >
 
                 <van-button
                   type="primary"
-                  size="mini"
-                  :to="`/order/powercurve/${item.chargeid}`"
+                  size="small"
+                  :to="`/order/powercurve/${item.id}`"
                   v-if="!is0304"
                   >功率曲线</van-button
                 >
@@ -258,8 +260,6 @@
 </template>
 <script>
 import { fmtDate, dateRange, payTypeToName } from '@/utils/util'
-// import hdSelectBox from '@/components/hd-select-box'
-// import hdSelectBoxItem from '@/components/hd-select-box-item'
 import hdCard from '@/components/hd-card'
 import hdCardItem from '@/components/hd-card-item'
 import hdScroll from '@/components/hd-scroll'
@@ -337,14 +337,22 @@ export default {
         if (code === 200) {
           // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值
           // eslint-disable-next-line no-debugger
+          let chargeList = result.chargeList
+          if (Array.isArray(result.tradedataList)) {
+              chargeList = result.chargeList.map((item) => {
+              const tradObj = result.tradedataList.find(one => one.ordernum === item.ordernum) || {}
+              item.uid = tradObj.uid
+              return item
+            })
+          }
           if (init) {
-            this.list = result.chargeList
+            this.list = chargeList
             this.hardversion = result.hardversion
           } else {
-            this.list = [...this.list, ...result.chargeList]
+            this.list = [...this.list, ...chargeList]
           }
           // 更改状态，看是否还有数据
-          if (result.chargeList.length >= LIMIT) {
+          if (chargeList.length >= LIMIT) {
             this.status = 1
           } else {
             this.status = 2
@@ -353,6 +361,7 @@ export default {
           this.$toast(message)
         }
       } catch (e) {
+        console.log(e)
         this.$toast('异常错误')
       } finally {
         if (this.scroll) {
@@ -482,6 +491,42 @@ export default {
     fmtPayType(value) {
       const name = payTypeToName(value)
       return name ? `${name}支付` : '— —'
+    },
+    fmtReason (resultinfo) {
+      let reason = '无'
+      switch (resultinfo) {
+        case 0:
+          reason = '充电完成'
+          break
+        case 1:
+          reason = '无功率断电 (原因：充满、插座拔掉或脉冲充电器功率异常)'
+          break
+        case 2:
+          reason = '充满自停'
+          break
+        case 3:
+          reason = '超功率自停'
+          break
+        case 4:
+          reason = '充电线脱落'
+          break
+        case 5:
+          reason = '刷卡断电'
+          break
+        case 7:
+          reason = '余额不足'
+          break
+        case 11:
+          reason = '充电完成(11)'
+          break
+        case 255:
+          reason = '充电完成(255)'
+          break
+        default:
+          reason = '无'
+          break
+      }
+      return reason
     }
   },
   computed: {

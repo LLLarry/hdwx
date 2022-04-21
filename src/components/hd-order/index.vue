@@ -14,12 +14,14 @@
           <section class="bg-white padding-y-2">
               <ul>
                   <li class="padding-x-3" v-for="(one, index) in list" :key="index">
-                       <slot name="child" :row="one" v-if="one">
-                          <div class="d-flex justify-content-between padding-y-1">
-                            <div>{{ one.title }}</div>
-                            <div class="text-666">{{ one.content }}</div>
-                        </div>
-                      </slot>
+                      <template v-if="one">
+                           <slot name="child" :row="one" v-if="one">
+                            <div class="d-flex justify-content-between padding-y-1">
+                                <div>{{ one.title }}</div>
+                                <div class="text-666">{{ one.content }}</div>
+                            </div>
+                        </slot>
+                      </template>
                   </li>
               </ul>
               <div class="d-flex justify-content-between menu-contral padding-top-2 padding-x-3 margin-top-2" v-if="menu">

@@ -10,7 +10,8 @@ export default {
       agent,
       showincoins,
       platform,
-      auth
+      auth,
+      tenantId
     } = await getDealAccountData(data)
     if (code === 200) {
       commit('setUser', {
@@ -19,7 +20,8 @@ export default {
         agent,
         showincoins,
         platform,
-        auth
+        auth,
+        tenantId
       })
       // 记录商户的访问记录
       accessRecord()

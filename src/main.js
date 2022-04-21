@@ -24,14 +24,20 @@ import VueCompositionApi from '@vue/composition-api'
 import '@/assets/js/vant-helper'
 import '@/assets/js/mixin'
 import '@/assets/js/v-console'
+import { getURLParams } from '@/utils/util'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
 Icon, Search, Col, Row, NumberKeyboard, Toast, ActionSheet, Popup, Calendar, Area, NavBar, Sticky, Empty, Skeleton, Divider, Stepper, Checkbox, CheckboxGroup,
-RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover, ImagePreview, NoticeBar
+RadioGroup, Radio, Switch, Collapse, CollapseItem, Cell, CellGroup, Picker, Popover, ImagePreview, NoticeBar, DatetimePicker
 } from 'vant'
 
 // 解决 vue当页面应用在ios微信中，使用wxsdk, wx.config报错
 window.sessionStorage.setItem('__init_url__', window.location.href)
+// 缓存tenantId, 缓存中获取不到tenantId,再从url中取tenantId，并保存在缓存中
+if (!window.sessionStorage.getItem('__init_tenantId__')) {
+  const tenantId = Number.parseInt(getURLParams().tenantId)
+  window.sessionStorage.setItem('__init_tenantId__', Number.isNaN(tenantId) ? '' : tenantId)
+}
 
 Vue.use(VueCompositionApi)
 Vue.use(loadingIndex)
@@ -81,6 +87,7 @@ Vue.use(Picker)
 Vue.use(Popover)
 Vue.use(NoticeBar)
 Vue.use(ImagePreview)
+Vue.use(DatetimePicker)
 
 Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })

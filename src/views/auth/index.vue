@@ -28,52 +28,52 @@
   </div>
 </template>
 <script>
-import { sendCodeAndgetUserInfo } from '@/require/auth'
-import { mapMutations } from 'vuex'
+// import { sendCodeAndgetUserInfo } from '@/require/auth'
+// import { mapMutations } from 'vuex'
 export default {
   created() {
-    const code = this.$route.query.code
-    if (code) {
-      this.asySendCodeAndgetUserInfo(code)
-    } else {
-      this.$dialog
-        .alert({
-          title: '提示',
-          message: '未获取到code信息'
-        })
-        .then(res => {
-          wx.closeWindow()
-        })
-    }
-  },
-  methods: {
-    ...mapMutations(['setUser']),
-    async asySendCodeAndgetUserInfo(code) {
-      const {
-        code: status,
-        message,
-        dealuser,
-        openid,
-        agent,
-        showincoins
-      } = await sendCodeAndgetUserInfo({ code })
-      if (status === 200) {
-        this.setUser({ ...dealuser, openid, agent, showincoins })
-        //    this.$router.replace({ path: '/' })
-        // window.history.go(-(window.history.length - 1))
-        this.$router.replace({ path: '/' })
-      } else {
-        this.$dialog.alert({
-          title: '验证失败',
-          message,
-          beforeClose(action, done) {
-            done()
-            wx.closeWindow()
-          }
-        })
-      }
-    }
+    // const code = this.$route.query.code
+    // if (code) {
+    //   this.asySendCodeAndgetUserInfo(code)
+    // } else {
+    //   this.$dialog
+    //     .alert({
+    //       title: '提示',
+    //       message: '未获取到code信息'
+    //     })
+    //     .then(res => {
+    //       wx.closeWindow()
+    //     })
+    // }
   }
+  // methods: {
+  //   ...mapMutations(['setUser']),
+  //   async asySendCodeAndgetUserInfo(code) {
+  //     const {
+  //       code: status,
+  //       message,
+  //       dealuser,
+  //       openid,
+  //       agent,
+  //       showincoins
+  //     } = await sendCodeAndgetUserInfo({ code })
+  //     if (status === 200) {
+  //       this.setUser({ ...dealuser, openid, agent, showincoins })
+  //       //    this.$router.replace({ path: '/' })
+  //       // window.history.go(-(window.history.length - 1))
+  //       this.$router.replace({ path: '/' })
+  //     } else {
+  //       this.$dialog.alert({
+  //         title: '验证失败',
+  //         message,
+  //         beforeClose(action, done) {
+  //           done()
+  //           wx.closeWindow()
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
 }
 </script>
 

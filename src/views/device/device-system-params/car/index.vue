@@ -55,11 +55,11 @@ export default {
     methods: {
         async onSubmit (value) {
              try {
-                const { returncode, message } = await wolfsetsys({
+                const { code, message } = await wolfsetsys({
                     ...this.model,
                     code: this.code
                 })
-                if (returncode === 200) {
+                if (Number(code) === 200) {
                     this.$toast('设置成功')
                 } else {
                     this.$toast(message)
@@ -76,10 +76,10 @@ export default {
         async getSystem () {
             try {
                 // eslint-disable-next-line camelcase
-                const { returncode, message, CST: cst, ELEC_PRI: elec_pri } = await wolfreadsys({
+                const { code, message, cst, elec_pri } = await wolfreadsys({
                     code: this.code
                 })
-                if (returncode === 200) {
+                if (Number(code) === 200) {
                     this.model = {
                         cst,
                         elec_pri

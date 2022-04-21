@@ -90,7 +90,10 @@ export default {
     },
     data () {
         return {
-            hdMask2Text: '<span class="text-danger">未开启功率计费<span>'
+            hdMask2Text: `
+              <p class="text-danger">未开启功率计费</p>
+              <p class="text-danger text-size-md margin-top-1">（可在上面“充电计费方式”中开启）</p>
+            `
         }
     },
     methods: {

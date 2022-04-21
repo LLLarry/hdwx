@@ -47,7 +47,10 @@ export default {
     },
     data () {
         return {
-            hdMask1Text: '<span class="text-danger">未开启按电量计费<span>'
+            hdMask1Text: `
+                <p class="text-danger">未开启按电量计费</p>
+                <p class="text-danger text-size-md margin-top-1">（可在上面“充电计费方式”中开启）</p>
+            `
         }
     }
 }

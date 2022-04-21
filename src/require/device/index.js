@@ -629,3 +629,33 @@ export const remoteChargingIncoins = (data, loadText) => {
     loadText
   })
 }
+
+/**
+ * 获取离线卡信息
+ * @param {*} data {  code: String， openid, nowtime }
+ * @param {*} loadText
+ * @returns
+ */
+export const queryOfflineCard = (data, loadText) => {
+  return ajax({
+    url: '/allowInterface/queryOfflineCard',
+    data,
+    method: 'post',
+    loadText
+  })
+}
+
+/**
+ * 充值离线卡
+ * @param {*} data {}
+ * @param {*} loadText
+ * @returns
+ */
+export const chargeCard = (data, loadText) => {
+  return ajax({
+    url: '/chargeCard',
+    data,
+    method: 'post',
+    loadText
+  })
+}
