@@ -270,7 +270,7 @@ export default {
                         title: '提示',
                         message: '成功'
                     }).then(() => {
-                        this.mounted()
+                        this.init()
                     })
                 } else {
                     this.$dialog.alert({
@@ -291,7 +291,7 @@ export default {
                         title: '提示',
                         message: '成功'
                     }).then(() => {
-                        this.mounted()
+                        this.init()
                     })
                 } else {
                     this.$dialog.alert({

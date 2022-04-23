@@ -105,11 +105,13 @@
 </template>
 <script>
 import HdScroll from '@/components/hd-scroll'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
 import { bindingDevice } from '@/require/home'
 import { checkAndGo } from '@/views/withdraw/helper'
+import { getType } from '@/utils/util'
+import store from '@/store'
 const map = [
   {
     title: '设备',
@@ -195,14 +197,20 @@ const map = [
         url: '/withdraw/page/3',
         icon: require('@/assets/images/mine/提现.png'),
         class: 'sm-img',
-        permission: [0, 2, 4]
+        permission: [0, 2, 4],
+        permiss () { // 权限函数，返回true显示, false不显示，permiss不存在时显示
+          return store.getters.isShowWechatRefud
+        }
       },
       {
         name: '提现到银行卡',
         url: '/withdraw/page/1',
         icon: require('@/assets/images/mine/提现.png'),
         class: 'sm-img',
-        permission: [0, 2, 4]
+        permission: [0, 2, 4],
+        permiss () { // 权限函数，返回true显示, false不显示，permiss不存在时显示
+          return store.getters.isShowPersonalBankRefud
+        }
       },
       {
         name: '提现到对公',
@@ -268,7 +276,13 @@ export default {
           .map(({ title, list }) => {
             return {
               title,
-              list: list.filter(one => one.permission.includes(auth)) // 筛选出符合权限的菜单
+              list: list.filter(one => {
+                if (getType(one.permiss) === 'function') {
+                  return one.permission.includes(auth) && one.permiss()
+                } else {
+                  return one.permission.includes(auth)
+                }
+              }) // 筛选出符合权限的菜单
             }
           })
           .filter(({ title, list }) => list.length > 0) // 过滤掉list为空的每一项

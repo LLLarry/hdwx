@@ -38,7 +38,7 @@
             <div
               class="btn-box"
               @click="$router.push({ path: '/withdraw/page/3' })"
-              v-if="!user.agent"
+              v-if="!user.agent && isShowWechatRefud"
               v-hd-permission="[0, 2, 4]"
             >
               提现到微信
@@ -131,7 +131,7 @@
 
 <script>
 import { skipPersonCenter, updateAccountData } from '@/require/mine'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import WithdrawManager from '@/components/mine/withdraw-manager'
 import Setting from '@/components/mine/setting'
 import { fmtDate } from '@/utils/util'
@@ -152,7 +152,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user']),
+    ...mapGetters(['isShowWechatRefud', 'isShowPersonalBankRefud'])
   },
   mounted() {
     this.getInitData()

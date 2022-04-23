@@ -103,6 +103,7 @@ import hdScroll from '@/components/hd-scroll/scroll'
 import IcListCard from '@/components/ic-list/ic-list-card'
 import BindIcCard from '@/components/ic-list/bind-ic-card'
 import { inquireOnlineData, changeOnlineCardStatus } from '@/require/ic'
+import { mapGetters } from 'vuex'
 const REQUIRE_LENGTH = 35 // 请求返回值数量
 export default {
   data() {
@@ -156,6 +157,7 @@ export default {
     BindIcCard
   },
   computed: {
+    ...mapGetters(['tenantId']),
     descMessage() {
       if (this.actionIsShow) {
         const cardID = this.actionRow.cardID ? this.actionRow.cardID : ''
@@ -219,7 +221,8 @@ export default {
             cardrank: this.value4, // 1:充值金额按从大到小  2:充值金额按从小到大
             currentPage: this.currentPage,
             limit: REQUIRE_LENGTH,
-            source: 2 // 来源； 手机端 默认固定传值 2
+            source: 2, // 来源； 手机端 默认固定传值 2
+            tenantId: this.tenantId
           },
           '正在加载数据'
         )

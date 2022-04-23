@@ -32,12 +32,14 @@
             title="提现到微信零钱"
             label="实时到账"
             is-link
+            v-if="isShowWechatRefud"
             to="/withdraw/page/3"
           ></van-cell>
           <van-cell
             title="提现到银行卡"
             label="第二个工作日到账"
             is-link
+            v-if="isShowPersonalBankRefud"
             @click="handleGoWithdraw(1)"
           ></van-cell>
           <van-cell
@@ -87,6 +89,7 @@
 
 <script>
 import { checkAndGo } from '@/views/withdraw/helper'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -116,6 +119,9 @@ export default {
       //     this.$toast(error)
       // }
     }
+  },
+  computed: {
+    ...mapGetters(['isShowWechatRefud', 'isShowPersonalBankRefud'])
   }
 }
 </script>

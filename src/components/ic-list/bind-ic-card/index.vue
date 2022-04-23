@@ -134,7 +134,8 @@ export default {
             try {
                 const { code, message } = await dealerBindingOnlineCard({
                     aid: this.bindInfo.aid,
-                    cardID
+                    cardID,
+                    tenantId: this.tenantId
                 })
                 if (code === 200) {
                     this.bindInfo = {

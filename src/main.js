@@ -101,6 +101,14 @@ Vue.use(VueMeta, {
   // optional pluginOptions
   refreshOnceOnNavigation: true
 })
+
+Vue.mixin({
+  computed: {
+    tenantId () {
+      return store.getters.tenantId
+    }
+  }
+})
 Window.prototype.wx = wx
 
 new Vue({
