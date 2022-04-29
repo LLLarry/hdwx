@@ -1,7 +1,7 @@
 <template>
     <div class="">
-        <hd-title exec>个人银行卡</hd-title>
-        <div class="padding-bottom-3">
+        <hd-title exec v-if="isShowPersonalBankRefud">个人银行卡</hd-title>
+        <div class="padding-bottom-3" v-if="isShowPersonalBankRefud">
             <div v-no-data="bankCardList.length <= 0"></div>
             <bank-card
                 class="margin-bottom-3 margin-x-3"
@@ -51,6 +51,7 @@ import { merBankCardData, addBankCardInfo } from '@/require/withdraw'
 import { fmtBankCard } from '../helper'
 import HandleCompanyBank from '@/components/withdraw/handle-company-bank'
 import HandleBank from '@/components/withdraw/handle-bank'
+import { mapGetters } from 'vuex'
 export default {
     components: {
         BankCard,
@@ -68,6 +69,9 @@ export default {
     },
     mounted () {
         this.getInitData()
+    },
+    computed: {
+        ...mapGetters(['isShowPersonalBankRefud'])
     },
     methods: {
         async getInitData () {

@@ -54,28 +54,32 @@
                 <p class="text-center">选择提现方式</p>
             </div>
             <section :style="{ maxHeight: '70vh' }" class="overflow-auto">
-                <hd-title exec>微信列表</hd-title>
-                <bank-card
-                    class="margin-bottom-3 margin-x-3"
-                    :type="3"
-                    showStar
-                    v-for="item in wechatList"
-                    :key="item.id"
-                    :data="item"
-                    @handleSelect="handleSelect"
-                    :selected="item.id === accountInfo.id"
-                />
-                <hd-title exec>银行卡列表</hd-title>
-                <bank-card
-                    class="margin-bottom-3 margin-x-3"
-                    :type="1"
-                    showStar
-                    v-for="item in bankCardList"
-                    :key="item.id"
-                    @handleSelect="handleSelect"
-                    :data="item"
-                    :selected="item.id === accountInfo.id"
-                />
+               <template v-if="isShowWechatRefud">
+                    <hd-title exec>微信列表</hd-title>
+                    <bank-card
+                        class="margin-bottom-3 margin-x-3"
+                        :type="3"
+                        showStar
+                        v-for="item in wechatList"
+                        :key="item.id"
+                        :data="item"
+                        @handleSelect="handleSelect"
+                        :selected="item.id === accountInfo.id"
+                    />
+               </template>
+                <template v-if="isShowPersonalBankRefud">
+                    <hd-title exec>银行卡列表</hd-title>
+                    <bank-card
+                        class="margin-bottom-3 margin-x-3"
+                        :type="1"
+                        showStar
+                        v-for="item in bankCardList"
+                        :key="item.id"
+                        @handleSelect="handleSelect"
+                        :data="item"
+                        :selected="item.id === accountInfo.id"
+                    />
+                </template>
                 <hd-title exec>对公账户列表</hd-title>
                 <bank-card
                     class="margin-bottom-3 margin-x-3"
@@ -107,6 +111,7 @@
 import BankCard from '@/components/withdraw/bank-card'
 import { getBankList } from '@/views/withdraw/helper'
 import { weChatWithdraw, weChatWithdrawaccess, withdrawaccess } from '@/require/withdraw'
+import { mapGetters } from 'vuex'
 export default {
     components: {
         BankCard
@@ -128,6 +133,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['isShowWechatRefud', 'isShowPersonalBankRefud']),
         titleText () {
             switch (this.accountInfo.type) {
                 case 1 : return '提现到银行卡'

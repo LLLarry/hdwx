@@ -200,7 +200,8 @@ export default {
             areaId: this.value2,
             currentPage: this.currentPage,
             ranktype: this.value3,
-            limit: REQUIRE_LENGTH
+            limit: REQUIRE_LENGTH,
+            tenantId: this.tenantId
           },
           '正在加载数据'
         )

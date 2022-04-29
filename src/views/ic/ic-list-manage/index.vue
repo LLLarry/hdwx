@@ -56,7 +56,7 @@
                 当前<span class="text-danger">IC卡余额为(充值：{{card.money}}元、赠送：{{card.sendmoney}}元)</span>，解绑用户会自动清除卡余额
             </div>
             <div class="text-center text-size-sm" v-else>
-                当前<span class="text-danger">IC卡已关联钱包</span>，解绑用户会不会清除卡余额
+                当前<span class="text-danger">IC卡已关联钱包</span>，解绑用户不会清除卡余额
             </div>
             <h5 class="text-center text-size-sm margin-top-3 margin-bottom-2">
                 会进行以下操作

@@ -114,3 +114,18 @@ export const getV3TempData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 删除用户钱包余额
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const mercVirtualDeleteData = (data, loadText) => {
+    return ajax({
+        url: '/mobileMerchant/mercVirtualDeleteData',
+        method: 'post',
+        data,
+        loadText
+    })
+}

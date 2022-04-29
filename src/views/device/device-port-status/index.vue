@@ -13,12 +13,12 @@
             </div>
         </header>
         <hd-line />
-        <van-tabs v-model="active">
+        <van-tabs v-model="active" ref="top-tab">
             <van-tab title="端口状态">
                 <div class="padding-x-3 tabContent bg-gray" ref="tabContent" :style="{height: maxHeight+'px'}">
                     <div class="padding-top-3">
                         <div v-no-data="allPortStatusList.length <= 0"></div>
-                        <hd-card class="card rounded padding-2 margin-bottom-3 bg-white" v-for="item in allPortStatusList" :key="item.port">
+                        <!-- <hd-card class="card rounded padding-2 margin-bottom-3 bg-white" v-for="item in allPortStatusList" :key="item.port">
                             <hd-card-item class="w-100 card-title margin-bottom-1 d-flex justify-content-between">
                                 <template>
                                     <div>
@@ -71,13 +71,77 @@
                                     <van-button type="danger" class="padding-x-2 float-right margin-right-2" size="mini" @click="handleRemoteClose(item)">断电</van-button>
                                 </template>
                             </hd-card-item>
-                        </hd-card>
+                        </hd-card> -->
+                        <div class="post-list" v-if="allPortStatusList.length > 0">
+                            <van-sticky :offset-top="sticky">
+                                <van-row class="d-flex post-border-row post-header margin-x-1 text-size-sm font-weight-bold">
+                                    <van-col :span="3" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        端口
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        状态
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        充电时间
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        充电功率
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        电量
+                                    </van-col>
+                                    <van-col :span="5" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        操作
+                                    </van-col>
+                                </van-row>
+                            </van-sticky>
+                            <div class="padding-bottom-3">
+                                <van-row class="d-flex post-border-row margin-x-1 text-size-sm text-666" v-for="item in allPortStatusList" :key="item.port">
+                                    <van-col :span="3" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        {{ String(item.port).padStart(2, '0') }}
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        <div v-if="addr">
+                                            <van-tag type="danger" v-if="item.portStatus == 2">使用</van-tag>
+                                            <van-tag type="success" v-else-if="item.portStatus == 1">空闲</van-tag>
+                                            <van-tag color="#969799" v-else-if="item.portStatus == 3">禁用端口</van-tag>
+                                            <van-tag color="#969799" v-else-if="item.portStatus == 4">端口故障</van-tag>
+                                            <van-tag type="success" v-else-if="item.portStatus == 5">充满，浮充</van-tag>
+                                            <van-tag color="#969799" v-else>— —</van-tag>
+                                        </div>
+                                        <div v-else>
+                                            <van-tag type="danger" v-if="item.portStatus == 2">使用</van-tag>
+                                            <van-tag type="success" v-else-if="item.portStatus == 1">空闲</van-tag>
+                                            <van-tag color="#969799" v-else>故障</van-tag>
+                                        </div>
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        {{ item.time }} 分钟
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        {{ item.power }} W
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        {{ item.elec / 100 }} 度
+                                    </van-col>
+                                    <van-col :span="5" class="post-border-col padding-y-1 padding-x-1 d-flex flex-column align-items-center">
+                                        <van-button type="primary" class="padding-x-2 float-right d-block margin-bottom-1" size="mini" @click="handleUpdateStatus(item)">更新</van-button>
+                                        <!-- <van-button type="danger" class="padding-x-2 float-right d-block" style="margin-left: 0" size="mini" @click="handleRemoteClose(item)">断电</van-button> -->
+                                    </van-col>
+                                </van-row>
+                                <van-row>
+                                    <van-col :span="24" class="post-border-col padding-y-1 padding-x-1 d-flex flex-column align-items-center">
+                                        <span class="text-size-sm padding-y-1">更新时间：{{ updateTime ? updateTime : '— —' }}</span>
+                                    </van-col>
+                                </van-row>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </van-tab>
-            <van-tab title="远程充电">
+            <van-tab title="远程控制">
                 <div class="padding-x-3 tabContent bg-gray" :style="{height: maxHeight+'px'}">
-                    <div class="margin-top-3 border-1 border-ccc rounded">
+                    <!-- <div class="margin-top-3 border-1 border-ccc rounded">
                         <van-cell-group class="padding-3">
                             <van-field
                                 v-model="remoteModel.port"
@@ -99,6 +163,81 @@
                             </van-field>
                             <div class="text-center margin-top-2"><van-button type="primary" class="w-50" size="small" @click="handlerRemoteCharge">远程下发充电</van-button></div>
                         </van-cell-group>
+                    </div> -->
+                    <div class="padding-top-3">
+                        <div class="post-list" v-if="allPortStatusList.length > 0">
+                            <van-sticky :offset-top="sticky">
+                                <van-row class="d-flex post-border-row post-header margin-x-1 text-size-sm font-weight-bold">
+                                    <van-col :span="3" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        端口
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        状态
+                                    </van-col>
+                                    <van-col :span="6" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        充电时间
+                                    </van-col>
+                                    <van-col :span="5" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        电量
+                                    </van-col>
+                                    <van-col :span="6" class="post-border-col padding-y-2 padding-x-1 d-flex align-items-center justify-content-center">
+                                        操作
+                                    </van-col>
+                                </van-row>
+                            </van-sticky>
+                            <div class="padding-bottom-3">
+                                <van-row class="d-flex post-border-row margin-x-1 text-size-sm text-666" v-for="item in allPortStatusList" :key="item.port">
+                                    <van-col :span="3" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        {{ String(item.port).padStart(2, '0') }}
+                                    </van-col>
+                                    <van-col :span="4" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        <div v-if="addr">
+                                            <van-tag type="danger" v-if="item.portStatus == 2">使用</van-tag>
+                                            <van-tag type="success" v-else-if="item.portStatus == 1">空闲</van-tag>
+                                            <van-tag color="#969799" v-else-if="item.portStatus == 3">禁用端口</van-tag>
+                                            <van-tag color="#969799" v-else-if="item.portStatus == 4">端口故障</van-tag>
+                                            <van-tag type="success" v-else-if="item.portStatus == 5">充满，浮充</van-tag>
+                                            <van-tag color="#969799" v-else>— —</van-tag>
+                                        </div>
+                                        <div v-else>
+                                            <van-tag type="danger" v-if="item.portStatus == 2">使用</van-tag>
+                                            <van-tag type="success" v-else-if="item.portStatus == 1">空闲</van-tag>
+                                            <van-tag color="#969799" v-else>故障</van-tag>
+                                        </div>
+                                    </van-col>
+                                    <van-col :span="6" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        <input
+                                            type="number"
+                                            class="input-form van-field__control border-1 border-ccc flex-1"
+                                            v-model="item.remoteTime"
+                                        >
+                                        <span class="d-inline-block text-right" style="width: 2.5em;">分钟</span>
+                                    </van-col>
+                                    <van-col :span="5" class="post-border-col padding-y-1 padding-x-1 d-flex align-items-center justify-content-center">
+                                        <input
+                                            type="text"
+                                            class="input-form van-field__control border-1 border-ccc flex-1"
+                                            v-model="item.remoteElec"
+                                        >
+                                        <span class="d-inline-block text-right" style="width: 1.3em;">度</span>
+                                    </van-col>
+                                    <van-col :span="6" class="bottom-post post-border-col padding-y-1 padding-x-1 d-flex justify-content-center align-items-center">
+                                        <van-button
+                                            type="primary"
+                                            class="padding-x-2 float-right margin-right-1"
+                                            size="mini"
+                                            @click="handlerRemoteCharge(item)"
+                                        >充电</van-button>
+                                        <van-button
+                                            type="danger"
+                                            class="padding-x-2 float-right"
+                                            style="margin-left: 0" size="mini"
+                                            @click="handleRemoteClose(item)"
+                                        >断电</van-button>
+                                    </van-col>
+                                </van-row>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </van-tab>
@@ -210,16 +349,16 @@
 </template>
 
 <script>
-import hdCard from '@/components/hd-card'
-import hdCardItem from '@/components/hd-card-item'
+// import hdCard from '@/components/hd-card'
+// import hdCardItem from '@/components/hd-card-item'
 import { mapState } from 'vuex'
-import { getDeviceVersionName, getInfoByHdVersion } from '@/utils/util'
+import { getDeviceVersionName, getInfoByHdVersion, fmtDate } from '@/utils/util'
 import { inquireDeviceStatus, querystate, queryPortStatus, stopRechargeByPort, stopCharge, testpaytoport, startCharge, getDeviceNowArgument } from '@/require/device'
 export default {
-    components: {
-        hdCard,
-        hdCardItem
-    },
+    // components: {
+    //     hdCard,
+    //     hdCardItem
+    // },
     data () {
         return {
             code: this.$route.params.code, // 设备号
@@ -234,7 +373,9 @@ export default {
             showPicker: false,
             columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             allPortStatusList: [],
-            result: {}
+            result: {},
+            updateTime: null,
+            sticky: '3.78625rem'
         }
     },
     computed: {
@@ -251,18 +392,24 @@ export default {
     },
     mounted () {
         this.init()
+        this.sticky = this.$refs['top-tab'].$el.querySelector('.van-tabs__wrap').getBoundingClientRect().bottom + 'px'
     },
     methods: {
         async init () {
             try {
                 const { code, message, allPortStatusList, ...result } = await inquireDeviceStatus({ code: this.code, addr: this.addr })
                 if (code === 200) {
-                    this.allPortStatusList = allPortStatusList
+                    this.allPortStatusList = allPortStatusList.map(item => ({
+                        ...item,
+                        remoteTime: 240,
+                        remoteElec: 1
+                    }))
                     this.result = {
                         ...result,
                         hvName: getDeviceVersionName(result.deviceversion)
                     }
                     this.columns = new Array(getInfoByHdVersion(result.deviceversion).portNum).fill(1).map((item, index) => (index + 1))
+                    this.updateTime = result.updateTime
                 } else {
                     this.$toast(message)
                 }
@@ -275,16 +422,20 @@ export default {
             const index = this.allPortStatusList.findIndex(one => one.port === item.port)
             if (this.addr) { // 从机
                 queryPortStatus({ code: this.code, port: item.port, addr: this.addr }).then(res => {
-                    if (res.wolfcode === '1000' || res.returncode === 200) {
-                        this.allPortStatusList.splice(index, 1, res.result)
+                    if (res.wolfcode === '1000' || Number(res.code) === 200 || res.returncode === 200) {
+                        this.$toast('更新成功')
+                        this.allPortStatusList.splice(index, 1, Object.assign({}, this.allPortStatusList[index], res.result))
+                        this.updateTime = res.result.updateTime
                     } else {
                         this.$toast(res.message || res.wolfmsg)
                     }
                 })
             } else { // 设备
                 querystate({ code: this.code, port: item.port }).then(res => {
-                    if (res.code === 200) {
-                        this.allPortStatusList.splice(index, 1, { port: item.port, ...res.data })
+                    if (res.wolfcode === '1000' || Number(res.code) === 200 || res.returncode === 200) {
+                        this.$toast('更新成功')
+                        this.allPortStatusList.splice(index, 1, Object.assign({}, this.allPortStatusList[index], { port: item.port, ...res.data }))
+                        this.updateTime = fmtDate(new Date(Number(res.data.updateTime)), 'YYYY-MM-DD HH:mm:ss')
                     } else {
                         this.$toast(res.message)
                     }
@@ -292,8 +443,7 @@ export default {
             }
         },
         // 远程充电
-        handlerRemoteCharge () {
-            const { port, time, elec } = this.remoteModel
+        handlerRemoteCharge ({ port, remoteTime: time, remoteElec: elec }) {
             if (this.addr) { // 从机
                 startCharge({
                     code: this.code,
@@ -304,7 +454,7 @@ export default {
                     money: 1
                 })
                 .then(res => {
-                    if (res.wolfcode === '1000' || res.returncode === 200) {
+                    if (res.wolfcode === '1000' || Number(res.code) === 200 || res.returncode === 200) {
                         this.$dialog.alert({
                             title: '提示',
                             message: `${port}号端口，远程充电成功`
@@ -327,7 +477,7 @@ export default {
                     elec
                 })
                 .then(res => {
-                    if (res.wolfcode === '1000' || res.returncode === 200) {
+                    if (res.wolfcode === '1000' || Number(res.code) === 200 || res.returncode === 200) {
                         this.$dialog.alert({
                             title: '提示',
                             message: `${port}号端口，远程充电成功`
@@ -358,7 +508,7 @@ export default {
                         port: item.port
                     })
                     .then(res => {
-                        if (res.wolfcode === '1000' || res.returncode === 200) {
+                        if (res.wolfcode === '1000' || Number(res.code) === 200 || res.returncode === 200) {
                             this.$toast(`${item.port}号端口，断电成功！`)
                             setTimeout(() => {
                                 this.handleUpdateStatus(item) // 更新端口状态
@@ -376,7 +526,7 @@ export default {
                         port: item.port
                     })
                     .then(res => {
-                        if (res.wolfcode === '1000' || res.returncode === 200) {
+                        if (res.wolfcode === '1000' || Number(res.code) === 200 || res.returncode === 200) {
                             this.$toast(`${item.port}号端口，断电成功！`)
                             setTimeout(() => {
                                 this.handleUpdateStatus(item) // 更新端口状态
@@ -430,6 +580,33 @@ export default {
     }
     .tabContent {
         overflow: auto;
+    }
+    .post-list {
+        margin: 0 -15px;
+        .post-border-row {
+            &.post-header {
+                background-color: #c8efd4;
+            }
+            border: 1px solid #add9c0;
+            .post-border-col {
+                border-right: 1px solid #add9c0;
+            }
+        }
+        .bottom-style {
+            padding: 0 !important;
+            height: 45px !important;
+            line-height: 1.8;
+        }
+    }
+    .input-form {
+        padding: 4px;
+        border-radius: 3px;
+    }
+    .bottom-post {
+        &::v-deep button {
+            padding: 3px 0;
+            width: 4em;
+        }
     }
 }
 </style>
