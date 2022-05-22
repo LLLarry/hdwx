@@ -2,7 +2,7 @@
     <div class="device-addr d-flex flex-column">
         <header class="position-relative">
             <van-nav-bar
-                :title="`${code}从机`"
+                :title="`${code}主机`"
                 left-text="返回"
                 right-text="按钮"
                 left-arrow
@@ -94,10 +94,10 @@ export default {
         const { keywords, isShowSearch } = useSearchook()
         const [initList, reload] = useAddrList(code)
         const { qrWrapper, showQrcode, hideQrcode } = useQrcode(context, code)
-        const addAddr = () => useAddAddr(context)
+        const addAddr = () => useAddAddr(context, code, reload)
         const list = filterList(keywords, initList)
         const unbind = (addr) => {
-            unbindAddr(context, code, addr)
+            unbindAddr(context, code, addr, reload)
         }
         return {
             list,

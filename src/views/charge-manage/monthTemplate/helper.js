@@ -3,9 +3,9 @@ import ctemHandler from './ctem-helper'
 import navHelper from './nav-helper'
 import contral from './contral'
 
-export default ({ router }) => {
+export default ({ router, tenantId }) => {
     // 获取初始化数据
-    const initDataRef = initData()
+    const initDataRef = initData(tenantId)
     // 子模板处理函数
     const ctemMap = ctemHandler(initDataRef)
     // 处理监听事件

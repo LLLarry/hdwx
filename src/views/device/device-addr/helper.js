@@ -18,12 +18,12 @@ export const useSearchook = () => {
 export const useAddrList = (code) => {
     const list = ref([])
     initAddr(code)
-    .then(addrlist => {
-        list.value = addrlist
-    })
-    .catch((err) => {
-        Toast(err)
-    })
+        .then(addrlist => {
+            list.value = addrlist
+        })
+        .catch((err) => {
+            Toast(err)
+        })
     // 重新加载
     const reload = () => {
         initAddr(code)
@@ -67,7 +67,7 @@ export const useQrcode = (context) => {
 }
 
 // 添加从机地址
-export const useAddAddr = (context, code) => {
+export const useAddAddr = (context, code, reloadList) => {
     let scanQrCodeInput, scanQrCodeIcon
     const bindFn = () => {
         scanQRCode()
@@ -96,7 +96,7 @@ export const useAddAddr = (context, code) => {
             code,
             addr: value,
             type: 1
-        })
+        }, reloadList)
     })
     .finally(() => {
         scanQrCodeIcon.removeEventListener('click', bindFn)
@@ -122,7 +122,7 @@ export const filterList = (keywordRef, ListRef) => {
 }
 
 // 解绑从机地址
-export const unbindAddr = (context, code, addr) => {
+export const unbindAddr = (context, code, addr, reloadList) => {
     context.root.$dialog.confirm({
         title: '提示',
         message: '确认解绑从机地址吗？'
@@ -132,17 +132,17 @@ export const unbindAddr = (context, code, addr) => {
             type: 2,
             code,
             addr
-        })
+        }, reloadList)
     })
 }
 
-function addOrRemoveAddrFn (data) {
+function addOrRemoveAddrFn (data, reloadList) {
     const typeString = data.type === 1 ? '添加' : data.type === 2 ? '删除' : ''
     addOrRemoveAddr(data)
     .then(res => {
-        if (res.code === 200) {
+        if (Number(res.code) === 200) {
             Toast(`${typeString}成功`)
-            useAddrList(data.code)
+            reloadList && reloadList()
         } else {
             Toast(res.message)
         }
@@ -156,7 +156,7 @@ function initAddr (code) {
     return new Promise((resolve, reject) => {
         inquireDeviceAddr({ code })
         .then(res => {
-            if (res.code === 200) {
+            if (Number(res.code) === 200) {
                 resolve(res.addrlist)
             } else {
                 reject(res.message)

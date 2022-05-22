@@ -259,7 +259,8 @@ export default {
                 const { code, resultlist, message } = await inquireTraOrderData({
                     ...data,
                     currentPage: this.currentPage,
-                    limit: LIMIT
+                    limit: LIMIT,
+                    tenantId: this.tenantId
                 })
                 if (code === 200) {
                     // 判断是否是初始化，如果是初始化那么重新赋值，非初始化，再尾部追加值

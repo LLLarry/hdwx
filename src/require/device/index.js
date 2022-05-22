@@ -546,11 +546,11 @@ export const inquireDeviceAddr = (data, loadText) => {
  * @param {*} loadText
  * @returns
  */
-export const addOrRemoveAddr = (params, loadText) => {
+export const addOrRemoveAddr = (data, loadText) => {
   return ajax({
-    url: '/addOrRemoveAddr',
-    method: 'get',
-    params,
+    url: '/wolfNewSendData/addOrRemoveAddr',
+    method: 'post',
+    data,
     loadText
   })
 }

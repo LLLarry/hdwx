@@ -13,20 +13,22 @@ const initData = reactive({
     errorMsg: ''
 })
 
-export default () => {
-    getTempData()
+export default (tenantId) => {
+    getTempData(tenantId)
     return toRefs(initData)
 }
 
 /**
  * 模板信息
- * @param {*} tempid 主模板id
+ * @param {*} tenantId
  */
-async function getTempData () {
+async function getTempData (tenantId) {
     try {
         initData.isSystemTem = false
         initData.loading = true
-        const { code, message, resultdata } = await inquireMerTemplateMonth()
+        const { code, message, resultdata } = await inquireMerTemplateMonth({
+            tenantId
+        })
         if (code === 200) {
             const tempData = {
                 ...resultdata,

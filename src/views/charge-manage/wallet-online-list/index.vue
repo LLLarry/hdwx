@@ -49,7 +49,9 @@ export default {
   methods: {
     async init () {
       try {
-        const { code, message, templateData } = await areaTopUpTemplatePreview()
+        const { code, message, templateData } = await areaTopUpTemplatePreview({
+          tenantId: this.tenantId
+        })
         if (code === 200) {
           this.templateData = templateData
         } else {

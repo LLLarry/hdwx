@@ -52,8 +52,9 @@ export default {
         }
     },
     setup (props, context) {
+        const { tenantId } = context.root
         const router = context.root._router
-        return helper({ router })
+        return helper({ router, tenantId })
     }
 }
 </script>

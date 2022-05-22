@@ -72,7 +72,8 @@ export default {
                     type: this.type,
                     startTime: this.startTime,
                     endTime: this.endTime,
-                    source: 2 // 默认值
+                    source: 2, // 默认值
+                    tenantId: this.tenantId
                 }, loadMsg)
                 if (code === 200) {
                     this.resultTotal = resultTotal
