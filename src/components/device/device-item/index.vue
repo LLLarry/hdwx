@@ -14,7 +14,7 @@
           >{{ value.totalOnlineEarn }}元</span
         >
       </hd-card-item>
-      <hd-card-item v-hd-incoins>
+      <hd-card-item v-hd-incoins v-if="!isHideIconEarn">
         <span class="device-item-title text-666">投币收益：</span>
         <span class="device-item-content text-999"
           >{{ value.totalCoinsEarn }}元</span
@@ -173,6 +173,9 @@ export default {
       }
 
       return baseUrl + icon
+    },
+    isHideIconEarn() {
+      return this.value.hardversion === '11'
     }
   },
   methods: {

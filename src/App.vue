@@ -34,6 +34,7 @@
 <script>
 import { mapState } from 'vuex'
 import watchThemeHandler from '@/assets/js/watch-theme'
+import { provide } from '@vue/composition-api'
 // import color from 'css-color-function'
 // import rgbHex from 'rgb-hex'
 // console.log(rgbHex(color.convert('color(rgba(0 ,0 , 0) tint(100%))')))
@@ -66,6 +67,9 @@ export default {
       },
       immediate: true
     }
+  },
+  setup (props, context) {
+    provide('$root', context.root)
   }
 }
 </script>

@@ -1,21 +1,21 @@
 import { Toast, Dialog } from 'vant'
-import { ref, watch } from '@vue/composition-api'
+import { inject, ref, watch } from '@vue/composition-api'
 import { insertSonTempV3, inquireTemplateV3, deleteSonTemp, amendTempV3, inquireDeviceTemlata, insertTempV3 } from '@/require/template'
 import { createChildTemp } from '../helper'
 
 // 通过子模板的键货值对应的type
 const getType = (key) => key === 'tempower' ? 1 : key === 'temtime' ? 2 : key === 'temmoney' ? 3 : ''
-
 // 通过模板id获取模板详情
 export function getTempInitData (tempid, version) {
     const tempData = ref({})
     const copyTempData = ref({})
     const isSystemTem = ref(true) // 是否是系统模板
     const type = ref(1) // 1 编辑 2 新增
+    const root = inject('$root')
     ;(async () => {
         try {
             type.value = typeof tempid !== 'undefined' ? 1 : 2
-            const { code, message, resultdata } = await (type.value === 1 ? inquireTemplateV3({ tempid }) : inquireDeviceTemlata({ version }))
+            const { code, message, resultdata } = await (type.value === 1 ? inquireTemplateV3({ tempid, tenantId: root.tenantId }) : inquireDeviceTemlata({ version }))
             if (code === 200) {
                 if (type.value === 1) {
                     tempData.value = {

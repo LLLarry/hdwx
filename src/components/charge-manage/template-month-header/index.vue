@@ -110,7 +110,7 @@ export default {
 
 <style lang="scss" scoped>
 .template-header {
-    /deep/ .van-cell {
+    ::v-deep .van-cell {
         background: transparent;
         padding: 5px 0;
         .van-field__body {

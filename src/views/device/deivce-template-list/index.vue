@@ -198,7 +198,10 @@ export default {
         templatelist,
         hardversion,
         areaname
-      } = await inquireDeviceTemlataData({ code: this.code })
+      } = await inquireDeviceTemlataData({
+        code: this.code,
+        tenantId: this.tenantId
+      })
       if (code === 200) {
         this.templatelist = templatelist
         this.hardversion = hardversion

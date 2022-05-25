@@ -1,21 +1,29 @@
 <template>
   <div class="bind-result bg-gray">
     <hd-result
-      :type="bindResultMap.code === 200 ? 'success': 'warning'"
+      :type="bindResultMap.code === 200 ? 'success' : 'warning'"
       :title="bindResultMap.code === 200 ? '绑定成功' : '绑定失败'"
       :desc="desc"
     />
     <!-- 绑定成功完善信息 -->
-    <van-form @submit="onSubmit" class="margin-top-2" v-if="bindResultMap.code === 200">
-      <div class="bg-white padding-x-3 padding-y-2 text-size-sm text-p">完善设备信息</div>
-      <van-field
-        name="设备名称"
-        label="设备名称"
-        placeholder="设备名称"
-      >
+    <van-form
+      @submit="onSubmit"
+      class="margin-top-2"
+      v-if="bindResultMap.code === 200"
+    >
+      <div class="bg-white padding-x-3 padding-y-2 text-size-sm text-p">
+        完善设备信息
+      </div>
+      <van-field name="设备名称" label="设备名称" placeholder="设备名称">
         <template #input>
-          <input class="van-field__control flex-1" v-model="deviceModel.name" placeholder="设备名称" />
-          <span class="margin-left-1 text-primary text-size-sm unit">（选填）</span>
+          <input
+            class="van-field__control flex-1"
+            v-model="deviceModel.name"
+            placeholder="设备名称"
+          />
+          <span class="margin-left-1 text-primary text-size-sm unit"
+            >（选填）</span
+          >
         </template>
       </van-field>
       <van-field
@@ -46,7 +54,9 @@
         @click="selectTemp"
       />
       <div style="margin: 16px;">
-        <van-button round block type="primary" native-type="submit">提交</van-button>
+        <van-button round block type="primary" native-type="submit"
+          >提交</van-button
+        >
       </div>
     </van-form>
 
@@ -54,33 +64,68 @@
     <div class="padding-x-3 margin-top-4" v-else>
       <!-- 设备已被别人绑定 -->
       <div class="bg-white" v-if="bindResultMap.errorType === 1">
-        <div class="padding-x-3 padding-y-3 text-p text-size-sm">绑定人信息</div>
-        <van-cell-group >
-          <van-cell title="绑定人昵称" :value="bindResultMap.dealnick == null ? '无' : bindResultMap.dealnick" />
-          <van-cell title="绑定人电话" :value="bindResultMap.servephone == null ? '无' : bindResultMap.servephone" />
-          <van-cell title="绑定日期" :value="bindResultMap.registTime == null ? '无' : bindResultMap.registTime" />
+        <div class="padding-x-3 padding-y-3 text-p text-size-sm">
+          绑定人信息
+        </div>
+        <van-cell-group>
+          <van-cell
+            title="绑定人昵称"
+            :value="
+              bindResultMap.dealnick == null ? '无' : bindResultMap.dealnick
+            "
+          />
+          <van-cell
+            title="绑定人电话"
+            :value="
+              bindResultMap.servephone == null ? '无' : bindResultMap.servephone
+            "
+          />
+          <van-cell
+            title="绑定日期"
+            :value="
+              bindResultMap.registTime == null ? '无' : bindResultMap.registTime
+            "
+          />
         </van-cell-group>
-        <div class="padding-x-3 padding-y-3 text-p text-size-sm">如设备被非您本人绑定，请联系销售进行解绑</div>
+        <div class="padding-x-3 padding-y-3 text-p text-size-sm">
+          如设备被非您本人绑定，请联系销售进行解绑
+        </div>
       </div>
 
       <!-- 设备IMEI号过期 -->
       <div class="bg-white" v-if="bindResultMap.errorType === 2">
         <div class="padding-x-3 padding-y-3 text-p text-size-sm">失败信息</div>
-        <van-cell-group >
+        <van-cell-group>
           <van-cell title="失败原因" value="IMEI号过期" />
-          <van-cell title="过期日期" :value="bindResultMap.expirationtime == null ? '无' : bindResultMap.expirationtime" />
+          <van-cell
+            title="过期日期"
+            :value="
+              bindResultMap.expirationtime == null
+                ? '无'
+                : bindResultMap.expirationtime
+            "
+          />
         </van-cell-group>
-        <div class="padding-x-3 padding-y-3 text-p text-size-sm">请联系销售解决</div>
+        <div class="padding-x-3 padding-y-3 text-p text-size-sm">
+          请联系销售解决
+        </div>
       </div>
 
       <!-- 特约商户合伙人不允许绑定设备 -->
       <div class="bg-white" v-if="bindResultMap.errorType === 3">
         <div class="padding-x-3 padding-y-3 text-p text-size-sm">失败信息</div>
-        <van-cell-group >
+        <van-cell-group>
           <van-cell title="失败原因" value="特约商户合伙人不允许绑定设备" />
         </van-cell-group>
       </div>
-      <van-button round block type="primary" class="margin-top-3" @click="goHome">返回首页</van-button>
+      <van-button
+        round
+        block
+        type="primary"
+        class="margin-top-3"
+        @click="goHome"
+        >返回首页</van-button
+      >
     </div>
 
     <!-- 选择模板 -->
@@ -94,16 +139,19 @@
           v-for="(item, index) in templatelist"
           :key="item.name"
           class="padding-x-1 border-bottom-1 border-ddd padding-y-4"
-          :class="{ 'bg-gray' : index % 2 === 0 }"
+          :class="{ 'bg-gray': index % 2 === 0 }"
           @click="selectTempBack(item)"
         >
           <div class="d-flex">
             <div class="title text-left text-666 text-size-md">模板名称：</div>
-            <div>{{item.name}}</div>
+            <div>{{ item.name }}</div>
           </div>
-          <div class="d-flex margin-top-3" >
+          <div class="d-flex margin-top-3">
             <div class="title text-666 text-size-md">收费说明：</div>
-            <div v-html="item.subname || '无'" class="subname text-left text-p text-size-sm "></div>
+            <div
+              v-html="item.subname || '无'"
+              class="subname text-left text-p text-size-sm "
+            ></div>
           </div>
         </li>
       </ul>
@@ -131,7 +179,7 @@ export default {
   components: {
     HdResult
   },
-  data () {
+  data() {
     return {
       deviceModel: {
         area: '未命名小区',
@@ -149,17 +197,17 @@ export default {
   watch: {
     value: {
       // 监听组件打开时，初始化当前状态
-      handler (val) {
+      handler(val) {
         if (val) {
           const { hardversion = '00' } = this.bindResultMap
           this.deviceModel = {
-              area: '未命名小区',
-              areaId: '',
-              temp: '',
-              tempId: '',
-              name: '',
-              hardversion: hardversion,
-              hardversionName: this.fmtGetDeviceTypeName(hardversion)
+            area: '未命名小区',
+            areaId: '',
+            temp: '',
+            tempId: '',
+            name: '',
+            hardversion: hardversion,
+            hardversionName: this.fmtGetDeviceTypeName(hardversion)
           }
           this.selectTempIsShow = false
           this.templatelist = []
@@ -168,7 +216,7 @@ export default {
       immediate: true
     },
     'bindResultMap.hardversion': {
-      handler (hardversion = '00') {
+      handler(hardversion = '00') {
         this.deviceModel = {
           ...this.deviceModel,
           hardversion: hardversion,
@@ -179,7 +227,7 @@ export default {
     }
   },
   computed: {
-    desc () {
+    desc() {
       if (this.bindResultMap.code === 200) {
         return `${this.bindResultMap.devicenum}设备已绑定成功，可以添加下面信息来完善设备信息`
       } else {
@@ -188,7 +236,7 @@ export default {
     }
   },
   methods: {
-    async onSubmit () {
+    async onSubmit() {
       try {
         const { code, message } = await editEquipmentInfo({
           code: this.bindResultMap.devicenum,
@@ -197,8 +245,7 @@ export default {
           aid: this.deviceModel.areaId
         })
         if (code === 200) {
-          this.alert('设置成功')
-          .then(() => {
+          this.alert('设置成功').then(() => {
             this.goHome()
           })
         } else {
@@ -208,7 +255,7 @@ export default {
         this.toast('异常错误')
       }
     },
-    selectArea () {
+    selectArea() {
       showSelectArea({
         selectBack: ({ id, text }) => {
           this.deviceModel.areaId = id
@@ -217,53 +264,62 @@ export default {
         selectId: this.deviceModel.areaId
       })
     },
-    selectTemp () {
+    selectTemp() {
       this.getTempListData()
     },
-    async getTempListData (selectTempIsShow = true) {
-        const { code, message, templatelist } = await inquireDeviceTemlataData({ code: this.bindResultMap.devicenum })
-        if (code === 200) {
-            this.templatelist = templatelist.map(item => {
-              const subname = item.hintMessage ? item.hintMessage.split(/[\n\r]/).map(one => `<li>${one}</li>`).join('') : ''
-              return ({ name: item.tempname, id: item.id, subname })
-            })
-            this.selectTempIsShow = selectTempIsShow
-        } else {
-            this.toast(message)
-        }
+    async getTempListData(selectTempIsShow = true) {
+      const { code, message, templatelist } = await inquireDeviceTemlataData({
+        code: this.bindResultMap.devicenum,
+        tenantId: this.tenantId
+      })
+      if (code === 200) {
+        this.templatelist = templatelist.map(item => {
+          const subname = item.hintMessage
+            ? item.hintMessage
+                .split(/[\n\r]/)
+                .map(one => `<li>${one}</li>`)
+                .join('')
+            : ''
+          return { name: item.tempname, id: item.id, subname }
+        })
+        this.selectTempIsShow = selectTempIsShow
+      } else {
+        this.toast(message)
+      }
     },
-    selectTempBack ({ name, id }) {
+    selectTempBack({ name, id }) {
       this.selectTempIsShow = false
       this.deviceModel.tempId = id
       this.deviceModel.temp = name
     },
-    goHome () {
+    goHome() {
       this.$emit('input', false)
     },
-    fmtGetDeviceTypeName (hardversion) {
+    fmtGetDeviceTypeName(hardversion) {
       return `${hardversion} ${getDeviceVersionName(hardversion)}`
     },
     // 选择绑定设备
-    selectHardversion () {
+    selectHardversion() {
       showSelectHardversion({
         code: this.bindResultMap.devicenum,
         hardversion: this.deviceModel.hardversion,
-        selectBack: (pomise) => {
-          pomise.then(async res => {
-            this.alert(res.message)
-            await this.getTempListData(false)
-            const { name, id } = this.templatelist[0]
-            this.deviceModel = {
-              ...this.deviceModel,
-              hardversion: res.hardversion,
-              hardversionName: this.fmtGetDeviceTypeName(res.hardversion),
-              temp: name,
-              tempId: id
-            }
-          })
-          .catch(err => {
-            this.toast(err.message)
-          })
+        selectBack: pomise => {
+          pomise
+            .then(async res => {
+              this.alert(res.message)
+              await this.getTempListData(false)
+              const { name, id } = this.templatelist[0]
+              this.deviceModel = {
+                ...this.deviceModel,
+                hardversion: res.hardversion,
+                hardversionName: this.fmtGetDeviceTypeName(res.hardversion),
+                temp: name,
+                tempId: id
+              }
+            })
+            .catch(err => {
+              this.toast(err.message)
+            })
         }
       })
     }

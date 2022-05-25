@@ -133,7 +133,10 @@ export default {
       this.getTempListData()
     },
     async getTempListData () {
-        const { code, message, templatelist } = await inquireDeviceTemlataData({ code: this.code })
+        const { code, message, templatelist } = await inquireDeviceTemlataData({
+          code: this.code,
+          tenantId: this.tenantId
+        })
         if (code === 200) {
             this.templatelist = templatelist.map(item => {
               const subname = item.hintMessage ? item.hintMessage.split(/[\n\r]/).map(one => `<li>${one}</li>`).join('') : ''

@@ -119,7 +119,7 @@
 .add-area {
     .hd-title {
         div {
-            &nth-child(1) {
+            &:nth-child(1) {
                 font-size: 14px !important;
             }
         }
