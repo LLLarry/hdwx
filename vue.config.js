@@ -1,4 +1,5 @@
 const { proxy } = require('./hdwx.config')
+const { resolve } = require('path')
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ? '/merwx' : '/',
     configureWebpack: {
@@ -17,5 +18,23 @@ module.exports = {
             }
 
         }
-    }
+    },
+    chainWebpack(config) {
+        // 配置svg
+        config.module
+          .rule('svg')
+          .exclude.add(resolve('src/assets/svg'))
+          .end()
+        config.module
+          .rule('icons')
+          .test(/\.svg$/)
+          .include.add(resolve('src/assets/svg'))
+          .end()
+          .use('svg-sprite-loader')
+          .loader('svg-sprite-loader')
+          .options({
+            symbolId: 'icon-[name]'
+          })
+          .end()
+      }
 }

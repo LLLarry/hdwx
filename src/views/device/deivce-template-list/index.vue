@@ -383,7 +383,7 @@ export default {
         const opacity = rate * 0.5
         mask.style.background = `rgba(0, 0, 0, ${opacity})`
       } catch (error) {
-        console.log(error)
+        console.log('捕获异常', error)
       }
     }
   }

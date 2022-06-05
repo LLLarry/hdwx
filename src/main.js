@@ -24,6 +24,7 @@ import VueCompositionApi from '@vue/composition-api'
 import '@/assets/js/vant-helper'
 import '@/assets/js/mixin'
 import '@/assets/js/v-console'
+import '@/assets/svgs'
 import { getURLParams } from '@/utils/util'
 import {
 Tabbar, TabbarItem, Grid, GridItem, Image as VanImage, Loading, Dialog, Tab, Tabs, Form, Field, Button, DropdownMenu, DropdownItem, Tag, Overlay, ContactEdit,
@@ -93,6 +94,7 @@ Vue.config.productionTip = false
 Vue.use(Navigation, { router, store })
 Vue.component('hd-line', HdLine)
 Vue.component('hd-title', HdTitle)
+
 Vue.use(require('vue-wechat-title'))
 
 Vue.use(qrcode)

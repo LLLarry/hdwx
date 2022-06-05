@@ -1,6 +1,7 @@
 import * as dayjs from 'dayjs'
-import { Dialog } from 'vant'
+import { Dialog, Toast } from 'vant'
 import qs from 'qs'
+import ClipboardJS from 'clipboard'
 /**
  * 获取元素的类型： number、string、array、regexp ...
  * @param {*} e 元素
@@ -295,4 +296,68 @@ export const getURLParams = (url) => {
         url = url.substring(index + 1)
     }
     return qs.parse(url)
+}
+
+/**
+ * 复制文本
+ * @param text string 文本
+ */
+ export const copyText = (text) => {
+    let btn = document.querySelector('#copy-text-btn')
+    // 不存在就创建button
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.id = 'copy-text-btn'
+      btn.style.display = 'none'
+      document.body.appendChild(btn)
+    }
+    btn.setAttribute('data-clipboard-text', text)
+    const clipboard = new ClipboardJS('#copy-text-btn')
+    clipboard.on('success', () => {
+      handle('success')
+    })
+    clipboard.on('error', () => {
+      handle('error')
+    })
+    // 触发按钮
+    btn.click()
+    // 删除btn按钮
+    function handle (type) {
+      if (type === 'success') {
+        Toast.success('复制成功')
+      } else {
+        Toast.fail('复制失败')
+      }
+      clipboard.destroy()
+      if (btn && btn.parentNode && btn.parentNode.removeChild) {
+        btn.parentNode.removeChild(btn)
+      }
+    }
+  }
+
+/**
+ * 是否是外部资源
+ * @param {*} url
+ * @returns boolean
+ */
+export const isEternal = (url) => {
+    return /^https?:\/\/.+$/.test(url)
+}
+
+/**
+ * 深拷贝
+ * @param {*} targetObj 拷贝目标元素
+ * @returns newObj
+ */
+export const deepClone = (targetObj) => {
+    if (targetObj instanceof Date) return new Date(targetObj)
+    if (targetObj instanceof RegExp) return new RegExp(targetObj)
+    if (typeof targetObj !== 'object' || targetObj === null) { // 非对象或数组
+        return targetObj
+    }
+    const newObj = new targetObj.constructor()
+    for (const key in targetObj) {
+        newObj[key] = deepClone(targetObj[key])
+    }
+    return newObj
 }

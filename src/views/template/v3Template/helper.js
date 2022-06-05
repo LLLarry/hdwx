@@ -2,7 +2,6 @@ import { Toast, Dialog } from 'vant'
 import { inject, ref, watch } from '@vue/composition-api'
 import { insertSonTempV3, inquireTemplateV3, deleteSonTemp, amendTempV3, inquireDeviceTemlata, insertTempV3 } from '@/require/template'
 import { createChildTemp } from '../helper'
-
 // 通过子模板的键货值对应的type
 const getType = (key) => key === 'tempower' ? 1 : key === 'temtime' ? 2 : key === 'temmoney' ? 3 : ''
 // 通过模板id获取模板详情
@@ -326,8 +325,9 @@ export const useChargeType = (tempDataRef) => {
 
 // 保存编辑的主模板
 const useEditTemp = (tempDataRef, copyTempDataRef) => {
+    const root = inject('$root')
     return () => {
-        amendTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 2) })
+        amendTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 2), tenantId: root.tenantId })
         .then(res => {
             if (res.code === 200) {
                 Dialog.alert({
@@ -352,8 +352,9 @@ const useEditTemp = (tempDataRef, copyTempDataRef) => {
 
 // 新增主模板
 const useAddTemp = (tempDataRef, code) => {
+    const root = inject('$root')
     return (router) => {
-        insertTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 4) })
+        insertTempV3({ paratem: JSON.stringify(tempDataRef.value, null, 4), tenantId: root.tenantId })
         .then(res => {
             Dialog.alert({
                 title: '提示',

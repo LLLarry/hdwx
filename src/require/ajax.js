@@ -4,8 +4,9 @@ import Vue from 'vue'
 import { Dialog } from 'vant'
 import store from '@/store'
 import { getRamdom } from '@/utils/util'
+import { addTenantId } from './midwarle'
 const { proxy } = require('../../hdwx.config')
-console.log(proxy)
+
 const api = process.env.NODE_ENV === 'production' ? '' : proxy.open ? '/api' : ''
 const { PROXY_BASE_URL } = HDWX
 const baseURL = process.env.NODE_ENV === 'production' ? PROXY_BASE_URL : proxy.open ? '' : 'http://localhost'
@@ -21,6 +22,7 @@ const server = axios.create({
 })
 
 server.interceptors.request.use(config => {
+    config = addTenantId(config)
     config.cancelToken = new axios.CancelToken((cancel) => {
         store.commit('pushToken', { cancelToken: cancel, url: config.url })
     })

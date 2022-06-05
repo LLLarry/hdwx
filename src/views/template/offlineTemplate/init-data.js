@@ -1,5 +1,5 @@
 // 初始化数据
-import { reactive, toRefs } from '@vue/composition-api'
+import { reactive, toRefs, inject } from '@vue/composition-api'
 import { alert } from '@/assets/js/vant-helper'
 
 import { inquireTemplateCharge, inquireDeviceSysTemlata } from '@/require/template'
@@ -16,12 +16,13 @@ const initData = reactive({
 })
 
 export default ({ tempid, version, code }) => {
+    const root = inject('$root')
     if (typeof tempid !== 'undefined') {
         initData.type = 'edit'
-        getTempDataByTempid({ tempid, code })
+        getTempDataByTempid({ tempid, code, tenantId: root.tenantId })
     } else {
         initData.type = 'add'
-        getTempDataByHv({ version })
+        getTempDataByHv({ version, tenantId: root.tenantId })
     }
     return toRefs(initData)
 }
