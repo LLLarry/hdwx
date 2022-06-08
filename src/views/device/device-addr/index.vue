@@ -7,6 +7,7 @@
         right-text="按钮"
         left-arrow
         class="shadow"
+        @click-left="$router.go(-1)"
       >
         <template #right>
           <div
@@ -45,7 +46,7 @@
         <van-search
           v-model="keywords"
           show-action
-          placeholder="请输入搜索关键词"
+          placeholder="请输入从机号进行搜索"
           class="flex-1"
           @cancel="isShowSearch = false"
         />
@@ -132,7 +133,7 @@
                   </div>
                 </div>
                 <div
-                  class="post-list w-100"
+                  class="post-list w-100 padding-bottom-2"
                   v-if="
                     item.allPortStatusList && item.allPortStatusList.length > 0
                   "
@@ -313,7 +314,7 @@
                   </div>
                 </div>
                 <div
-                  class="post-list w-100"
+                  class="post-list w-100 padding-bottom-2"
                   v-if="
                     item.allPortStatusList && item.allPortStatusList.length > 0
                   "
@@ -510,33 +511,46 @@
     <!-- 绑定状态 -->
     <hd-overlay
       :show="bindErrorInfo.error"
-      title="绑定结果"
-      @close="bindErrorInfo.error = false"
+      title="绑定失败"
+      @close="closeError"
     >
-      <div class="text-center text-size-sm margin-bottom-2">
-        00123545从机已被
-        <span class="text-success">测试用户</span>绑定
-      </div>
-      <ul class="text-size-md repeat-box">
-        <li
-          class="margin-bottom-1 d-flex align-items-center border-bottom-1 border-ccc padding-bottom-3 margin-bottom-3"
-        >
-          <p class="flex-1 text-center font-weight-bold">测试123</p>
-          <div class="flex-1 text-center">
-            <p>11111</p>
-            <p>222</p>
-          </div>
-        </li>
+      <template v-if="bindErrorInfo.code === 202">
+        <div class="text-center text-size-md margin-bottom-2 text-danger">
+          {{bindErrorInfo.addr}} {{bindErrorInfo.message}}
+        </div>
+        <ul class="repeat-box bg-gray rounded padding-2 text-size-sm text-right">
+          <li
+            class="margin-bottom-1 d-flex align-items-center margin-bottom-3"
+          >
+            <p class="flex-1 text-center text-left">已绑定设备：</p>
+            <p class="flex-1 text-center">{{ bindErrorInfo.equipmentCode }}</p>
+          </li>
+          <li
+            class="margin-bottom-1 d-flex align-items-center margin-bottom-3"
+          >
+            <p class="flex-1 text-center text-left">绑定人ID：</p>
+            <p class="flex-1 text-center">{{ bindErrorInfo.bindId | fmtFill(8) }}</p>
+          </li>
+          <li
+            class="margin-bottom-1 d-flex align-items-center margin-bottom-3"
+          >
+            <p class="flex-1 text-center text-left">绑定人昵称：</p>
+            <p class="flex-1 text-center">{{ bindErrorInfo.bindName }}</p>
+          </li>
+          <li
+            class="margin-bottom-1 d-flex align-items-center margin-bottom-3"
+          >
+            <p class="flex-1 text-center text-left">绑定人电话：</p>
+            <p class="flex-1 text-center">{{ bindErrorInfo.bindPhone }}</p>
+          </li>
+        </ul>
+      </template>
 
-        <!-- <li class="margin-bottom-1 d-flex align-items-center">
-                <p class="flex-1 text-center font-weight-bold">{{changeResultMap.code2}}</p>
-                <div class="flex-1 text-center">
-                  <p>{{changeResultMap.oldCode2}}</p>
-                  <van-icon name="exchange" size=".5rem"  class="text-primary" />
-                  <p>{{changeResultMap.newCode2}}</p>
-                </div>
-            </li> -->
-      </ul>
+      <template v-else>
+        <div class="text-center text-size-sm margin-bottom-2">
+          {{bindErrorInfo.message}}
+        </div>
+      </template>
       <svg-icon icon="undraw_warning_re_eoyh" class="undraw-error" />
     </hd-overlay>
   </div>
@@ -597,7 +611,7 @@ export default {
     const { keywords, isShowSearch } = useSearchook()
     const [initList, reload] = useAddrList(code)
     const { qrWrapper, showQrcode, hideQrcode } = useQrcode(context, code)
-    const { addAddr, bindErrorInfo } = useAddAddr(context, code, reload)
+    const { addAddr, bindErrorInfo, closeError } = useAddAddr(context, code, reload)
     const {
       updatePortStatus,
       remoteCharge,
@@ -618,6 +632,7 @@ export default {
       hideQrcode,
       addAddr,
       bindErrorInfo,
+      closeError,
       unbind,
       reload,
       nodata: {

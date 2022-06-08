@@ -129,3 +129,18 @@ export const getV3TempData = (data, loadText) => {
         loadText
     })
 }
+
+/**
+ * 用户钱包退费
+ * @param {*} data
+ * @param {*} loadText
+ * @returns
+ */
+ export const doWalletRefundMerchant = (data, loadText) => {
+    return ajax({
+        url: '/wxpay/doWalletRefundMerchant',
+        method: 'post',
+        data,
+        loadText
+    })
+}

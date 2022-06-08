@@ -132,7 +132,8 @@ export default {
       option1: [
         { text: '设备编号', value: 0 },
         { text: '设备名称', value: 1 },
-        { text: '小区名称', value: 2 }
+        { text: '小区名称', value: 2 },
+        { text: '从机编号', value: 3 }
       ],
       source: [
         {

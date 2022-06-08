@@ -101,14 +101,6 @@
           <img :src="deleteUrl" class="delete-icon" />
           <span>删除钱包</span>
         </div>
-
-        <!-- <div
-          class="delete-item shadow padding-3 d-flex justify-content-around align-items-center"
-          @click="deleteUserWallet = true"
-        >
-          <svg-icon icon="wallet_refund" class="wallet_refund" />
-          <span>钱包退款</span>
-        </div> -->
         <wallet-refund />
       </div>
     </template>
@@ -171,12 +163,7 @@ export default {
     this.uid = this.$route.params.id
     this.aid = this.$route.query.aid
     this.walletid = this.$route.query.walletid
-    this.handleGetInitData({
-      id: this.uid,
-      aid: this.aid,
-      walletid: this.walletid,
-      type: 1 // 1 虚拟充值钱包
-    })
+    this.handleGetInitData()
   },
   components: {
     memberListCard,
@@ -184,15 +171,23 @@ export default {
     WalletRefund
   },
   methods: {
-    async handleGetInitData(data) {
+    async handleGetInitData() {
       try {
         const {
           code,
           message,
           order,
           areadata,
-          masteraccount
-        } = await skipVirtualTopupPage(data)
+          masteraccount,
+          walletid
+        } = await skipVirtualTopupPage(
+          {
+            id: this.uid,
+            aid: this.aid,
+            walletid: this.walletid,
+            type: 1 // 1 虚拟充值钱包
+          }
+        )
         if (code === 200) {
           const {
             id: uid,
@@ -201,7 +196,8 @@ export default {
             sendmoney,
             username,
             realname,
-            phoneNum: cellphone
+            phoneNum: cellphone,
+            merid
           } = order
           const { id: aid, name: areaname } = areadata
           this.member = {
@@ -213,7 +209,9 @@ export default {
             sendmoney,
             topupmoney,
             uid,
-            username
+            username,
+            walletid,
+            merid
           }
           this.masteraccount = masteraccount
         } else {

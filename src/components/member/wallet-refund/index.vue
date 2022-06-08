@@ -12,7 +12,7 @@
       title="钱包退款"
       @close="refundVisible = false"
     >
-      <svg-icon icon="undraw_discount_d-4-bd" :style="styleMap" />
+      <svg-icon icon="undraw_make_it_rain_iwk4" :style="styleMap" />
       <h5 class="text-center text-size-sm margin-top-3 margin-bottom-2">
         退款说明
       </h5>
@@ -24,7 +24,7 @@
       </div>
 
       <van-button
-        type="info"
+        type="primary"
         size="small"
         class="w-100 margin-top-2"
         @click="onConfirm"
@@ -45,6 +45,7 @@
 
 <script>
 import hdOverlay from '@/components/hd-overlay'
+import { doWalletRefundMerchant } from '@/require/member'
 export default {
   components: {
     hdOverlay
@@ -71,7 +72,31 @@ export default {
       this.refundVisible = true
     },
     onConfirm() {
-      this.refundVisible = false
+      this.redund()
+    },
+    async redund () {
+      try {
+        const { uid = 0, aid = 0, walletid, merid, topupmoney: money } = this.$parent.$data.member
+         const { ok, message } = await doWalletRefundMerchant({
+          id: uid, // 用户id
+          walletid, // 钱包id
+          merid, // 商户id，
+          aid: aid || 0, // 小区id
+          money, // 钱包余额
+          utype: 2, // 当前登录用户类型 普通商户2 超级管理员3
+          pwd: '' // 密码
+        })
+        if (ok === 'ok') {
+          this.refundVisible = false
+          this.alert('退款成功').then(() => {
+            this.$parent.handleGetInitData()
+          })
+        } else {
+          this.$toast(message)
+        }
+      } catch (error) {
+        this.$toast('异常错误')
+      }
     }
   }
 }

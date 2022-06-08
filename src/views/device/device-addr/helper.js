@@ -1,6 +1,6 @@
 import { inject, reactive, ref, watch } from '@vue/composition-api'
 import { inquireDeviceAddr, addOrRemoveAddr, inquireDeviceStatus, queryPortStatus, startCharge, stopCharge, lockOrUnlockPort } from '@/require/device'
-import { Toast } from 'vant'
+import { Toast, Dialog } from 'vant'
 import { scanQRCode } from '@/utils/wechat-util'
 import parseURL from '@/utils/parse-url'
 const { PROXY_BASE_URL } = HDWX
@@ -14,6 +14,31 @@ export const useSearchook = () => {
     }
 }
 
+// 默认端口list
+const defaultPortStatusList = [
+    {
+        elec: '0',
+        port: '1',
+        portA: '0',
+        portStatus: '1',
+        portV: '0',
+        power: '0',
+        time: '0',
+        remoteTime: 240, // 默认远程充电时间
+        remoteElec: 1 // 默认远程充电电量
+    },
+    {
+        elec: '0',
+        port: '2',
+        portA: '0',
+        portStatus: '1',
+        portV: '0',
+        power: '0',
+        time: '0',
+        remoteTime: 240, // 默认远程充电时间
+        remoteElec: 1 // 默认远程充电电量
+    }
+]
 // 通过设备号获取从机地址
 export const useAddrList = (code) => {
     const list = ref([])
@@ -42,7 +67,7 @@ export const useAddrList = (code) => {
                             }))
                         map = {
                             ...one.value,
-                            allPortStatusList: portStatusList
+                            allPortStatusList: portStatusList.length > 0 ? portStatusList : defaultPortStatusList
                         }
                     }
                     return ({
@@ -96,7 +121,10 @@ export const useQrcode = (context) => {
 // 添加从机地址
 export const useAddAddr = (context, code, reloadList) => {
     const bindErrorInfo = ref({
-        error: false // 是否有错误信息
+        error: false, // 是否有错误信息
+        code: -1,
+        addr: '',
+        equipmentCode: ''
     })
     // 添加从机
     const addAddr = () => {
@@ -133,12 +161,29 @@ export const useAddAddr = (context, code, reloadList) => {
                 type: 1
             }, reloadList)
             .catch(err => {
-                alert(err)
+                if (typeof err === 'string') {
+                    bindErrorInfo.value.error = true
+                    bindErrorInfo.value.code = 199
+                    bindErrorInfo.value.message = err
+                    bindErrorInfo.value.addr = value
+                } else if (typeof err === 'object' && err.code) {
+                    const { code, message, equipmentCode, user = {} } = err
+                    bindErrorInfo.value = {
+                        error: true,
+                        code,
+                        message,
+                        bindName: user.username,
+                        bindPhone: user.phoneNum,
+                        bindId: user.id,
+                        addr: value,
+                        equipmentCode
+                    }
+                }
             })
         })
         .catch(e => {
             console.log(bindErrorInfo)
-            bindErrorInfo.value.error = true
+            // bindErrorInfo.value.error = true
         })
         .finally(() => {
             scanQrCodeIcon.removeEventListener('click', bindFn)
@@ -150,9 +195,19 @@ export const useAddAddr = (context, code, reloadList) => {
         })
     }
 
+    const closeError = () => {
+        bindErrorInfo.value = {
+            error: false, // 是否有错误信息
+            code: -1,
+            addr: '',
+            equipmentCode: ''
+        }
+    }
+
     return {
         addAddr,
-        bindErrorInfo
+        bindErrorInfo,
+        closeError
     }
 }
 
@@ -191,11 +246,18 @@ function addOrRemoveAddrFn (data, reloadList) {
         addOrRemoveAddr(data)
         .then(res => {
             if (Number(res.code) === 200) {
-                Toast(`从机${data.addr}${typeString}成功`)
-                reloadList && reloadList()
+                    Dialog.alert({
+                        title: '提示',
+                        message: `从机${data.addr}${typeString}成功`
+                    })
+                    .then(() => {
+                        reloadList && reloadList()
+                    })
+                // Toast(`从机${data.addr}${typeString}成功`)
+                // reloadList && reloadList()
                 resolve(res)
             } else {
-                reject(res.message)
+                reject(res)
                 if (!isAdd) {
                     Toast(res.message)
                 }
